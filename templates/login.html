@@ -1,0 +1,85 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>
+            Common Thread POS
+        </title>
+        <script type="text/javascript" src="/static/js/jquery.js">
+        </script>
+        <script type="text/javascript" src="/static/js/date.js">
+        </script><!--[if IE]><script type="text/javascript" src="/static/js/bgiframe.js"></script><![endif]-->
+        <script type="text/javascript" src="/static/js/datePicker.js">
+        </script>
+        <script type="text/javascript" src="/static/js/pos.js">
+        </script>
+        <style type="text/css">
+                .centered {
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 600px;
+                }
+                
+                .master {
+                    width: 100%;
+                    height: 100%;
+                }
+                
+                .vertical {
+                    width: 100%;
+                    height: 100%;
+                    vertical-align: middle;
+                }
+        </style>
+    </head>
+    <body>
+        <form method="post" action="/login">
+            <input type="hidden" name="forward_to" value="{{forward_to}}" />
+            <table class="master">
+                <tr>
+                    <td class="vertical">
+                        <table class="centered">
+                            <tr>
+                                <td colspan="2">
+                                    <h1>
+                                        Welcome to the Common Thread POS
+                                    </h1>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    Please login.
+                                </td>
+                            </tr>
+                            {% if error %}
+                            <tr>
+                                <td colspan="2" style="border: thin solid red">That email/password combination is not recognized!</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <th>
+                                    Email:
+                                </th>
+                                <td>
+                                    <input type="text" name="email" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Password:
+                                </th>
+                                <td>
+                                    <input type="password" name="password" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <input type="submit" value="Login" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <p>Created by Silas Snider <img src="/static/images/beard_icon.png" height="16" width="16"/></p>
+    </body>
+</html>
