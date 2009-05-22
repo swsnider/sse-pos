@@ -1,7 +1,6 @@
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 import os
-from google.appengine.api import users
-import gdata.calendar, gdata.calendar.service
+from auth_layer import uses_users
 
 def render_template(name, template_values):
     template_dirs = []
@@ -11,11 +10,14 @@ def render_template(name, template_values):
         template = env.get_template(name)
     except TemplateNotFound:
         raise TemplateNotFound(name)
+    if not template_values:
+        template_values = {}
     return template.render(template_values)
 
 def secure(f):
+    @uses_users
     def g(*args, **kwargs):
-        if users.get_current_user():
+        if args[0].users.get_current_user() != None:
             return f(*args, **kwargs)
         else:
             args[0].redirect("/login")

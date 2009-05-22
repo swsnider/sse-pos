@@ -1,65 +1,21 @@
-<html>
-  <head>
-      <title>SSE: Volunteer Management</title>
-      <script type="text/javascript" src="/static/js/jquery.js"></script>
-      <script type="text/javascript" src="/static/js/date.js"></script>
-      <!--[if IE]><script type="text/javascript" src="/static/js/bgiframe.js"></script><![endif]-->
-      <script type="text/javascript" src="/static/js/datePicker.js"></script>
-      <script type="text/javascript" src="/static/js/calapp.js"></script>
-      <link rel="stylesheet" type="text/css" media="screen" href="/static/css/datePicker.css">
-      <style type="text/css">
-        /* located in demo.css and creates a little calendar icon
-         * instead of a text link for "Choose date"
-         */
-        a.dp-choose-date {
-        	float: left;
-        	width: 16px;
-        	height: 16px;
-        	padding: 0;
-        	margin: 5px 3px 0;
-        	display: block;
-        	text-indent: -2000px;
-        	overflow: hidden;
-        	background: url(/static/images/cal.gif) no-repeat; 
-        }
-        a.dp-choose-date.dp-disabled {
-        	background-position: 0 -20px;
-        	cursor: default;
-        }
-        /* makes the input field shorter once the date picker code
-         * has run (to allow space for the calendar icon
-         */
-        input.dp-applied {
-        	width: 140px;
-        	float: left;
-        }
-      </style>
-      <script type="text/javascript">
-        $(function()
-        {
-        	$('.date-pick').datePicker({clickInput:true});
-        });
-      </script>
-  </head>
-  <body>
-    <h1>Welcome to the Common Thread POS</h1>
-    <p>Please login.</p>
-    <form method="post" action="/save">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>
+            Common Thread POS
+        </title>
+        <script type="text/javascript" src="/static/js/jquery.js">
+        </script>
+        <script type="text/javascript" src="/static/js/date.js">
+        </script><!--[if IE]><script type="text/javascript" src="/static/js/bgiframe.js"></script><![endif]-->
+        <script type="text/javascript" src="/static/js/datePicker.js">
+        </script>
+        <script type="text/javascript" src="/static/js/pos.js">
+        </script>
+    </head>
+    <body>
+        <h1>Common Thread POS</h1>
         <table>
-            <tr><th>Username: </th><td><input type="text" name="username" /></td></tr>
-            <tr><th>Password: </th><td><input type="password" name="password" /></td></tr>
-            <tr><td colspan="2"><input type="submit" value="Login" /></td></tr>
+            <tr><td><a href="/logout">Logout</a></td></tr>
         </table>
-    </form>
-          <!--  <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-6537413-1");
-pageTracker._trackPageview();
-} catch(err) {}</script>
-  -->
-  </body>
+    </body>
 </html>
