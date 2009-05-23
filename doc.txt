@@ -1,0 +1,3 @@
+Syntax:
+
+quantity 'x' item_code ' ' color_code

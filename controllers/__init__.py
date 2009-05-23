@@ -13,7 +13,10 @@ class MainPage(webapp.RequestHandler):
         return {}
 
 class LogoutPage(webapp.RequestHandler):
-    @sec
+    @uses_users
+    def get(self, **kwargs):
+        self.users.logout()
+        self.redirect('/')
 
 class DumpPage(webapp.RequestHandler):
     @uses_users
@@ -33,6 +36,7 @@ class DumpPage(webapp.RequestHandler):
         for i in r:
             self.response.out.write(str(i.key().id_or_name()) + "#")
             self.response.out.write(repr(i.expired) + "#")
+            self.response.out.write(repr(i.modified_on) + "#")
             self.response.out.write(i.session + "#\n")
 
 class LoginPage(webapp.RequestHandler):
@@ -43,7 +47,7 @@ class LoginPage(webapp.RequestHandler):
     @uses_users
     def post(self, **kwargs):
         if self.users.login(self.request.get('email'), self.request.get('password')):
-            self.response.out.write(repr(self.session))
+            self.redirect('/')
         else:
             return {'forward_to': self.request.get('forward_to', '/'), 'error':True}
 

@@ -7,8 +7,6 @@ def uses_session(f):
         self = args[0]
         invalid_cookie = False
         self.request.charset = None
-        #self.response.out.write(repr(self.request.cookies['sse_pos_session_key']))
-        #return
         if 'sse_pos_session_key' not in self.request.cookies:
             curr_session = Visit(expired=False, session='{}')
             curr_session.expired=False
