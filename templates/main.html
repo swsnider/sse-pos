@@ -15,7 +15,22 @@
     <body>
         <h1>Common Thread POS</h1>
         <table>
-            <tr><td><a href="/logout">Logout</a></td></tr>
+            <tr><td><a href="/trans/new">New transaction</a></td><td><a href="/logout">Logout</a></td></tr>
         </table>
+        <div id="transaction">
+            <form onsubmit="enter_item(); return false;">
+                <table style="text-align: center;">
+                    <tr><td colspan="3"><input type="text" name="item_id" id="item_id" /></td></tr>
+                    <tr><td>7</td><td>8</td><td>9</td></tr>
+                    <tr><td>4</td><td>5</td><td>6</td></tr>
+                    <tr><td>1</td><td>2</td><td>3</td></tr>
+                    <tr><td>&nbsp;</td><td>0</td><td>&nbsp;</td></tr>
+                </table>
+            </form>
+            <table id="item_list">
+                <tr><th>Item #</th><th>Item Description</th><th>price per</th><th>quantity</th><th>discount</th><th>total</th></tr>
+                
+            </table>
+        </div>
     </body>
 </html>

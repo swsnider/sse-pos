@@ -13,8 +13,22 @@ class User(db.Model):
 class Visit(db.Model):
     expired = db.BooleanProperty()
     session = db.StringProperty()
+    modified_on = db.DateTimeProperty(auto_now=True)
 
 class ItemCategory(db.Model):
     price = db.IntegerProperty()
-    description = db.TextProperty()
-    title = db.StringProperty()
+    description = db.StringProperty()
+    code = db.StringProperty()
+
+class ColorCode(db.Model):
+    discount = db.IntegerProperty()
+    color = db.StringProperty()
+    code = db.StringProperty()
+
+class LineItem(db.Model):
+    color = db.ReferenceProperty(ColorCode)
+    quantity = db.IntegerProperty()
+    category = db.ReferenceProperty(ItemCategory)
+
+class Transaction(db.Model):
+    owner = db.ReferenceProperty(User)
