@@ -3,6 +3,8 @@ from google.appengine.api import urlfetch
 
 #add models here
 
+__all__ = ['User', 'Visit', 'ItemCategory', 'ColorCode', 'LineItem', 'Transaction']
+
 class User(db.Model):
     email = db.EmailProperty()
     salt = db.StringProperty()
@@ -32,3 +34,4 @@ class LineItem(db.Model):
 
 class Transaction(db.Model):
     owner = db.ReferenceProperty(User)
+    items = db.StringListProperty() # List of str(LineItem.key())

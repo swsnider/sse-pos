@@ -4,3 +4,4 @@ def add_routes(map):
     map.connect('/logout',controller="controllers:LogoutPage")
     map.connect('/new',controller="controllers:InsertPage")
     map.connect('/dump', controller="controllers:DumpPage")
+    map.connect('/transaction', controller="controllers:TransactionPage")

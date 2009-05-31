@@ -11,25 +11,11 @@
         </script>
         <script type="text/javascript" src="/static/js/pos.js">
         </script>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                document.TextBoxMain.init_js(document);
-            });
-        </script>
     </head>
     <body>
         <h1>Common Thread POS</h1>
         <table>
-            <tr><td><a href="/trans/new">New transaction</a></td><td><a href="/logout">Logout</a></td></tr>
+            <tr><td><a href="/transaction">New transaction</a></td><td><a href="/logout">Logout</a></td></tr>
         </table>
-        <div id="transaction">
-            <applet id="text_field" name="TextBoxMain" width="150" height="25" archive="/static/misc/complicated.jar" code="com.silassnider.commonthread.pos.TextBoxMain.class" mayscript="true">
-            </applet>
-            <table id="item_list">
-                <tr><th>Item #</th><th>Item Description</th><th>Price per</th><th>Quantity</th><th>Discount</th><th>Total</th></tr>
-                <tr style="border-top: black thin solid;"><th>Tax</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$0.00</td></tr>
-                <tr><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$0.00</td></tr>
-            </table>
-        </div>
     </body>
 </html>

@@ -36,6 +36,7 @@ public class TextBoxMain extends JApplet {
 
 			@Override
 			public void keyReleased(KeyEvent arg0) {
+				if (input.getBackground() == Color.RED) input.setBackground(Color.WHITE);
 				if (arg0.getKeyCode() == KeyEvent.VK_ENTER){
 					interfaceObj.eval("process_input('" + input.getText() + "');");
 					input.setText("");
@@ -52,5 +53,8 @@ public class TextBoxMain extends JApplet {
 	
 	public void init_js(JSObject obj){
 		this.interfaceObj = obj;
+	}
+	public void show_error(){
+		this.input.setBackground(Color.RED);
 	}
 }
