@@ -1,0 +1,26 @@
+tr.odd td {
+    background-color: #C5E6DC;
+}
+
+tr.even td {
+    background-color: #F8F7DC;
+}
+
+.delete_button {
+    color: #CC7254;
+    cursor: hand;
+    text-decoration: none;
+}
+
+.add_button {
+    color: #3B2B20;
+    font-size: 200%;
+    cursor: hand;
+    text-decoration: none;
+}
+
+.edit_button {
+    color: #534C48;
+    cursor: hand;
+    text-decoration: none;
+}

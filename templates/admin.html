@@ -1,15 +1,10 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
-        <title>
-            Common Thread POS
-        </title>
-    </head>
-    <body>
+{% extends "base.html" %}
+{% block title %}Adminstration: Main Menu{% endblock %}
+{% block content %}
         <h1>Common Thread POS Admin</h1>
         <ul>
             <li><a href="/admin/category">Admin Item Types</a></li>
             <li><a href="/admin/color">Admin Colors</a></li>
             <li><a href="/admin/reports">Generate Reports</a></li>
         </ul>
-    </body>
-</html>
+{% endblock %}

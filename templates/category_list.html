@@ -1,24 +1,16 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
-        <title>
-            Common Thread POS
-        </title>
-        <link type="text/css" href="/static/css/jquery-ui.css" rel="Stylesheet" />	
-        <script type="text/javascript" src="/static/js/jquery.js">
-        </script>
-        <script type="text/javascript" src="/static/js/jquery-ui.js">
-        </script>
+{% extends "base.html" %}
+{% block title %}Adminstration: Categories{% endblock %}
+{% block scripts %}
         <script type="text/javascript" src="/static/js/category_list.js">
         </script>
-    </head>
-    <body>
-        <h1>Common Thread POS Admin::Color Codes</h1>
+{% endblock %}
+{% block content %}
+        <h1>Common Thread POS Admin::Categories</h1>
         <table>
             <tr><th>Category description</th><th>Price</th><th>Code</th></tr>
         {% for category in categories %}
-            <tr id="{{category.key()}}"><td>{{ category.description }}</td><td>${{ category.price }}</td><td>{{ category.code }}</td><td><a onclick="delete_category('{{category.key()}}');" style="color: red;">X</a></td><td><a onclick="edit_row('{{category.key()}}');" style="color: green;">edit</a></td></tr>
+            <tr class="{{ loop.cycle('odd', 'even') }}" id="{{category.key()}}"><td>{{ category.description }}</td><td>${{ category.price }}</td><td>{{ category.code }}</td><td><a onclick="delete_category('{{category.key()}}');" class="delete_button"  href="#">X</a></td><td><a onclick="edit_row('{{category.key()}}');" class="edit_button" href="#">edit</a></td></tr>
         {% endfor %}
-            <tr id="add_new"><td colspan="3"><a onclick="add_category();" style="color: blue">+</a></tr>
+            <tr id="add_new"><td colspan="3"><a onclick="add_category();" class="add_button"  href="#">+</a></tr>
         </table>
-    </body>
-</html>
+{% endblock %}

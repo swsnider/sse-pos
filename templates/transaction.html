@@ -1,10 +1,6 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
-        <title>
-            Common Thread POS
-        </title>
-        <script type="text/javascript" src="/static/js/jquery.js">
-        </script>
+{% extends "base.html" %}
+{% block title %}Start/Continue Sale{% endblock %}
+{% block scripts %}
         <script type="text/javascript" src="/static/js/transaction.js">
         </script>
         <script type="text/javascript">
@@ -12,19 +8,18 @@
                 document.TextBoxMain.init_js(document);
             });
         </script>
-    </head>
-    <body>
+{% endblock %}
+{% block content %}
         <h1>Common Thread POS</h1>
         <applet id="text_field" name="TextBoxMain" width="150" height="25" archive="/static/misc/complicated.jar" code="com.silassnider.commonthread.pos.TextBoxMain.class" mayscript="true">
         </applet><img src="/static/images/ajax-loader.gif" id="spinner" style="display: none;" />
         <table id="item_list">
             <tr id="head_row"><th>Item #</th><th>Item Description</th><th>Price per</th><th>Quantity</th><th>Discount</th><th>Total</th></tr>
             {% for i in items %}
-            <tr><td>{{ i.category.code }}</td><td>{{ i.category.description }}</td><td>${{ i.category.price }}</td><td>{{i.quantity}}</td><td>{{ i.color.discount }}</td><td>${{ i.total_str() }}</td></tr>
+            <tr class="{{ loop.cycle('odd', 'even') }}"><td>{{ i.category.code }}</td><td>{{ i.category.description }}</td><td>${{ i.category.price }}</td><td>{{i.quantity}}</td><td>{{ i.color.discount }}</td><td>${{ i.total_str() }}</td></tr>
             {% endfor %}
             <tr id="tax_row" style="border-top: black thin solid;"><th>Tax</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>0%</td></tr>
             <tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>${{ grand_total }}</td></tr>
             <tr><td><button onclick="cancel_trans();">Cancel</button></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><button onclick="finalize_trans();">Finalize</button></td></tr>
         </table>
-    </body>
-</html>
+{% endblock %}

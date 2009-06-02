@@ -1,0 +1,23 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        {% block head %}
+        <title>{% block title %}{% endblock %} - Common Thread POS</title>
+        <link type="text/css" href="/static/css/jquery-ui.css" rel="Stylesheet" />
+        <link type="text/css" href="/static/css/main.css" rel="Stylesheet" />
+        <script type="text/javascript" src="/static/js/jquery.js">
+        </script>
+        <script type="text/javascript" src="/static/js/jquery-ui.js">
+        </script>
+        {% block scripts %}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        <table>
+            <tr><td><a href="/transaction">Start/Continue Sale</a></td><td><a href="/admin">Administration Menu</a></td><td><a href="/logout">Logout</a></td>
+        </table>
+        {% block content %}
+        <h1>Common Thread POS</h1>
+        {% endblock %}
+        <p>Created by Silas Snider <img src="/static/images/beard_icon.png" height="16" width="16"/></p>
+    </body>
+</html>

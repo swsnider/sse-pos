@@ -1,13 +1,5 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
-        <title>
-            Common Thread POS
-        </title>
-    </head>
-    <body>
+{% extends "base.html" %}
+{% block title %}Main{% endblock %}
+{% block content %}
         <h1>Common Thread POS</h1>
-        <table>
-            <tr><td><a href="/transaction">Transactions</a></td>{% if user.is_admin %}<td><a href="/admin">Administration</a></td>{% endif %}<td><a href="/logout">Logout</a></td></tr>
-        </table>
-    </body>
-</html>
+{% endblock %}
