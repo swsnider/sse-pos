@@ -1,5 +1,6 @@
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 import os
+import simplejson as json
 from auth_layer import uses_users
 
 def render_template(name, template_values):
@@ -23,9 +24,25 @@ def secure(f):
             args[0].redirect("/login")
     return g
 
+def admin_only(f):
+    @uses_users
+    def g(*args, **kwargs):
+        current_user = args[0].users.get_current_user()
+        if current_user != None and current_user.is_admin:
+            return f(*args, **kwargs)
+        else:
+            args[0].redirect("/denied")
+    return g
+
 def tg_template(name):
     def h(f):
         def g(*args, **kwargs):
             args[0].response.out.write(render_template(name, f(*args, **kwargs)))
         return g
     return h
+
+def jsonify(f):
+    def g(*args, **kwargs):
+        self = args[0]
+        self.response.out.write(json.dumps(f(*args, **kwargs)))
+    return g

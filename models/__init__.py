@@ -11,6 +11,7 @@ class User(db.Model):
     password = db.StringProperty()
     first_name = db.StringProperty()
     last_name = db.StringProperty()
+    is_admin = db.BooleanProperty(default=False)
 
 class Visit(db.Model):
     expired = db.BooleanProperty()

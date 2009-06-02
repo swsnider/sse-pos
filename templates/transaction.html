@@ -9,7 +9,7 @@
         </script><!--[if IE]><script type="text/javascript" src="/static/js/bgiframe.js"></script><![endif]-->
         <script type="text/javascript" src="/static/js/datePicker.js">
         </script>
-        <script type="text/javascript" src="/static/js/pos.js">
+        <script type="text/javascript" src="/static/js/transaction.js">
         </script>
         <script type="text/javascript">
             $(document).ready(function(){
@@ -23,7 +23,7 @@
         </applet><img src="/static/images/ajax-loader.gif" id="spinner" style="display: none;" />
         <table id="item_list">
             <tr id="head_row"><th>Item #</th><th>Item Description</th><th>Price per</th><th>Quantity</th><th>Discount</th><th>Total</th></tr>
-            <tr id="tax_row" style="border-top: black thin solid;"><th>Tax</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$0.00</td></tr>
+            <tr id="tax_row" style="border-top: black thin solid;"><th>Tax</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>0%</td></tr>
             <tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$0.00</td></tr>
             <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><button onclick="finalize_trans();">Finalize</button></td></tr>
         </table>

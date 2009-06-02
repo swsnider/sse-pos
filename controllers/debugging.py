@@ -1,11 +1,12 @@
-from models import User, Visit
+from models import *
 from google.appengine.ext import webapp
 from auth_layer import uses_users
 import hashlib
+from util import jsonify, secure
 
-class DumpPage(webapp.RequestHandler):
+class DebuggingPages(webapp.RequestHandler):
     @uses_users
-    def get(self, **kwargs):
+    def dump(self, **kwargs):
         r = User.all().fetch(1000)
         for i in r:
             self.response.out.write(str(i.key().id_or_name()) + "#")
@@ -23,9 +24,20 @@ class DumpPage(webapp.RequestHandler):
             self.response.out.write(repr(i.expired) + "#")
             self.response.out.write(repr(i.modified_on) + "#")
             self.response.out.write(i.session + "#\n")
-
-class InsertPage(webapp.RequestHandler):
-    def get(self, **kwargs):
+    @jsonify
+    def insert_item(self, **kwargs):
+        i = ItemCategory()
+        i.price=7
+        i.code="j"
+        i.description = 'A small, plain, red-colored, letter J'
+        i.put()
+        c = ColorCode()
+        c.code = 'r'
+        c.color = 'Red'
+        c.discount = 7
+        c.put()
+        return {}
+    def new(self, **kwargs):
         h = hashlib.sha512()
         h.update("silas")
         h.update("qwe")
@@ -37,3 +49,10 @@ class InsertPage(webapp.RequestHandler):
         u.last_name="Snider"
         u.put()
         self.redirect('/')
+    @secure
+    @jsonify
+    def make_admin(self, **kwargs):
+        u = self.users.get_current_user()
+        u.is_admin = True
+        u.put()
+        return {}
