@@ -7,7 +7,7 @@ from auth_layer import uses_users
 from models import User, Visit
 from debugging import DebuggingPages
 from transactions import TransactionPage, TransactionAPI
-from admin import AdminPages, ColorAPI, CategoryAPI
+from admin import AdminPages, ColorAPI, CategoryAPI, UserAPI, UserPages
 
 #'Core' controller
 

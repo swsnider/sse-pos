@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Adminstration: Users{% endblock %}
+{% block scripts %}
+        <script type="text/javascript" src="/static/js/user_list.js">
+        </script>
+{% endblock %}
+{% block content %}
+        <h1>Common Thread POS Admin::Users</h1>
+        <table>
+            <tr><th>Email</th><th>Name</th></tr>
+        {% for user in users %}
+            <tr class="{{ loop.cycle('odd', 'even') }}" id="{{user.key()}}"><td>{{ user.email }}</td><td>{{ user.first_name }} {{user.last_name}}</td><td><a onclick="delete_color('{{user.key()}}');" class="delete_button">X</a></td><td><a class="edit_button" href="/admin/user/edit?key={{user.key()}}">edit</a></td></tr>
+        {% endfor %}
+            <tr id="add_new"><td colspan="3"><a href="/admin/user/add" class="add_button">+</a></tr>
+        </table>
+{% endblock %}

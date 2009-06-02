@@ -1,5 +1,5 @@
 from models import *
-import traceback, urllib
+import traceback, urllib, hashlib
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
 from util import admin_only, secure, tg_template, jsonify
@@ -23,6 +23,90 @@ class AdminPages(webapp.RequestHandler):
     @tg_template('unimplemented.html')
     def reports(self, **kwargs):
         return dict(return_url="/admin")
+    
+    @admin_only
+    @tg_template('user_list.html')
+    def user(self, **kwargs):
+        return dict(users=User.all().fetch(1000))
+
+class UserPages(webapp.RequestHandler):
+    def index(self, **kwargs):
+        self.redirect("/admin/user")
+
+    @admin_only
+    @tg_template("add_user.html")
+    def add(self, **kwargs):
+        return {}
+    
+    @admin_only
+    @tg_template("edit_user.html")
+    def edit(self, **kwargs):
+        try:
+            u = User.get(Key(encoded=self.request.get('key')))
+            return dict(user=u)
+        except:
+            self.redirect("/admin/user")
+    
+    
+    @admin_only
+    def do_edit(self, **kwargs):
+        try:
+            u = User.get(Key(encoded=self.request.get('key')))
+            email = urllib.unquote_plus(self.request.get('email'))
+            first_name = urllib.unquote_plus(self.request.get('first_name'))
+            last_name = urllib.unquote_plus(self.request.get('last_name'))
+            password = urllib.unquote_plus(self.request.get('password'))
+            is_admin = urllib.unquote_plus(self.request.get('is_admin'))
+            u.email = email
+            u.first_name = first_name
+            u.last_name = last_name
+            if is_admin == "True":
+                u.is_admin = True
+            else:
+                u.is_admin = False
+            if password != "****":
+                h = hashlib.sha512()
+                u.salt = email
+                h.update(password)
+                h.update(email)
+                u.password=h.hexdigest()
+            u.put()
+        except:
+            pass
+        self.redirect("/admin/user")        
+    @admin_only
+    def do_add(self, **kwargs):
+        email = urllib.unquote_plus(self.request.get('email'))
+        first_name = urllib.unquote_plus(self.request.get('first_name'))
+        last_name = urllib.unquote_plus(self.request.get('last_name'))
+        password = urllib.unquote_plus(self.request.get('password'))
+        is_admin = urllib.unquote_plus(self.request.get('is_admin'))
+        u = User()
+        u.salt = email
+        u.email = email
+        u.first_name = first_name
+        u.last_name = last_name
+        if is_admin == "True":
+            u.is_admin = True
+        else:
+            u.is_admin = False
+        h = hashlib.sha512()
+        h.update(password)
+        h.update(email)
+        u.password=h.hexdigest()
+        u.put()
+        self.redirect("/admin/user")
+
+class UserAPI(webapp.RequestHandler):
+    @admin_only
+    @jsonify
+    def delete(self, **kwargs):
+        try:
+            c = User.get(Key(encoded=self.request.get('key')))
+            c.delete()
+            return dict(valid=True)
+        except:
+            return dict(valid=False, failure=traceback.format_exc())
 
 class ColorAPI(webapp.RequestHandler):
     @admin_only
