@@ -15,7 +15,7 @@ class GenericPages(webapp.RequestHandler):
     @secure
     @tg_template("main.html")
     def index(self, **kwargs):
-        return {}
+        return {'user': self.users.get_current_user()}
     
     @uses_users
     def logout(self, **kwargs):

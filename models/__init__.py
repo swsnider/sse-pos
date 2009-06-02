@@ -32,6 +32,10 @@ class LineItem(db.Model):
     color = db.ReferenceProperty(ColorCode)
     quantity = db.IntegerProperty()
     category = db.ReferenceProperty(ItemCategory)
+    def total(self):
+        return self.category.price*int(self.quantity)*((100 + self.color.discount)/100.0)
+    def total_str(self):
+        return "%#.2f" % self.total()
 
 class Transaction(db.Model):
     owner = db.ReferenceProperty(User)

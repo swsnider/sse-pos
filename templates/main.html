@@ -7,7 +7,7 @@
     <body>
         <h1>Common Thread POS</h1>
         <table>
-            <tr><td><a href="/transaction">New transaction</a></td><td><a href="/logout">Logout</a></td></tr>
+            <tr><td><a href="/transaction">Transactions</a></td>{% if user.is_admin %}<td><a href="/admin">Administration</a></td>{% endif %}<td><a href="/logout">Logout</a></td></tr>
         </table>
     </body>
 </html>
