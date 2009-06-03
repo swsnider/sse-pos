@@ -17,44 +17,49 @@ import netscape.javascript.JSObject;
 
 /**
  * @author Silas Snider
- *
+ * 
  */
 public class TextBoxMain extends JApplet {
 	JTextField input;
 	JSObject interfaceObj;
-	public void init(){
+
+	public void init() {
 		setBackground(Color.white);
 		input = new JTextField();
 		input.setColumns(20);
-		input.addKeyListener(new KeyListener(){
+		input.addKeyListener(new KeyListener() {
 
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-				
+			public void keyTyped(KeyEvent arg0) {
 			}
 
-			@Override
-			public void keyReleased(KeyEvent arg0) {
-				if (input.getBackground() == Color.RED) input.setBackground(Color.WHITE);
-				if (arg0.getKeyCode() == KeyEvent.VK_ENTER){
-					interfaceObj.eval("process_input('" + input.getText() + "');");
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void keyReleased(KeyEvent e) {
+				if (input.getBackground() == Color.RED)
+					input.setBackground(Color.WHITE);
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					interfaceObj.eval("process_input('" + input.getText()
+							+ "');");
 					input.setText("");
 				}
 			}
 
-			@Override
-			public void keyTyped(KeyEvent arg0) {
-			}
-			
 		});
 		add(input);
 	}
-	
-	public void init_js(JSObject obj){
+
+	public void init_js(JSObject obj) {
 		this.interfaceObj = obj;
 	}
-	public void show_error(){
+
+	public void show_error() {
 		this.input.setBackground(Color.RED);
+	}
+
+	public void add_chars(String new_char) {
+		input.setText(input.getText() + new_char);
 	}
 }

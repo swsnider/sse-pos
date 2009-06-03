@@ -33,7 +33,7 @@ class LineItem(db.Model):
     quantity = db.IntegerProperty()
     category = db.ReferenceProperty(ItemCategory)
     def total(self):
-        return self.category.price*int(self.quantity)*((100 + self.color.discount)/100.0)
+        return self.category.price*int(self.quantity)*((100 - self.color.discount)/100.0)
     def total_str(self):
         return "%#.2f" % self.total()
 

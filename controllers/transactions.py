@@ -19,7 +19,7 @@ class TransactionPage(webapp.RequestHandler):
         grand_total = 0
         for i in items:
             grand_total += i.total()
-        return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total)
+        return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all().fetch(1000), itemtypes=ItemCategory.all().fetch(1000))
 
 class TransactionAPI(webapp.RequestHandler):
     @secure
@@ -49,7 +49,7 @@ class TransactionAPI(webapp.RequestHandler):
             for i in trans.items:
                 j = LineItem.get(Key(encoded=i))
                 grand_total += j.total()
-            total = category.price*int(quantity)*((100 + color.discount)/100.0)
+            total = category.price*int(quantity)*((100 - color.discount)/100.0)
             html = """<tr><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td></tr>""" % {'item_id': str(cat_code), 'description': str(category.description), 'price': str(category.price), 'quantity': str(quantity), 'discount':str(color.discount), 'total': total}
             return {'valid':True, 'html':html, 'total_row':"""<tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$%s</td></tr>""" %(str(grand_total)), 'sess':repr(self.session)}
         except:
