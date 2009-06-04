@@ -21,7 +21,6 @@ import netscape.javascript.JSObject;
  */
 public class TextBoxMain extends JApplet {
 	JTextField input;
-	JSObject interfaceObj;
     TextBoxMain me;
 
 	public void init() {
@@ -43,23 +42,12 @@ public class TextBoxMain extends JApplet {
 				if (input.getBackground() == Color.RED)
 					input.setBackground(Color.WHITE);
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					JSObject interfac = JSObject.getWindow(me);
-					interfac.call("process_input", new String[]{input.getText()});
-					/*interfaceObj.eval("alert('" + input.getText()
-							+ "');");
-					interfaceObj.eval("process_input('" + input.getText()
-							+ "');");*/
-					input.setText("");
+					commit();
 				}
-				//input.setText("" + KeyEvent.VK_ENTER + "|" + e.getKeyCode());
 			}
 
 		});
 		add(input);
-	}
-
-	public void init_js(JSObject obj) {
-		this.interfaceObj = obj;
 	}
 
 	public void show_error() {
@@ -68,5 +56,17 @@ public class TextBoxMain extends JApplet {
 
 	public void add_chars(String new_char) {
 		input.setText(input.getText() + new_char);
+	}
+	
+	public String get_text(){
+		return input.getText();
+	}
+	public void set_text(String text){
+		input.setText(text);
+	}
+	public void commit(){
+		JSObject interfac = JSObject.getWindow(me);
+		interfac.call("process_input", new String[]{input.getText()});
+		input.setText("");
 	}
 }
