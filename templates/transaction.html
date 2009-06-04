@@ -26,11 +26,11 @@
             <table style="border-left: solid black thin; border-collapse:collapse;">
                 <tr><th>Items</th><th>Description</th><th>Code</th></tr>
                 {% for i in itemtypes %}
-                <tr class="{{loop.cycle('odd','even')}}"><td>&nbsp;</td><td>{{ i.description }}</td><td>{{ i.code }}</td></tr>
+                <tr onclick="enter_item('{{i.code}}')" class="{{loop.cycle('odd','even')}}"><td>&nbsp;</td><td>{{ i.description }}</td><td>{{ i.code }}</td></tr>
                 {% endfor %}
                 <tr><th>Tag Names</th><th>Color</th><th>Code</th></tr>
                 {% for c in colors %}
-                <tr class="{{loop.cycle('odd','even')}}"><td>&nbsp;</td><td>{{ c.color }}</td><td>{{ c.code }}</td></tr>
+                <tr onclick="enter_color('{{c.code}}')" class="{{loop.cycle('odd','even')}}"><td>&nbsp;</td><td>{{ c.color }}</td><td>{{ c.code }}</td></tr>
                 {% endfor %}
             </table>
         </td>

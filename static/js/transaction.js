@@ -63,3 +63,12 @@ function finalize_trans(){
         }
     });
 }
+
+
+function enter_item(code){
+    document.TextBoxMain.set_text(code);
+}
+function enter_color(code){
+    document.TextBoxMain.add_chars(" "+code);
+    document.TextBoxMain.commit();
+}

@@ -24,3 +24,7 @@ tr.even td {
     cursor: hand;
     text-decoration: none;
 }
+
+.clickable {
+    cursor: hand;
+}

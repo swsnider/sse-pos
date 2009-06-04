@@ -36,7 +36,10 @@ class TransactionAPI(webapp.RequestHandler):
             t = self.request.get('data')
             item = LineItem()
             l = t.split()
-            quantity, cat_code, color = l[0], l[1], l[2]
+            if len(l) == 2:
+                quantity, cat_code, color = 1, l[0], l[1]
+            else:
+                quantity, cat_code, color = l[0], l[1], l[2]
             item.quantity = int(quantity)
             color = ColorCode.all().filter('code =', color).fetch(1)[0]
             category = ItemCategory.all().filter('code =', cat_code).fetch(1)[0]
