@@ -34,6 +34,16 @@ def admin_only(f):
             args[0].redirect("/denied")
     return g
 
+def developer_only(f):
+    @uses_users
+    def g(*args, **kwargs):
+        current_user = args[0].users.get_current_user()
+        if current_user != None and current_user.is_developer:
+            return f(*args, **kwargs)
+        else:
+            args[0].redirect("/denied")
+    return g
+
 def tg_template(name):
     def h(f):
         def g(*args, **kwargs):

@@ -1,10 +1,16 @@
 from models import *
+from datetime import datetime
 from google.appengine.ext import webapp
 from auth_layer import uses_users
 import hashlib
 from util import jsonify, secure
 
 class DebuggingPages(webapp.RequestHandler):
+    def add_dates(self, **kwargs):
+        trans = Transaction.all().fetch(1000)
+        for t in trans:
+            t.created_on = datetime.now()
+            t.put()
     @uses_users
     def dump(self, **kwargs):
         r = User.all().fetch(1000)

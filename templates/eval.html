@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Adminstration: Eval (Developers only!!!){% endblock %}
+{% block content %}
+        <h1>Common Thread POS Admin</h1>
+        <form method="post" action="/admin/do_eval">
+			<textbox name="code"></textbox><input type="submit" value="Evaluate code" />
+		</form>
+{% endblock %}

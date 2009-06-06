@@ -1,8 +1,9 @@
 from models import *
+from datetime import datetime, date
 import traceback, urllib, hashlib
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
-from util import admin_only, secure, tg_template, jsonify
+from util import admin_only, developer_only, secure, tg_template, jsonify
 
 class AdminPages(webapp.RequestHandler):
     @admin_only
@@ -28,6 +29,32 @@ class AdminPages(webapp.RequestHandler):
     @tg_template('user_list.html')
     def user(self, **kwargs):
         return dict(users=User.all().fetch(1000))
+    
+    @admin_only
+    @tg_template('stats.html')
+    def stats(self, **kwargs):
+        ts = Transaction.all().filter('created_on >=', date.today()).fetch(1000)
+        our_total = 0
+        our_count = 0
+        for i in ts:
+            if i.items is None or len(i.items) == 0:
+                continue
+            our_count += 1
+            for k in i.items:
+                j = LineItem.get(Key(encoded=k))
+                our_total += j.total()
+        return dict(sales_today=our_count, sales_today_total=our_total)
+    
+    @developer_only
+    @tg_template('eval.html')
+    def eval(self, **kwargs):
+        return {}
+    
+    @developer_only
+    @jsonify
+    def do_eval(self, **kwargs):
+        code = urllib.unquote_plus(self.request.get('code'))
+        return {'evalResult': eval(code), 'errors': traceback.format_exc()}
 
 class UserPages(webapp.RequestHandler):
     def index(self, **kwargs):
@@ -64,6 +91,10 @@ class UserPages(webapp.RequestHandler):
                 u.is_admin = True
             else:
                 u.is_admin = False
+            if is_developer == "True":
+                u.is_developer = True
+            else:
+                u.is_developer = False
             if password != "****":
                 h = hashlib.sha512()
                 u.salt = email
@@ -90,6 +121,10 @@ class UserPages(webapp.RequestHandler):
             u.is_admin = True
         else:
             u.is_admin = False
+        if is_developer == "True":
+            u.is_developer = True
+        else:
+            u.is_developer = False
         h = hashlib.sha512()
         h.update(password)
         h.update(email)

@@ -12,6 +12,7 @@ class User(db.Model):
     first_name = db.StringProperty()
     last_name = db.StringProperty()
     is_admin = db.BooleanProperty(default=False)
+    is_developer = db.BooleanProperty(default=False)
 
 class Visit(db.Model):
     expired = db.BooleanProperty()
@@ -40,3 +41,4 @@ class LineItem(db.Model):
 class Transaction(db.Model):
     owner = db.ReferenceProperty(User)
     items = db.StringListProperty() # List of str(LineItem.key())
+    created_on = db.DateTimeProperty(auto_now_add=True)

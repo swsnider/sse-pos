@@ -15,6 +15,11 @@ class TransactionPage(webapp.RequestHandler):
             self.session['transaction_key'] = str(trans.key())
         else:
             trans = Transaction.get(Key(encoded=self.session['transaction_key']))
+            if trans is None:
+                trans = Transaction()
+                trans.owner = self.users.get_current_user()
+                trans.put()
+                self.session['transaction_key'] = str(trans.key())
         items = [LineItem.get(Key(encoded=i)) for i in trans.items]
         grand_total = 0
         for i in items:
