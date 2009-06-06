@@ -54,5 +54,10 @@ def tg_template(name):
 def jsonify(f):
     def g(*args, **kwargs):
         self = args[0]
-        self.response.out.write(json.dumps(f(*args, **kwargs)))
+        retval = f(*args, **kwargs)
+        #if type(retval) == type(dict()):
+        #    for i in retval.keys():
+        #        if i.startswith('__sse_pos'):
+        #            del retval[i]
+        self.response.out.write(json.dumps(retval))
     return g

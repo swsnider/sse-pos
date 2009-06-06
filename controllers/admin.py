@@ -6,32 +6,37 @@ from google.appengine.ext.db import Key
 from util import admin_only, developer_only, secure, tg_template, jsonify
 
 class AdminPages(webapp.RequestHandler):
-    @admin_only
+    
     @tg_template('admin.html')
+    @admin_only
     def index(self, **kwargs):
         return {}
     
-    @admin_only
     @tg_template('category_list.html')
+    @admin_only
     def category(self, **kwargs):
         return dict(categories=ItemCategory.all().fetch(1000))
-    @admin_only
+    
     @tg_template('color_list.html')
+    @admin_only
     def color(self, **kwargs):
         return dict(colors=ColorCode.all().fetch(1000))
     
-    @admin_only
+    
     @tg_template('unimplemented.html')
+    @admin_only
     def reports(self, **kwargs):
         return dict(return_url="/admin")
     
-    @admin_only
+    
     @tg_template('user_list.html')
+    @admin_only
     def user(self, **kwargs):
         return dict(users=User.all().fetch(1000))
     
-    @admin_only
+    
     @tg_template('stats.html')
+    @admin_only
     def stats(self, **kwargs):
         ts = Transaction.all().filter('created_on >=', date.today()).fetch(1000)
         our_total = 0
@@ -45,13 +50,15 @@ class AdminPages(webapp.RequestHandler):
                 our_total += j.total()
         return dict(sales_today=our_count, sales_today_total=our_total)
     
-    @developer_only
+    
     @tg_template('eval.html')
+    @developer_only
     def eval(self, **kwargs):
         return {}
     
-    @developer_only
+    
     @jsonify
+    @developer_only
     def do_eval(self, **kwargs):
         code = urllib.unquote_plus(self.request.get('code'))
         return {'evalResult': eval(code), 'errors': traceback.format_exc()}
@@ -60,13 +67,15 @@ class UserPages(webapp.RequestHandler):
     def index(self, **kwargs):
         self.redirect("/admin/user")
 
-    @admin_only
+    
     @tg_template("add_user.html")
+    @admin_only
     def add(self, **kwargs):
         return {}
     
-    @admin_only
+    
     @tg_template("edit_user.html")
+    @admin_only
     def edit(self, **kwargs):
         try:
             u = User.get(Key(encoded=self.request.get('key')))
@@ -133,8 +142,9 @@ class UserPages(webapp.RequestHandler):
         self.redirect("/admin/user")
 
 class UserAPI(webapp.RequestHandler):
-    @admin_only
+    
     @jsonify
+    @admin_only
     def delete(self, **kwargs):
         try:
             c = User.get(Key(encoded=self.request.get('key')))
@@ -144,8 +154,9 @@ class UserAPI(webapp.RequestHandler):
             return dict(valid=False, failure=traceback.format_exc())
 
 class ColorAPI(webapp.RequestHandler):
-    @admin_only
+    
     @jsonify
+    @admin_only
     def delete(self, **kwargs):
         try:
             c = ColorCode.get(Key(encoded=self.request.get('key')))
@@ -153,15 +164,17 @@ class ColorAPI(webapp.RequestHandler):
             return dict(valid=True)
         except:
             return dict(valid=False, failure=traceback.format_exc())
-    @admin_only
+    
     @jsonify
+    @admin_only
     def new_blank(self, **kwargs):
         c = ColorCode()
         c.put()
         return dict(valid=True, html="""<tr id="%(key)srow"><td><input type="text" id="%(key)scolor" /></td><td><input type="text" id="%(key)sdiscount" />%%</td><td><input type="text" id="%(key)scode" /></td><td><button onclick="commit_row('%(key)s');">Commit</button></td></tr>""" % {"key": str(c.key())})
     
-    @admin_only
+    
     @jsonify
+    @admin_only
     def update(self, **kwargs):
         try:
             c = ColorCode.get(Key(encoded=self.request.get('key')))
@@ -173,15 +186,17 @@ class ColorAPI(webapp.RequestHandler):
         except:
             return dict(valid=False, failure=traceback.format_exc())
     
-    @admin_only
+    
     @jsonify
+    @admin_only
     def edit(self, **kwargs):
         c = ColorCode.get(Key(encoded=self.request.get('key')))
         return dict(valid=True, html="""<tr id="%(key)srow"><td><input type="text" id="%(key)scolor" value="%(color)s"/></td><td><input type="text" id="%(key)sdiscount" value="%(discount)s"/>%%</td><td><input type="text" id="%(key)scode" value="%(code)s"/></td><td><button onclick="commit_row('%(key)s');">Commit</button></td></tr>""" % {"key": str(c.key()), 'discount': str(c.discount), 'color': str(c.color), 'code': str(c.code)})
 
 class CategoryAPI(webapp.RequestHandler):
-    @admin_only
+    
     @jsonify
+    @admin_only
     def delete(self, **kwargs):
         try:
             c = ItemCategory.get(Key(encoded=self.request.get('key')))
@@ -189,15 +204,17 @@ class CategoryAPI(webapp.RequestHandler):
             return dict(valid=True)
         except:
             return dict(valid=False, failure=traceback.format_exc())
-    @admin_only
+    
     @jsonify
+    @admin_only
     def new_blank(self, **kwargs):
         c = ItemCategory()
         c.put()
         return dict(valid=True, html="""<tr id="%(key)srow"><td><input type="text" id="%(key)sdescription" /></td><td>$<input type="text" id="%(key)sprice" /></td><td><input type="text" id="%(key)scode" /></td><td><button onclick="commit_row('%(key)s');">Commit</button></td></tr>""" % {"key": str(c.key())})
     
-    @admin_only
+    
     @jsonify
+    @admin_only
     def update(self, **kwargs):
         try:
             c = ItemCategory.get(Key(encoded=self.request.get('key')))
@@ -209,8 +226,9 @@ class CategoryAPI(webapp.RequestHandler):
         except:
             return dict(valid=False, failure=traceback.format_exc())
     
-    @admin_only
+    
     @jsonify
+    @admin_only
     def edit(self, **kwargs):
         c = ItemCategory.get(Key(encoded=self.request.get('key')))
         return dict(valid=True, html="""<tr id="%(key)srow"><td><input type="text" id="%(key)sdescription" value="%(description)s"/></td><td>$<input type="text" id="%(key)sprice" value="%(price)s"/></td><td><input type="text" id="%(key)scode" value="%(code)s"/></td><td><button onclick="commit_row('%(key)s');">Commit</button></td></tr>""" % {"key": str(c.key()), 'price': str(c.price), 'description': str(c.description), 'code': str(c.code)})

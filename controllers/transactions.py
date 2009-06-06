@@ -5,8 +5,9 @@ from google.appengine.ext.db import Key
 from util import secure, tg_template, jsonify
 
 class TransactionPage(webapp.RequestHandler):
-    @secure
+    
     @tg_template("transaction.html")
+    @secure
     def index(self, **kwargs):
         if 'transaction_key' not in self.session:
             trans = Transaction()
@@ -27,8 +28,9 @@ class TransactionPage(webapp.RequestHandler):
         return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all().fetch(1000), itemtypes=ItemCategory.all().fetch(1000))
 
 class TransactionAPI(webapp.RequestHandler):
-    @secure
+    
     @jsonify
+    @secure
     def add_item(self, **kwargs):
         try:
             if 'transaction_key' not in self.session:
@@ -106,8 +108,9 @@ class TransactionAPI(webapp.RequestHandler):
         except:
             return {'valid':False, 'payload':traceback.format_exc()}
     
-    @secure
+    
     @jsonify
+    @secure
     def finalize_step_1(self, **kwargs):
         try:
             if 'transaction_key' not in self.session:
@@ -122,8 +125,9 @@ class TransactionAPI(webapp.RequestHandler):
         except:
             return {'valid': False, 'is_error':True, 'payload':traceback.format_exc()}
     
-    @secure
+    
     @jsonify
+    @secure
     def finalize_step_2(self, **kwargs):
         try:
             if 'transaction_key' not in self.session:
@@ -143,8 +147,9 @@ class TransactionAPI(webapp.RequestHandler):
         except:
             return {'valid': False, 'is_error': True, 'payload':traceback.format_exc()}
     
-    @secure
+    
     @jsonify
+    @secure
     def cancel(self, **kwargs):
         try:
             if 'transaction_key' not in self.session:
@@ -156,8 +161,9 @@ class TransactionAPI(webapp.RequestHandler):
             return {'valid':True, 'is_error': False}
         except:
             return {'valid': False, 'is_error': True, 'payload':traceback.format_exc()}
-    @secure
+    
     @jsonify
+    @secure
     def void_item(self, **kwargs):
         try:
             if 'transaction_key' not in self.session:

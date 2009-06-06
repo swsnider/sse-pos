@@ -8,5 +8,6 @@
             <li><a href="/admin/user">Admin Users</a></li>
             <li><a href="/admin/reports">Generate Reports</a></li>
 			<li><a href="/admin/stats">Sales Statistics</a></li>
+			{% if user.is_developer %}<li><a href="/admin/eval">Python Eval (!!!)</a></li>{% endif %}
         </ul>
 {% endblock %}
