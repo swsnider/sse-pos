@@ -34,8 +34,12 @@ class LineItem(db.Model):
     quantity = db.IntegerProperty()
     category = db.ReferenceProperty(ItemCategory)
     misc_amount = db.IntegerProperty(default=0)
+    misc_discount = db.IntegerProperty(default=0)
     def total(self):
-        return (self.category.price*int(self.quantity)*((100 - self.color.discount)/100.0)) + self.misc_amount
+        if self.color.discount == 0:
+            return (self.category.price*int(self.quantity)*((100 - self.misc_discount)/100.0)) + self.misc_amount
+        else:
+            return (self.category.price*int(self.quantity)*((100 - self.color.discount)/100.0)) + self.misc_amount
     def total_str(self):
         return "%#.2f" % self.total()
 

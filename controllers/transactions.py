@@ -49,7 +49,7 @@ class TransactionAPI(webapp.RequestHandler):
                 if misc is None:
                     misc = ItemCategory()
                     misc.description = 'MISC'
-                    misc.code = ''
+                    misc.code = '$$$'
                     misc.price = 0
                     misc.put()
                 item.category = misc
@@ -70,13 +70,24 @@ class TransactionAPI(webapp.RequestHandler):
                 else:
                     quantity, cat_code, color = l[0], l[1], l[2]
                 item.quantity = int(quantity)
-                color = ColorCode.all().filter('code =', color).fetch(1)[0]
+                if color.startswith('%'):
+                    #custom precentage handler
+                    item.misc_discount = int(color[1:])
+                    color = ColorCode.all().filter('color =', 'CUSTOM').get()
+                    if color == None:
+                        color = ColorCode()
+                        color.color = 'CUSTOM'
+                        color.code = '%%%'
+                        color.discount = 0
+                        color.put()
+                else:                
+                    color = ColorCode.all().filter('code =', color).fetch(1)[0]
                 category = ItemCategory.all().filter('code =', cat_code).fetch(1)[0]
                 item.color = color
                 item.category = category
                 item.put()
                 trans.items.append(str(item.key()))
-                total = category.price*int(quantity)*((100 - color.discount)/100.0)
+                total = item.total()
                 html = """<tr><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td></tr>""" % {'item_id': str(cat_code), 'description': str(category.description), 'price': str(category.price), 'quantity': str(quantity), 'discount':str(color.discount), 'total': total}
             trans.put()
             grand_total = 0
