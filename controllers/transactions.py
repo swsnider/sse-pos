@@ -65,7 +65,7 @@ class TransactionAPI(webapp.RequestHandler):
                     class_val = 'even'
                 else:
                     class_val = 'odd'
-                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(item.category.code), 'description': str(item.category.description), 'price': str(price), 'quantity': str(1), 'discount':str(item.color.discount), 'total': item.total_str(), "class":class_val}
+                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(item.category.code), 'description': str(item.category.description), 'price': str(price), 'quantity': str(1), 'discount':str(item.get_discount()), 'total': item.total_str(), "class":class_val}
             else:
                 item = LineItem()
                 l = t.split()
@@ -96,7 +96,7 @@ class TransactionAPI(webapp.RequestHandler):
                 else:
                     class_val = 'odd'
                 total = item.total()
-                html = """<tr class="%(class)s delete_button" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(cat_code), 'description': str(category.description), 'price': str(category.price), 'quantity': str(quantity), 'discount':str(color.discount), 'total': total, "class":class_val}
+                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(cat_code), 'description': str(category.description), 'price': str(category.price), 'quantity': str(quantity), 'discount':str(item.get_discount()), 'total': total, "class":class_val}
             trans.put()
             grand_total = 0
             for i in trans.items:
