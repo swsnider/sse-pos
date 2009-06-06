@@ -33,8 +33,9 @@ class LineItem(db.Model):
     color = db.ReferenceProperty(ColorCode)
     quantity = db.IntegerProperty()
     category = db.ReferenceProperty(ItemCategory)
+    misc_amount = db.IntegerProperty(default=0)
     def total(self):
-        return self.category.price*int(self.quantity)*((100 - self.color.discount)/100.0)
+        return (self.category.price*int(self.quantity)*((100 - self.color.discount)/100.0)) + self.misc_amount
     def total_str(self):
         return "%#.2f" % self.total()
 
@@ -42,3 +43,4 @@ class Transaction(db.Model):
     owner = db.ReferenceProperty(User)
     items = db.StringListProperty() # List of str(LineItem.key())
     created_on = db.DateTimeProperty(auto_now_add=True)
+    misc_amount = db.IntegerProperty(default=0)

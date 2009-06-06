@@ -39,26 +39,50 @@ class TransactionAPI(webapp.RequestHandler):
             else:
                 trans = Transaction.get(Key(encoded=self.session['transaction_key']))    
             t = self.request.get('data')
-            item = LineItem()
-            l = t.split()
-            if len(l) == 2:
-                quantity, cat_code, color = 1, l[0], l[1]
+            if t.startswith('$'):
+                #misc processing
+                l = t.split()
+                price, color_inp = l[0], l[1]
+                price = int(price[1:])
+                item = LineItem()
+                misc = ItemCategory.all().filter('description =', 'MISC').get()
+                if misc is None:
+                    misc = ItemCategory()
+                    misc.description = 'MISC'
+                    misc.code = ''
+                    misc.price = 0
+                    misc.put()
+                item.category = misc
+                item.quantity = 1
+                item.misc_amount = price
+                color = ColorCode.all().filter('code =', color_inp).get()
+                if color == None:
+                    raise "Bad color"
+                item.color = color
+                item.put()
+                trans.items.append(str(item.key()))
+                html = """<tr><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td></tr>""" % {'item_id': str(item.category.code), 'description': str(item.category.description), 'price': str(price), 'quantity': str(1), 'discount':str(item.color.discount), 'total': item.total_str()}
             else:
-                quantity, cat_code, color = l[0], l[1], l[2]
-            item.quantity = int(quantity)
-            color = ColorCode.all().filter('code =', color).fetch(1)[0]
-            category = ItemCategory.all().filter('code =', cat_code).fetch(1)[0]
-            item.color = color
-            item.category = category
-            item.put()
-            trans.items.append(str(item.key()))
+                item = LineItem()
+                l = t.split()
+                if len(l) == 2:
+                    quantity, cat_code, color = 1, l[0], l[1]
+                else:
+                    quantity, cat_code, color = l[0], l[1], l[2]
+                item.quantity = int(quantity)
+                color = ColorCode.all().filter('code =', color).fetch(1)[0]
+                category = ItemCategory.all().filter('code =', cat_code).fetch(1)[0]
+                item.color = color
+                item.category = category
+                item.put()
+                trans.items.append(str(item.key()))
+                total = category.price*int(quantity)*((100 - color.discount)/100.0)
+                html = """<tr><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td></tr>""" % {'item_id': str(cat_code), 'description': str(category.description), 'price': str(category.price), 'quantity': str(quantity), 'discount':str(color.discount), 'total': total}
             trans.put()
             grand_total = 0
             for i in trans.items:
                 j = LineItem.get(Key(encoded=i))
                 grand_total += j.total()
-            total = category.price*int(quantity)*((100 - color.discount)/100.0)
-            html = """<tr><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td></tr>""" % {'item_id': str(cat_code), 'description': str(category.description), 'price': str(category.price), 'quantity': str(quantity), 'discount':str(color.discount), 'total': total}
             return {'valid':True, 'html':html, 'total_row':"""<tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$%s</td></tr>""" %(str(grand_total)), 'sess':repr(self.session)}
         except:
             return {'valid':False, 'payload':traceback.format_exc()}
