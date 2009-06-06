@@ -41,7 +41,7 @@ class LineItem(db.Model):
         else:
             return self.color.discount
     def total(self):
-        return (self.category.price*int(self.quantity)*((100 - self.get_dicount())/100.0)) + self.misc_amount
+        return (self.category.price*int(self.quantity)*((100 - self.get_discount())/100.0)) + self.misc_amount
     def total_str(self):
         return "%#.2f" % self.total()
 
