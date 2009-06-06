@@ -1,3 +1,15 @@
+function void_item(key){
+    $('#spinner').show();
+    $.post("/api/transaction/void_item", {data: key}, function(data){
+        $('#spinner').hide();
+        data = eval('(' + data + ')');
+        if (data.valid){
+            $('#' + key).remove();
+            $('#total_row').replaceWith(data.total_row);
+        }
+    });
+}
+
 function enter_item(){
     var item = $('#item_id').value();
     alert(item);

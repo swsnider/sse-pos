@@ -47,4 +47,11 @@ class Transaction(db.Model):
     owner = db.ReferenceProperty(User)
     items = db.StringListProperty() # List of str(LineItem.key())
     created_on = db.DateTimeProperty(auto_now_add=True)
-    misc_amount = db.IntegerProperty(default=0)
+    def total(self):
+        total = 0
+        for i in self.items:
+            it = LineItem.get(db.Key(encoded=i))
+            total += it.total()
+        return total
+    def total_str(self):
+        return "%#.2f" % self.total()

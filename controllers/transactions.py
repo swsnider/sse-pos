@@ -61,7 +61,11 @@ class TransactionAPI(webapp.RequestHandler):
                 item.color = color
                 item.put()
                 trans.items.append(str(item.key()))
-                html = """<tr><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td></tr>""" % {'item_id': str(item.category.code), 'description': str(item.category.description), 'price': str(price), 'quantity': str(1), 'discount':str(item.color.discount), 'total': item.total_str()}
+                if len(trans.items) % 2 == 0:
+                    class_val = 'even'
+                else:
+                    class_val = 'odd'
+                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(item.category.code), 'description': str(item.category.description), 'price': str(price), 'quantity': str(1), 'discount':str(item.color.discount), 'total': item.total_str(), "class":class_val}
             else:
                 item = LineItem()
                 l = t.split()
@@ -87,8 +91,12 @@ class TransactionAPI(webapp.RequestHandler):
                 item.category = category
                 item.put()
                 trans.items.append(str(item.key()))
+                if len(trans.items) % 2 == 0:
+                    class_val = 'even'
+                else:
+                    class_val = 'odd'
                 total = item.total()
-                html = """<tr><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td></tr>""" % {'item_id': str(cat_code), 'description': str(category.description), 'price': str(category.price), 'quantity': str(quantity), 'discount':str(color.discount), 'total': total}
+                html = """<tr class="%(class)s delete_button" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(cat_code), 'description': str(category.description), 'price': str(category.price), 'quantity': str(quantity), 'discount':str(color.discount), 'total': total, "class":class_val}
             trans.put()
             grand_total = 0
             for i in trans.items:
@@ -146,5 +154,18 @@ class TransactionAPI(webapp.RequestHandler):
             trans.delete()
             del self.session['transaction_key']
             return {'valid':True, 'is_error': False}
+        except:
+            return {'valid': False, 'is_error': True, 'payload':traceback.format_exc()}
+    @secure
+    @jsonify
+    def void_item(self, **kwargs):
+        try:
+            if 'transaction_key' not in self.session:
+                return {'valid': False, 'is_error': False, 'payload': 'Unable to find the current transaction!'}
+            else:
+                trans = Transaction.get(Key(encoded=self.session['transaction_key']))
+            trans.items.remove(self.request.get('data'))
+            trans.put()
+            return {'valid':True, 'is_error': False, 'total_row': """<tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$%s</td></tr>""" % trans.total_str()}
         except:
             return {'valid': False, 'is_error': True, 'payload':traceback.format_exc()}
