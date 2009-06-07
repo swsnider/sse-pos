@@ -21,6 +21,7 @@ def secure(f):
         if args[0].users.get_current_user() != None:
             return f(*args, **kwargs)
         else:
+            args[0].redirected = True
             args[0].redirect("/login")
     return g
 
@@ -47,7 +48,8 @@ def developer_only(f):
 def tg_template(name):
     def h(f):
         def g(*args, **kwargs):
-            args[0].response.out.write(render_template(name, f(*args, **kwargs)))
+            retval = f(*args, **kwargs)
+            args[0].response.out.write(render_template(name, retval))
         return g
     return h
 

@@ -1,4 +1,4 @@
-{% set user = __sse_pos__users.get_current_user() %}
+<!-- {% set user = __sse_pos__users.get_current_user() %} -->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         {% block head %}
@@ -14,7 +14,7 @@
     </head>
     <body>
         <table>
-            <tr><td><a href="/transaction">Start/Continue Sale</a></td>{% if user.is_admin %}<td><a href="/admin">Administration Menu</a></td>{% endif %}<td><a href="/logout">Logout</a></td><td><strong>Current User:</strong>{{user.first_name}}{{user.last_name}}</td></tr>
+            <tr><td><a href="/transaction">Start/Continue Sale</a></td>{% if user.is_admin %}<td><a href="/admin">Administration Menu</a></td>{% endif %}<td><a href="/logout">Logout</a></td><!-- <td><strong>Current User:</strong>{{user.first_name}}{{user.last_name}}</td>--></tr>
         </table>
         {% block content %}
         <h1>Common Thread POS</h1>
