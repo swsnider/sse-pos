@@ -1,15 +1,32 @@
-from models import *
-from datetime import datetime, date
 import traceback, urllib, hashlib
+from models import *
+from util import *
+from datetime import datetime, date
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
-from util import admin_only, developer_only, secure, tg_template, jsonify
 
 class AdminPages(webapp.RequestHandler):
     @admin_only
     @tg_template('admin.html')
     def index(self, **kwargs):
         return {}
+    
+    @admin_only
+    @csvify
+    def export_users(self, **kwargs):
+        keys = User.properties().keys()
+        instances = User.all().fetch(1000)
+        result = []
+        headers = {}
+        for i in keys:
+            headers[i] = i
+        result.append(headers)
+        for i in instances:
+            curr = {}
+            result.append(curr)
+            for j in keys:
+                curr[j] = str(getattr(i, j))
+        return result
     
     @admin_only
     @tg_template('category_list.html')
