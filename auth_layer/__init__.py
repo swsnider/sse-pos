@@ -9,8 +9,6 @@ def uses_users(f):
         self = args[0]
         self.users = users(self.session)
         retval = f(*args, **kwargs)
-        if type(retval) == type(dict()):
-            retval['__sse_pos__users'] = users(self.session)
         return retval
     return g
 
