@@ -55,8 +55,9 @@ class DebuggingPages(webapp.RequestHandler):
         u.last_name="Snider"
         u.put()
         self.redirect('/')
-    @secure
+    
     @jsonify
+    @secure
     def make_admin(self, **kwargs):
         u = self.users.get_current_user()
         u.is_admin = True

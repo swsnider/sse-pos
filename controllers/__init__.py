@@ -12,8 +12,9 @@ from admin import AdminPages, ColorAPI, CategoryAPI, UserAPI, UserPages
 #'Core' controller
 
 class GenericPages(webapp.RequestHandler):
-    @secure
+    
     @tg_template("main.html")
+    @secure
     def index(self, **kwargs):
         return {'user': self.users.get_current_user()}
     

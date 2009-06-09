@@ -21,6 +21,7 @@ def secure(f):
         if args[0].users.get_current_user() != None:
             return f(*args, **kwargs)
         else:
+            args[0].redirected = True
             args[0].redirect("/login")
     return g
 
@@ -47,12 +48,18 @@ def developer_only(f):
 def tg_template(name):
     def h(f):
         def g(*args, **kwargs):
-            args[0].response.out.write(render_template(name, f(*args, **kwargs)))
+            retval = f(*args, **kwargs)
+            args[0].response.out.write(render_template(name, retval))
         return g
     return h
 
 def jsonify(f):
     def g(*args, **kwargs):
         self = args[0]
-        self.response.out.write(json.dumps(f(*args, **kwargs)))
+        retval = f(*args, **kwargs)
+        #if type(retval) == type(dict()):
+        #    for i in retval.keys():
+        #        if i.startswith('__sse_pos'):
+        #            del retval[i]
+        self.response.out.write(json.dumps(retval))
     return g

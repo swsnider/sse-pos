@@ -8,7 +8,10 @@ def uses_users(f):
     def g(*args, **kwargs):
         self = args[0]
         self.users = users(self.session)
-        return f(*args, **kwargs)
+        retval = f(*args, **kwargs)
+        if type(retval) == type(dict()):
+            retval['__sse_pos__users'] = users(self.session)
+        return retval
     return g
 
 class users:
