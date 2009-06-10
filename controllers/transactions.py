@@ -25,7 +25,7 @@ class TransactionPage(webapp.RequestHandler):
         grand_total = 0
         for i in items:
             grand_total += i.total()
-        return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all().fetch(1000), itemtypes=ItemCategory.all().fetch(1000))
+        return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all(), itemtypes=ItemCategory.all())
 
 class TransactionAPI(webapp.RequestHandler):
     

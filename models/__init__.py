@@ -49,6 +49,7 @@ class Transaction(db.Model):
     owner = db.ReferenceProperty(User)
     items = db.StringListProperty() # List of str(LineItem.key())
     created_on = db.DateTimeProperty(auto_now_add=True)
+    finalized = db.BooleanProperty(default=False)
     def total(self):
         total = 0
         for i in self.items:

@@ -16,7 +16,7 @@ class AdminPages(webapp.RequestHandler):
     @csvify
     def export_users(self, **kwargs):
         keys = User.properties().keys()
-        instances = User.all().fetch(1000)
+        instances = User.all()
         result = []
         headers = {}
         for i in keys:
@@ -32,12 +32,12 @@ class AdminPages(webapp.RequestHandler):
     @tg_template('category_list.html')
     @admin_only
     def category(self, **kwargs):
-        return dict(categories=ItemCategory.all().fetch(1000))
+        return dict(categories=ItemCategory.all())
     
     @tg_template('color_list.html')
     @admin_only
     def color(self, **kwargs):
-        return dict(colors=ColorCode.all().fetch(1000))
+        return dict(colors=ColorCode.all())
     
     
     @tg_template('unimplemented.html')
@@ -49,13 +49,13 @@ class AdminPages(webapp.RequestHandler):
     @tg_template('user_list.html')
     @admin_only
     def user(self, **kwargs):
-        return dict(users=User.all().fetch(1000))
+        return dict(users=User.all())
     
     
     @tg_template('stats.html')
     @admin_only
     def stats(self, **kwargs):
-        ts = Transaction.all().filter('created_on >=', date.today()).fetch(1000)
+        ts = Transaction.all().filter('created_on >=', date.today())
         our_total = 0
         our_count = 0
         for i in ts:
