@@ -110,6 +110,7 @@ class UserPages(webapp.RequestHandler):
             last_name = urllib.unquote_plus(self.request.get('last_name'))
             password = urllib.unquote_plus(self.request.get('password'))
             is_admin = urllib.unquote_plus(self.request.get('is_admin'))
+            is_developer = urllib.unquote_plus(self.request.get('is_developer'))
             u.email = email
             u.first_name = first_name
             u.last_name = last_name
@@ -138,6 +139,7 @@ class UserPages(webapp.RequestHandler):
         last_name = urllib.unquote_plus(self.request.get('last_name'))
         password = urllib.unquote_plus(self.request.get('password'))
         is_admin = urllib.unquote_plus(self.request.get('is_admin'))
+        is_developer = urllib.unquote_plus(self.request.get('is_developer'))
         u = User()
         u.salt = email
         u.email = email
