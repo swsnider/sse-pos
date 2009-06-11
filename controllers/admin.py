@@ -1,4 +1,4 @@
-import traceback, urllib, hashlib
+import traceback, urllib, hashlib, time
 from models import *
 from util import *
 from datetime import datetime, date
@@ -55,7 +55,10 @@ class AdminPages(webapp.RequestHandler):
     @tg_template('stats.html')
     @admin_only
     def stats(self, **kwargs):
-        ts = Transaction.all().filter('created_on >=', date.today())
+        date_requested = self.request.get('date_data', False)
+        if not date_requested:
+            date_requested = date.today().strftime('%Y-%m-%d')
+        ts = Transaction.gql("WHERE created_on >= :1", datetime.strptime(date_requested, '%Y-%m-%d'))
         our_total = 0
         our_count = 0
         for i in ts:
@@ -65,7 +68,7 @@ class AdminPages(webapp.RequestHandler):
             for k in i.items:
                 j = LineItem.get(Key(encoded=k))
                 our_total += j.total()
-        return dict(sales_today=our_count, sales_today_total=our_total)
+        return dict(sales_today=our_count, sales_today_total=our_total, date_requested=date_requested)
     
     
     @tg_template('eval.html')
