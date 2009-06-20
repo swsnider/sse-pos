@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Adminstration: Transaction List{% endblock %}
+{% block content %}
+        <h1>Common Thread POS Admin::Transaction List</h1>
+        <table>
+            <tr><th>Date</th><th>Owner</th><th>Finalized?</th><th>Item #</th><th>Item Description</th><th>Price per</th><th>Quantity</th><th>Discount</th><th>Total</th></tr>
+        {% for j in transactions %}
+			<tr><td>{{ j.transaction.created_on }}</td><td>{{ j.transaction.owner.first_name }} {{ j.transaction.owner.last_name }}</td><td>{% if j.transaction.finalized %}Yes{% else %}No{% endif %}</td></tr>
+			{% for i in j.item_list %}
+			<tr><td>&nbsp;</td><td>&nbsp;</td><td>{{ i.category.code }}</td><td>{{ i.category.description }}</td><td>${% if i.category.description == 'MISC' %}{{i.misc_amount}}{% else %}{{ i.category.price }}{% endif %}</td><td>{{i.quantity}}</td><td>{{ i.get_discount() }}%</td><td>${{ i.total_str() }}</td></tr>
+			{% endfor %}
+		{% endfor %}
+        </table>
+{% endblock %}
