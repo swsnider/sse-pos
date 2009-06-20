@@ -142,6 +142,8 @@ class TransactionAPI(webapp.RequestHandler):
             if customer_total < grand_total:
                 return {'valid': False, 'is_error': False, 'payload':"The amount received from the customer is not enough to pay the outstanding balance."}
             else:
+                trans.finalized = True
+                trans.put()
                 del self.session['transaction_key']
                 return {'valid': True, 'is_error': False}
         except:
