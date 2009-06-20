@@ -7,7 +7,7 @@
         {% for j in transactions %}
 			<tr><td>{{ j.transaction.created_on }}</td><td>{{ j.transaction.owner.first_name }} {{ j.transaction.owner.last_name }}</td><td>{% if j.transaction.finalized %}Yes{% else %}No{% endif %}</td></tr>
 			{% for i in j.item_list %}
-			<tr><td>&nbsp;</td>td>&nbsp;</td><td>&nbsp;</td><td>{{ i.category.code }}</td><td>{{ i.category.description }}</td><td>${% if i.category.description == 'MISC' %}{{i.misc_amount}}{% else %}{{ i.category.price }}{% endif %}</td><td>{{i.quantity}}</td><td>{{ i.get_discount() }}%</td><td>${{ i.total_str() }}</td></tr>
+			<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>{{ i.category.code }}</td><td>{{ i.category.description }}</td><td>${% if i.category.description == 'MISC' %}{{i.misc_amount}}{% else %}{{ i.category.price }}{% endif %}</td><td>{{i.quantity}}</td><td>{{ i.get_discount() }}%</td><td>${{ i.total_str() }}</td></tr>
 			{% endfor %}
 		{% endfor %}
         </table>
