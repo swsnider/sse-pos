@@ -8,12 +8,24 @@
         </script>
         <script type="text/javascript" src="/static/js/jquery-ui.js">
         </script>
+		<script type="text/javascript" src="/static/js/main.js">
+		</script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$.get('/user_name', function(data){
+					data = eval('('+ data +')');
+					if (data.valid){
+						$('#welcome').text(data.data);
+					}
+				});
+			});
+		</script>
         {% block scripts %}{% endblock %}
         {% endblock %}
     </head>
     <body>
         <table>
-            <tr><td><a href="/transaction">Start/Continue Sale</a></td><td><a href="/admin">Administration Menu</a></td><td><a href="/logout">Logout</a></td></tr>
+            <tr><td id="welcome"></td><td><a href="/transaction">Start/Continue Sale</a></td><td><a href="/admin">Administration Menu</a></td><td><a href="/logout">Logout</a></td></tr>
         </table>
         {% block content %}
         <h1>Common Thread POS</h1>
