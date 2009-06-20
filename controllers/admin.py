@@ -70,6 +70,18 @@ class AdminPages(webapp.RequestHandler):
                 our_total += j.total()
         return dict(sales_today=our_count, sales_today_total=our_total, date_requested=date_requested)
     
+    @tg_template('admin_transactions.html')
+    @admin_only
+    def view_transactions(self, **kwargs):
+        ts = Transaction.all().order('-created_on')
+        transaction_list = []
+        for trans in ts:
+            trans_dict = {'transaction': trans, 'item_list':[]}
+            for item in trans.items:
+                it = LineItem.get(Key(encoded=item))
+                trans_dict['item_list'].append(it)
+            transaction_list.append(trans_dict)
+        return dict(transactions=transaction_list)
     
     @tg_template('eval.html')
     @developer_only
