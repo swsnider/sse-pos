@@ -17,7 +17,7 @@ class users:
         self.session = session
     def logout(self):
         if 'curr_user_key' in self.session:
-            del self.session['curr_user_key']
+            self.session.clear()
     def get_current_user(self):
         if 'curr_user_key' in self.session:
             return User.get(Key(encoded=str(self.session['curr_user_key'])))
