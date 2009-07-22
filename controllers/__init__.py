@@ -8,6 +8,7 @@ from models import User, Visit
 from debugging import DebuggingPages
 from transactions import TransactionPage, TransactionAPI
 from admin import AdminPages, ColorAPI, CategoryAPI, UserAPI, UserPages
+from api import SyncAPI
 
 #'Core' controller
 
