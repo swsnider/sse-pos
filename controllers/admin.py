@@ -1,7 +1,7 @@
 import traceback, urllib, hashlib, time
 from models import *
 from util import *
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
 
@@ -56,8 +56,13 @@ class AdminPages(webapp.RequestHandler):
     @admin_only
     def stats(self, **kwargs):
         date_requested = self.request.get('date_data', False)
+        oneDay = timedelta(days=1)
         if not date_requested:
-            date_requested = date.today().strftime('%Y-%m-%d')
+            now = datetime.now()
+            if int(now.hour) < 4:
+                date_requested = (date.today() - oneDay).strftime('%Y-%m-%d')
+            else:
+                date_requested = date.today().strftime('%Y-%m-%d')
         ts = Transaction.gql("WHERE created_on >= :1", datetime.strptime(date_requested, '%Y-%m-%d'))
         our_total = 0
         our_count = 0
