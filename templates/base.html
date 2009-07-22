@@ -8,10 +8,12 @@
         </script>
         <script type="text/javascript" src="/static/js/jquery-ui.js">
         </script>
+        <script type="text/javascript" src="/static/gears/gears_init.js"></script>
 		<script type="text/javascript" src="/static/js/main.js">
 		</script>
 		<script type="text/javascript">
 			$(document).ready(function(){
+			    enable_cache();
 				$.get('/user_name', function(data){
 					data = eval('('+ data +')');
 					if (data.valid){
