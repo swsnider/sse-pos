@@ -1,49 +1,11 @@
-import traceback, urllib, hashlib, time, random
+import traceback, urllib, hashlib, time
 from models import *
 from util import *
 from datetime import datetime, date, timedelta
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
 
-alphas = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-
 class AdminPages(webapp.RequestHandler):
-    
-    @tg_template("connect.html")
-    @developer_only
-    def connect_instance_initial(self, **kwargs):
-        models.delete_all()
-        
-        return {}
-    
-    @tg_template("connect.html")
-    @developer_only
-    def connect_instance(self, **kwargs):
-        if self.request.get('host', False):
-            host = Setting.filter('name =', 'connection_host').get()
-            if host:
-                host.set_at = self.request.get('host')
-                host.put()
-            else:
-                host = Setting()
-                host.name = "connection_host"
-                host.set_at = self.request.get('host')
-                host.put()
-        connection_secret = Setting.filter('name =', 'connection_secret').get()
-        if not connection_secret:
-            connection_secret = Setting()
-            secret = "".join([random.choice(alphas) for i in range(32)])
-            connection_secret.name = 'connection_secret'
-            connection_secret.set_at = secret
-            connection_secret.put()
-        connection_secret = connection_secret.set_at
-        connection_host = Setting.filter('name =', 'connection_host').get()
-        if not connection_host:
-            connection_host = ""
-        else:
-            connection_host = connection_host.set_at
-        return dict(host=connection_host, secret=connection_secret)
-    
     @tg_template('admin.html')
     @admin_only
     def index(self, **kwargs):

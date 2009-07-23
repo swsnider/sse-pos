@@ -14,4 +14,3 @@ def add_routes(map):
     map.connect('/admin/user/:action', controller="controllers:UserPages")
     map.connect('/denied', controller="controllers:GenericPages", action="denied")
     map.connect('/debug/:action', controller="controllers:DebuggingPages")
-    map.connect('/sync/:action', controller="controllers:SyncAPI")
