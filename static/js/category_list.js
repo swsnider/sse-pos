@@ -1,3 +1,12 @@
+function toggle_display(key){
+    $.post('/api/category/toggle_display', {key: key}, function(data){
+        data = eval('('+ data +')');
+        if (data.valid){
+            $('#'+key).replaceWith(data.html);
+        }
+    });
+}
+
 function delete_category(key){
     $('<div id="dialog" title="Confirm delete"><p>Do you really want to delete this category?</p></div>').dialog({modal: true, buttons: {"No": function (){
         $(this).dialog("close");
@@ -18,6 +27,7 @@ function add_category(){
         data = eval('('+ data +')');
         if (data.valid){
             $('#add_new').before(data.html);
+            alert(data.html);
         }
     });
 }
@@ -29,7 +39,7 @@ function commit_row(key){
     $.post('/api/category/update', {key: key, description: description, price: price, code: code}, function(data){
         data = eval('('+ data +')');
         if (data.valid){
-            $('#'+key+'row').replaceWith(data.html)
+            $('#'+key+'row').replaceWith(data.html);
         }
     });
 }
@@ -38,7 +48,7 @@ function edit_row(key){
     $.get('/api/category/edit', {key: key}, function(data){
         data = eval('('+ data +')');
         if (data.valid){
-            $('#'+key).replaceWith(data.html)
+            $('#'+key).replaceWith(data.html);
         }
     });
 }

@@ -25,7 +25,7 @@ class TransactionPage(webapp.RequestHandler):
         grand_total = 0
         for i in items:
             grand_total += i.total()
-        return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all().order('color'), itemtypes=ItemCategory.all().order('description'))
+        return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all().filter('display =', True).order('color'), itemtypes=ItemCategory.all().filter('display =', True).order('description'))
 
 class TransactionAPI(webapp.RequestHandler):
     
@@ -57,6 +57,7 @@ class TransactionAPI(webapp.RequestHandler):
                     misc.description = 'MISC'
                     misc.code = '$$$'
                     misc.price = 0
+                    misc.display = False
                     misc.put()
                 item.category = misc
                 item.quantity = 1
@@ -89,6 +90,7 @@ class TransactionAPI(webapp.RequestHandler):
                         color.color = 'CUSTOM'
                         color.code = '%%%'
                         color.discount = 0
+                        color.display = False
                         color.put()
                 else:                
                     color = ColorCode.all().filter('code =', color).fetch(1)[0]

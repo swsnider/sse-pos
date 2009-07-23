@@ -2,7 +2,7 @@ from auth_layer import uses_users
 from models import Setting
 import random
 
-__all__ = ['secure', 'admin_only', 'developer_only', 'api_only']
+__all__ = ['secure', 'admin_only', 'developer_only']
 
 def secure(f):
     @uses_users

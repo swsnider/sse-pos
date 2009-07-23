@@ -17,7 +17,7 @@
 				$.get('/user_name', function(data){
 					data = eval('('+ data +')');
 					if (data.valid){
-						$('#welcome').text(data.data);
+						$('#welcome').html(data.data);
 					}
 				});
 			});

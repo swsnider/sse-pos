@@ -22,7 +22,7 @@ class GenericPages(webapp.RequestHandler):
     @secure
     def user_name(self, **kwargs):
         u = self.users.get_current_user()
-        return dict(valid=True, data="Welcome " + u.first_name+" "+u.last_name)
+        return dict(valid=True, data="<a onclick='destroy_cache();'>Welcome</a> " + u.first_name+" "+u.last_name)
     
     @uses_users
     def logout(self, **kwargs):

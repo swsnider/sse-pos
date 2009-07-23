@@ -3,7 +3,7 @@ from google.appengine.api import urlfetch
 
 #add models here
 
-__all__ = ['User', 'Visit', 'ItemCategory', 'ColorCode', 'LineItem', 'Transaction', 'Setting', 'models', 'delete_all']
+__all__ = ['User', 'Visit', 'ItemCategory', 'ColorCode', 'LineItem', 'Transaction', 'Setting']
 
 class User(db.Model):
     email = db.EmailProperty()
@@ -23,11 +23,13 @@ class ItemCategory(db.Model):
     price = db.IntegerProperty()
     description = db.StringProperty()
     code = db.StringProperty()
+    display = db.BooleanProperty(default=True)
 
 class ColorCode(db.Model):
     discount = db.IntegerProperty()
     color = db.StringProperty()
     code = db.StringProperty()
+    display = db.BooleanProperty(default=True)
 
 class LineItem(db.Model):
     color = db.ReferenceProperty(ColorCode)

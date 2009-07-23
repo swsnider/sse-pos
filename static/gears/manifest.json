@@ -1,6 +1,6 @@
 {
   "betaManifestVersion": 1,
-  "version": "gears1.0",
+  "version": "gears1.1",
   "entries": [
       { "url": "/static/js/jquery.js"},
       { "url": "/static/js/jquery-ui.js"},
