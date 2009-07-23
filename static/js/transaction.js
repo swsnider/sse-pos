@@ -10,6 +10,12 @@ function void_item(key){
     });
 }
 
+function process_braindead(){
+    input_line = $('#quantity').val() + " " + $('#item').val() + " " + $('#color').val();
+    $('#quantity').val('1');
+    process_input(input_line);
+}
+
 function enter_item(){
     var item = $('#item_id').value();
     alert(item);

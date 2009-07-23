@@ -10,13 +10,13 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-# Used 22 times in query history.
+# Used 50 times in query history.
 - kind: ColorCode
   properties:
   - name: display
   - name: color
 
-# Used 22 times in query history.
+# Used 50 times in query history.
 - kind: ItemCategory
   properties:
   - name: display
