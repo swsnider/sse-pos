@@ -7,9 +7,9 @@
 {% block content %}
         <h1>Common Thread POS Admin::Color Codes</h1>
         <table>
-            <tr><th>Color name</th><th>Discount</th><th>Code</th></tr>
+            <tr><th>Color name</th><th>Discount</th><th>Code</th><th>Displayed?</th></tr>
         {% for color in colors %}
-            <tr class="{{ loop.cycle('odd', 'even') }}" id="{{color.key()}}"><td>{{ color.color }}</td><td>{{ color.discount }}%</td><td>{{ color.code }}</td><td><a onclick="delete_color('{{color.key()}}');" class="delete_button">X</a></td><td><a onclick="edit_row('{{color.key()}}');" class="edit_button">edit</a></td></tr>
+            <tr class="{{ loop.cycle('odd', 'even') }}" id="{{color.key()}}"><td>{{ color.color }}</td><td>{{ color.discount }}%</td><td>{{ color.code }}</td><td>{{color.display}}</td><td><a onclick="delete_color('{{color.key()}}');" class="delete_button">X</a></td><td><a onclick="edit_row('{{color.key()}}');" class="edit_button">edit</a></td><td><a onclick="toggle_display('{{color.key()}}');" class="edit_button">Toggle Displayed</a></td></tr>
         {% endfor %}
             <tr id="add_new"><td colspan="3"><a onclick="add_color();" class="add_button">+</a></tr>
         </table>

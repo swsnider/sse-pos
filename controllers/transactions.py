@@ -25,7 +25,7 @@ class TransactionPage(webapp.RequestHandler):
         grand_total = 0
         for i in items:
             grand_total += i.total()
-        return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all().order('color'), itemtypes=ItemCategory.all().order('description'))
+        return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all().filter('display =', True).order('color'), itemtypes=ItemCategory.all().filter('display =', True).order('description'))
 
 class TransactionAPI(webapp.RequestHandler):
     
@@ -45,6 +45,10 @@ class TransactionAPI(webapp.RequestHandler):
                 #misc processing
                 l = t.split()
                 price, color_inp = l[0], l[1]
+                #if '.' in price:
+                #    z = price.split('.')
+                #    dollars, cents = z[0], z[1]
+                #    price = int(dollars) + int(cents)*100
                 price = int(price[1:])
                 item = LineItem()
                 misc = ItemCategory.all().filter('description =', 'MISC').get()
@@ -53,6 +57,7 @@ class TransactionAPI(webapp.RequestHandler):
                     misc.description = 'MISC'
                     misc.code = '$$$'
                     misc.price = 0
+                    misc.display = False
                     misc.put()
                 item.category = misc
                 item.quantity = 1
@@ -67,7 +72,7 @@ class TransactionAPI(webapp.RequestHandler):
                     class_val = 'even'
                 else:
                     class_val = 'odd'
-                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(item.category.code), 'description': str(item.category.description), 'price': str(price), 'quantity': str(1), 'discount':str(item.get_discount()), 'total': item.total_str(), "class":class_val}
+                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>$%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(item.category.code), 'description': str(item.category.description), 'price': str(price), 'quantity': str(1), 'discount':str(item.get_discount()), 'total': item.total_str(), "class":class_val}
             else:
                 item = LineItem()
                 l = t.split()
@@ -85,6 +90,7 @@ class TransactionAPI(webapp.RequestHandler):
                         color.color = 'CUSTOM'
                         color.code = '%%%'
                         color.discount = 0
+                        color.display = False
                         color.put()
                 else:                
                     color = ColorCode.all().filter('code =', color).fetch(1)[0]

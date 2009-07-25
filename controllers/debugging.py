@@ -6,6 +6,17 @@ import hashlib
 from util import jsonify, secure
 
 class DebuggingPages(webapp.RequestHandler):
+    def fix_items(self, **kwargs):
+        its = ItemCategory.all()
+        for i in its:
+            i.display = True
+            i.put()
+        cos = ColorCode.all()
+        for c in cos:
+            c.display = True
+            c.put()
+        return    
+    
     def add_dates(self, **kwargs):
         trans = Transaction.all().fetch(1000)
         for t in trans:

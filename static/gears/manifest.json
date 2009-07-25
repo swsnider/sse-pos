@@ -1,0 +1,33 @@
+{
+  "betaManifestVersion": 1,
+  "version": "gears1.1",
+  "entries": [
+      { "url": "/static/js/jquery.js"},
+      { "url": "/static/js/jquery-ui.js"},
+      { "url": "/static/js/transaction.js"},
+      { "url": "/static/js/user_list.js"},
+      { "url": "/static/js/color_list.js"},
+      { "url": "/static/js/category_list.js"},
+      { "url": "/static/css/datePicker.css"},
+      { "url": "/static/css/jquery-ui.css"},
+      { "url": "/static/css/main.css"},
+      { "url": "/static/css/datePicker.css"},
+      { "url": "/static/css/images/ui-bg_flat_0_aaaaaa_40x100.png"},
+      { "url": "/static/css/images/ui-bg_flat_75_ffffff_40x100.png"},
+      { "url": "/static/css/images/ui-bg_glass_55_fbf9ee_1x400.png"},
+      { "url": "/static/css/images/ui-bg_glass_75_dadada_1x400.png"},
+      { "url": "/static/css/images/ui-bg_glass_75_e6e6e6_1x400.png"},
+      { "url": "/static/css/images/ui-bg_glass_95_fef1ec_1x400.png"},
+      { "url": "/static/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png"},
+      { "url": "/static/css/images/ui-icons_222222_256x240.png"},
+      { "url": "/static/css/images/ui-icons_2e83ff_256x240.png"},
+      { "url": "/static/css/images/ui-icons_454545_256x240.png"},
+      { "url": "/static/css/images/ui-icons_888888_256x240.png"},
+      { "url": "/static/css/images/ui-icons_cd0a0a_256x240.png"},
+      { "url": "/static/css/images/ui-bg_glass_65_ffffff_1x400.png"},
+      { "url": "/static/images/ajax-loader.gif"},
+      { "url": "/static/images/beard_icon.png"},
+      { "url": "/static/images/cal.gif"},
+      { "url": "/static/misc/complicated.jar"}
+    ]
+}

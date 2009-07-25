@@ -1,12 +1,11 @@
 import traceback, urllib, hashlib, time
 from models import *
 from util import *
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
 
 class AdminPages(webapp.RequestHandler):
-    
     @tg_template('admin.html')
     @admin_only
     def index(self, **kwargs):
@@ -56,8 +55,13 @@ class AdminPages(webapp.RequestHandler):
     @admin_only
     def stats(self, **kwargs):
         date_requested = self.request.get('date_data', False)
+        oneDay = timedelta(days=1)
         if not date_requested:
-            date_requested = date.today().strftime('%Y-%m-%d')
+            now = datetime.now()
+            if int(now.hour) < 4:
+                date_requested = (date.today() - oneDay).strftime('%Y-%m-%d')
+            else:
+                date_requested = date.today().strftime('%Y-%m-%d')
         ts = Transaction.gql("WHERE created_on >= :1", datetime.strptime(date_requested, '%Y-%m-%d'))
         our_total = 0
         our_count = 0
@@ -206,6 +210,16 @@ class ColorAPI(webapp.RequestHandler):
         c.put()
         return dict(valid=True, html="""<tr id="%(key)srow"><td><input type="text" id="%(key)scolor" /></td><td><input type="text" id="%(key)sdiscount" />%%</td><td><input type="text" id="%(key)scode" /></td><td><button onclick="commit_row('%(key)s');">Commit</button></td></tr>""" % {"key": str(c.key())})
     
+    @jsonify
+    @admin_only
+    def toggle_display(self, **kwargs):
+        try:
+            c = ColorCode.get(Key(encoded=self.request.get('key')))
+            c.display = not c.display
+            c.put()
+            return dict(valid=True, html="""<tr id="%(key)s"><td>%(color)s</td><td>%(discount)s%%</td><td>%(code)s</td><td>%(display)s</td><td><a onclick="delete_color('%(key)s');" class="delete_button">X</a></td><td><a onclick="edit_row('%(key)s');" class="edit_button">edit</a></td><td><a onclick="toggle_display('%(key)s');" class="edit_button">Toggle Displayed</a></td></tr>""" % {'key': str(c.key()), 'discount': str(c.discount), 'color': str(c.color), 'code': str(c.code), 'display': str(c.display)})
+        except:
+            return dict(valid=False, failure=traceback.format_exc())
     
     @jsonify
     @admin_only
@@ -216,7 +230,7 @@ class ColorAPI(webapp.RequestHandler):
             c.color = urllib.unquote_plus(self.request.get('color'))
             c.code = urllib.unquote_plus(self.request.get('code'))
             c.put()
-            return dict(valid=True, html="""<tr id="%(key)s"><td>%(color)s</td><td>%(discount)s%%</td><td>%(code)s</td><td><a onclick="delete_color('%(key)s');" style="color: red;">X</a></td><td><a onclick="edit_row('%(key)s');" style="color: green;">edit</a></td></tr>""" % {'key': str(c.key()), 'discount': str(c.discount), 'color': str(c.color), 'code': str(c.code)})
+            return dict(valid=True, html="""<tr id="%(key)s"><td>%(color)s</td><td>%(discount)s%%</td><td>%(code)s</td><td>%(display)s</td><td><a onclick="delete_color('%(key)s');" class="delete_button">X</a></td><td><a onclick="edit_row('%(key)s');" class="edit_button">edit</a></td><td><a onclick="toggle_display('%(key)s');" class="edit_button">Toggle Displayed</a></td></tr>""" % {'key': str(c.key()), 'discount': str(c.discount), 'color': str(c.color), 'code': str(c.code)})
         except:
             return dict(valid=False, failure=traceback.format_exc())
     
@@ -249,6 +263,17 @@ class CategoryAPI(webapp.RequestHandler):
     
     @jsonify
     @admin_only
+    def toggle_display(self, **kwargs):
+        try:
+            c = ItemCategory.get(Key(encoded=self.request.get('key')))
+            c.display = not c.display
+            c.put()
+            return dict(valid=True, html="""<tr id="%(key)s"><td>%(description)s</td><td>$%(price)s</td><td>%(code)s</td><td>%(display)s</td><td><a onclick="delete_category('%(key)s');" class="delete_button">X</a></td><td><a onclick="edit_row('%(key)s');" class="edit_button">edit</a></td><td><a onclick="toggle_display('%(key)s');" class="edit_button">Toggle Displayed</a></td></tr>""" % {'key': str(c.key()), 'price': str(c.price), 'description': str(c.description), 'code': str(c.code), 'display': str(c.display)})
+        except:
+            return dict(valid=False, failure=traceback.format_exc())
+    
+    @jsonify
+    @admin_only
     def update(self, **kwargs):
         try:
             c = ItemCategory.get(Key(encoded=self.request.get('key')))
@@ -256,7 +281,7 @@ class CategoryAPI(webapp.RequestHandler):
             c.description = urllib.unquote_plus(self.request.get('description'))
             c.code = urllib.unquote_plus(self.request.get('code'))
             c.put()
-            return dict(valid=True, html="""<tr id="%(key)s"><td>%(description)s</td><td>$%(price)s</td><td>%(code)s</td><td><a onclick="delete_category('%(key)s');" style="color: red;">X</a></td><td><a onclick="edit_row('%(key)s');" style="color: green;">edit</a></td></tr>""" % {'key': str(c.key()), 'price': str(c.price), 'description': str(c.description), 'code': str(c.code)})
+            return dict(valid=True, html="""<tr id="%(key)s"><td>%(description)s</td><td>$%(price)s</td><td>%(code)s</td><td>%(display)s</td><td><a onclick="delete_category('%(key)s');" class="delete_button">X</a></td><td><a onclick="edit_row('%(key)s');" class="edit_button">edit</a></td><td><a onclick="toggle_display('%(key)s');" class="edit_button">Toggle Displayed</a></td></tr>""" % {'key': str(c.key()), 'price': str(c.price), 'description': str(c.description), 'code': str(c.code)})
         except:
             return dict(valid=False, failure=traceback.format_exc())
     

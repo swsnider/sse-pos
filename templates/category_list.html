@@ -7,9 +7,9 @@
 {% block content %}
         <h1>Common Thread POS Admin::Categories</h1>
         <table>
-            <tr><th>Category description</th><th>Price</th><th>Code</th></tr>
+            <tr><th>Category description</th><th>Price</th><th>Code</th><th>Displayed?</th></tr>
         {% for category in categories %}
-            <tr class="{{ loop.cycle('odd', 'even') }}" id="{{category.key()}}"><td>{{ category.description }}</td><td>${{ category.price }}</td><td>{{ category.code }}</td><td><a onclick="delete_category('{{category.key()}}');" class="delete_button"  href="#">X</a></td><td><a onclick="edit_row('{{category.key()}}');" class="edit_button" href="#">edit</a></td></tr>
+            <tr class="{{ loop.cycle('odd', 'even') }}" id="{{category.key()}}"><td>{{ category.description }}</td><td>${{ category.price }}</td><td>{{ category.code }}</td><td>{{category.display}}</td><td><a onclick="delete_category('{{category.key()}}');" class="delete_button"  href="#">X</a></td><td><a onclick="edit_row('{{category.key()}}');" class="edit_button" href="#">edit</a></td><td><a onclick="toggle_display('{{category.key()}}');" class="edit_button">Toggle Displayed</a></td></tr>
         {% endfor %}
             <tr id="add_new"><td colspan="3"><a onclick="add_category();" class="add_button"  href="#">+</a></tr>
         </table>

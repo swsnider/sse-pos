@@ -3,7 +3,7 @@ from google.appengine.api import urlfetch
 
 #add models here
 
-__all__ = ['User', 'Visit', 'ItemCategory', 'ColorCode', 'LineItem', 'Transaction']
+__all__ = ['User', 'Visit', 'ItemCategory', 'ColorCode', 'LineItem', 'Transaction', 'Setting']
 
 class User(db.Model):
     email = db.EmailProperty()
@@ -23,11 +23,13 @@ class ItemCategory(db.Model):
     price = db.IntegerProperty()
     description = db.StringProperty()
     code = db.StringProperty()
+    display = db.BooleanProperty(default=True)
 
 class ColorCode(db.Model):
     discount = db.IntegerProperty()
     color = db.StringProperty()
     code = db.StringProperty()
+    display = db.BooleanProperty(default=True)
 
 class LineItem(db.Model):
     color = db.ReferenceProperty(ColorCode)
@@ -41,7 +43,7 @@ class LineItem(db.Model):
         else:
             return self.color.discount
     def total(self):
-        return (self.category.price*int(self.quantity)*((100 - self.get_discount())/100.0)) + self.misc_amount
+        return ((self.category.price + self.misc_amount)*int(self.quantity)*((100 - self.get_discount())/100.0))
     def total_str(self):
         return "%#.2f" % self.total()
 
@@ -58,3 +60,7 @@ class Transaction(db.Model):
         return total
     def total_str(self):
         return "%#.2f" % self.total()
+
+class Setting(db.Model):
+    name = db.StringProperty()
+    set_at = db.StringProperty()

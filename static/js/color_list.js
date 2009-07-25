@@ -1,3 +1,12 @@
+function toggle_display(key){
+    $.post('/api/color/toggle_display', {key: key}, function(data){
+        data = eval('('+ data +')');
+        if (data.valid){
+            $('#'+key).replaceWith(data.html);
+        }
+    });
+}
+
 function delete_color(key){
     $('<div id="dialog" title="Confirm delete"><p>Do you really want to delete this color?</p></div>').dialog({modal: true, buttons: {"No": function (){
         $(this).dialog("close");
@@ -29,7 +38,7 @@ function commit_row(key){
     $.post('/api/color/update', {key: key, color: color, discount: discount, code: code}, function(data){
         data = eval('('+ data +')');
         if (data.valid){
-            $('#'+key+'row').replaceWith(data.html)
+            $('#'+key+'row').replaceWith(data.html);
         }
     });
 }
@@ -38,7 +47,7 @@ function edit_row(key){
     $.get('/api/color/edit', {key: key}, function(data){
         data = eval('('+ data +')');
         if (data.valid){
-            $('#'+key).replaceWith(data.html)
+            $('#'+key).replaceWith(data.html);
         }
     });
 }
