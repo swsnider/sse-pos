@@ -26,6 +26,44 @@ class TransactionPage(webapp.RequestHandler):
         for i in items:
             grand_total += i.total()
         return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all().filter('display =', True).order('color'), itemtypes=ItemCategory.all().filter('display =', True).order('description'))
+    
+    @jsonify
+    @secure
+    def donate(self, **kwargs):
+        try:
+            amt = int(self.request.get('amt', False))
+        except:
+            return dict(valid=False, payload=traceback.format_exc())
+        trans = Transaction()
+        trans.owner = self.users.get_current_user()
+        trans.put()
+        item = LineItem()
+        donate = ItemCategory.all().filter('description =', 'DONATION').get()
+        if donate is None:
+            donate = ItemCategory()
+            donate.description = 'DONATION'
+            donate.code = '+++'
+            donate.price = 0
+            donate.display = False
+            donate.put()
+        color = ColorCode.all().filter('color =', 'DONATION').get()
+        if color is None:
+            color = ColorCode()
+            color.color = "DONATION"
+            color.code = "+++"
+            color.discount = 0
+            color.display = False
+            color.put()
+        item.category = donate
+        item.quantity = 1
+        item.misc_amount = amt
+        item.color = color
+        item.put()
+        trans.items.append(str(item.key()))
+        trans.finalized = True
+        trans.put()
+        return dict(valid=True)
+        
 
 class TransactionAPI(webapp.RequestHandler):
     

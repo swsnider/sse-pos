@@ -27,7 +27,7 @@
     </head>
     <body>
         <table>
-            <tr><td id="welcome"></td><td><a href="/transaction">Start/Continue Sale</a></td><td><a href="/admin">Administration Menu</a></td><td><a href="/logout">Logout</a></td><td><a href="/logout_pred">Logout with prejudice</a></td></tr>
+            <tr><td id="welcome"></td><td><a href="/transaction">Start/Continue Sale</a></td><td><a onclick="process_donation();" href="#">Donate</a></td><td><a href="/admin">Administration Menu</a></td><td><a href="/logout">Logout</a></td><td><a href="/logout_pred">Logout with prejudice</a></td></tr>
         </table>
         {% block content %}
         <h1>Common Thread POS</h1>

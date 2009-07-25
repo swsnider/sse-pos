@@ -27,7 +27,6 @@ function add_category(){
         data = eval('('+ data +')');
         if (data.valid){
             $('#add_new').before(data.html);
-            alert(data.html);
         }
     });
 }
