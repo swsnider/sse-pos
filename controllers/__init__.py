@@ -2,7 +2,7 @@ import cgi, os
 import hashlib
 from google.appengine.api import users
 from google.appengine.ext import webapp
-from util import render_template, secure, tg_template, jsonify
+from util import render_template, secure, tg_template, jsonify, developer_only
 from auth_layer import uses_users
 from models import User, Visit
 from debugging import DebuggingPages
@@ -27,6 +27,14 @@ class GenericPages(webapp.RequestHandler):
     @uses_users
     def logout(self, **kwargs):
         self.users.logout()
+        self.redirect('/')
+    
+    @developer_only
+    def logout_pred(self, **kwargs):
+        self.users.logout()
+        q = Visit.all()
+        for r in q:
+            r.delete()
         self.redirect('/')
     
     @tg_template("login.html")
