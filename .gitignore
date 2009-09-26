@@ -1,3 +1,4 @@
 *.pyc
 auth_info.py
 ._*
+.DS_Store
