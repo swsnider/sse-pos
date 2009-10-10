@@ -15,7 +15,7 @@
         <table id="item_list">
             <tr id="head_row"><th>Item #</th><th>Item Description</th><th>Price per</th><th>Quantity</th><th>Discount</th><th>Total</th></tr>
             {% for i in items %}
-            <tr id="{{ i.key() }}" class="{{ loop.cycle('odd', 'even') }}"><td>{{ i.category.code }}</td><td>{{ i.category.description }}</td><td>${% if i.category.description == 'MISC' %}{{i.misc_amount}}{% else %}{{ i.category.price }}{% endif %}</td><td>{{i.quantity}}</td><td>{{ i.get_discount() }}%</td><td>${{ i.total_str() }}</td><td><a class="delete_button" onclick="void_item('{{ i.key() }}')">void</a></td></tr>
+            <tr id="{{ i.key() }}" class="{{ loop.cycle('odd', 'even') }}"><td>{{ i.category_code }}</td><td>{{ i.category }}</td><td>${{ i.get_price() }}</td><td>{{i.quantity}}</td><td>{{ i.get_discount() }}%</td><td>${{ i.total_str() }}</td><td><a class="delete_button" onclick="void_item('{{ i.key() }}')">void</a></td></tr>
             {% endfor %}
             <tr id="tax_row"><td>&nbsp;</td><td><select id="item" name="item"><option value="">Select an item</option>{% for i in itemtypes %}<option value="{{i.code}}">{{i.description}}</option>{% endfor %}</select></td><td>&nbsp;</td><td><input type="text" name="quantity" value="1" id="quantity" /></td><td><select id="color" name="color"><option value="">Select a color</option>{% for i in colors %}<option value="{{i.code}}">{{i.color}}</option>{% endfor %}</select></td><td><button onclick="process_braindead();">Add</button></td></tr>
             <tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>${{ grand_total }}</td></tr>

@@ -2,7 +2,7 @@ from models import *
 import traceback, urllib
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
-from util import secure, tg_template, jsonify
+from util import secure, tg_template, jsonify, str_to_money, money_to_str
 
 class TransactionPage(webapp.RequestHandler):
     
@@ -21,7 +21,7 @@ class TransactionPage(webapp.RequestHandler):
                 trans.owner = self.users.get_current_user()
                 trans.put()
                 self.session['transaction_key'] = str(trans.key())
-        items = [LineItem.get(Key(encoded=i)) for i in trans.items]
+        items = [LineItem2.get(Key(encoded=i)) for i in trans.items]
         grand_total = 0
         for i in items:
             grand_total += i.total()
@@ -31,33 +31,20 @@ class TransactionPage(webapp.RequestHandler):
     @secure
     def donate(self, **kwargs):
         try:
-            amt = int(self.request.get('amt', False))
+            amt = str_to_money(self.request.get('amt', False))
         except:
             return dict(valid=False, payload=traceback.format_exc())
         trans = Transaction()
         trans.owner = self.users.get_current_user()
         trans.put()
-        item = LineItem()
-        donate = ItemCategory.all().filter('description =', 'DONATION').get()
-        if donate is None:
-            donate = ItemCategory()
-            donate.description = 'DONATION'
-            donate.code = '+++'
-            donate.price = 0
-            donate.display = False
-            donate.put()
-        color = ColorCode.all().filter('color =', 'DONATION').get()
-        if color is None:
-            color = ColorCode()
-            color.color = "DONATION"
-            color.code = "+++"
-            color.discount = 0
-            color.display = False
-            color.put()
-        item.category = donate
+        item = LineItem2()
+        item.category = "DONATION"
+        item.category_code = "+++"
         item.quantity = 1
-        item.misc_amount = amt
-        item.color = color
+        item.price = amt
+        item.color = "DONATION"
+        item.color_code = "+++"
+        item.discount = 0
         item.put()
         trans.items.append(str(item.key()))
         trans.finalized = True
@@ -87,32 +74,27 @@ class TransactionAPI(webapp.RequestHandler):
                 #    z = price.split('.')
                 #    dollars, cents = z[0], z[1]
                 #    price = int(dollars) + int(cents)*100
-                price = int(price[1:])
-                item = LineItem()
-                misc = ItemCategory.all().filter('description =', 'MISC').get()
-                if misc is None:
-                    misc = ItemCategory()
-                    misc.description = 'MISC'
-                    misc.code = '$$$'
-                    misc.price = 0
-                    misc.display = False
-                    misc.put()
-                item.category = misc
+                price = str_to_money(price[1:])
+                item = LineItem2()
+                item.category = "MISC"
+                item.category_code = "$$$"
+                item.price = price
                 item.quantity = 1
-                item.misc_amount = price
                 color = ColorCode.all().filter('code =', color_inp).get()
                 if color == None:
                     raise "Bad color"
-                item.color = color
+                item.color = color.color
+                item.color_code = color.code
+                item.discount = color.discount
                 item.put()
                 trans.items.append(str(item.key()))
                 if len(trans.items) % 2 == 0:
                     class_val = 'even'
                 else:
                     class_val = 'odd'
-                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>$%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(item.category.code), 'description': str(item.category.description), 'price': str(price), 'quantity': str(1), 'discount':str(item.get_discount()), 'total': item.total_str(), "class":class_val}
+                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>$%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(item.category_code), 'description': str(item.category), 'price': money_to_str(price), 'quantity': str(1), 'discount':str(item.get_discount()), 'total': item.total_str(), "class":class_val}
             else:
-                item = LineItem()
+                item = LineItem2()
                 l = t.split()
                 if len(l) == 2:
                     quantity, cat_code, color = 1, l[0], l[1]
@@ -121,20 +103,14 @@ class TransactionAPI(webapp.RequestHandler):
                 item.quantity = int(quantity)
                 if color.startswith('%'):
                     #custom precentage handler
-                    item.misc_discount = int(color[1:])
-                    color = ColorCode.all().filter('color =', 'CUSTOM').get()
-                    if color == None:
-                        color = ColorCode()
-                        color.color = 'CUSTOM'
-                        color.code = '%%%'
-                        color.discount = 0
-                        color.display = False
-                        color.put()
+                    item.discount = int(color[1:])
+                    item.color = 'CUSTOM'
+                    item.color_code = '%%%'
                 else:                
                     color = ColorCode.all().filter('code =', color).fetch(1)[0]
                 category = ItemCategory.all().filter('code =', cat_code).fetch(1)[0]
-                item.color = color
-                item.category = category
+                item.set_color(color)
+                item.set_category(category)
                 item.put()
                 trans.items.append(str(item.key()))
                 if len(trans.items) % 2 == 0:
@@ -142,11 +118,11 @@ class TransactionAPI(webapp.RequestHandler):
                 else:
                     class_val = 'odd'
                 total = item.total()
-                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(cat_code), 'description': str(category.description), 'price': str(category.price), 'quantity': str(quantity), 'discount':str(item.get_discount()), 'total': total, "class":class_val}
+                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(cat_code), 'description': str(category.description), 'price': money_to_str(category.price), 'quantity': str(quantity), 'discount':str(item.get_discount()), 'total': total, "class":class_val}
             trans.put()
             grand_total = 0
             for i in trans.items:
-                j = LineItem.get(Key(encoded=i))
+                j = LineItem2.get(Key(encoded=i))
                 grand_total += j.total()
             return {'valid':True, 'html':html, 'total_row':"""<tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$%s</td></tr>""" %(str(grand_total)), 'sess':repr(self.session)}
         except:
@@ -163,9 +139,9 @@ class TransactionAPI(webapp.RequestHandler):
                 trans = Transaction.get(Key(encoded=self.session['transaction_key']))    
             grand_total = 0
             for i in trans.items:
-                j = LineItem.get(Key(encoded=i))
+                j = LineItem2.get(Key(encoded=i))
                 grand_total += j.total()
-            return {'valid': True, 'is_error':False, 'total': grand_total}
+            return {'valid': True, 'is_error':False, 'total': (grand_total)}
         except:
             return {'valid': False, 'is_error':True, 'payload':traceback.format_exc()}
     
@@ -178,10 +154,10 @@ class TransactionAPI(webapp.RequestHandler):
                 return {'valid': False, 'is_error': False, 'payload': 'Unable to find the current transaction!'}
             else:
                 trans = Transaction.get(Key(encoded=self.session['transaction_key']))    
-            customer_total = float(urllib.unquote_plus(self.request.get('customer_total')))
+            customer_total = str_to_money(urllib.unquote_plus(self.request.get('customer_total')))
             grand_total = 0
             for i in trans.items:
-                j = LineItem.get(Key(encoded=i))
+                j = LineItem2.get(Key(encoded=i))
                 grand_total += j.total()
             if customer_total < grand_total:
                 return {'valid': False, 'is_error': False, 'payload':"The amount received from the customer is not enough to pay the outstanding balance."}

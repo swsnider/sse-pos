@@ -1,9 +1,10 @@
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
+from util import *
 
 #add models here
 
-__all__ = ['User', 'Visit', 'ItemCategory', 'ColorCode', 'LineItem', 'Transaction', 'Setting']
+__all__ = ['User', 'Visit', 'ItemCategory', 'ColorCode', 'LineItem2', 'Transaction', 'Setting']
 
 class User(db.Model):
     email = db.EmailProperty()
@@ -47,6 +48,34 @@ class LineItem(db.Model):
     def total_str(self):
         return "%#.2f" % self.total()
 
+class LineItem2(db.Model):
+    discount = db.IntegerProperty()
+    quantity = db.IntegerProperty()
+    price = db.IntegerProperty()
+    color = db.StringProperty()
+    category = db.StringProperty()
+    color_code = db.StringProperty()
+    category_code = db.StringProperty()
+    def set_color(self, color):
+        self.color = color.color
+        self.color_code = color.code
+        self.discount = color.discount
+    def set_category(self, cat):
+        self.category = cat.description
+        self.price = cat.price
+        self.category_code = cat.code
+    def get_discount(self):
+        return self.discount
+    
+    def total(self):
+        return (self.price * self.quantity * ((100 - self.get_discount())/100.0))/100.0
+    
+    def get_price(self):
+        return money_to_str(self.price)
+    
+    def total_str(self):
+        return "%#.2f" % self.total()
+
 class Transaction(db.Model):
     owner = db.ReferenceProperty(User)
     items = db.StringListProperty() # List of str(LineItem.key())
@@ -55,7 +84,7 @@ class Transaction(db.Model):
     def total(self):
         total = 0
         for i in self.items:
-            it = LineItem.get(db.Key(encoded=i))
+            it = LineItem2.get(db.Key(encoded=i))
             total += it.total()
         return total
     def total_str(self):

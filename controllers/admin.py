@@ -73,31 +73,6 @@ class AdminPages(webapp.RequestHandler):
                 j = LineItem.get(Key(encoded=k))
                 our_total += j.total()
         return dict(sales_today=our_count, sales_today_total=our_total, date_requested=date_requested)
-    
-    @tg_template('admin_transactions.html')
-    @admin_only
-    def view_transactions(self, **kwargs):
-        ts = Transaction.all().order('-created_on')
-        transaction_list = []
-        for trans in ts:
-            trans_dict = {'transaction': trans, 'item_list':[]}
-            for item in trans.items:
-                it = LineItem.get(Key(encoded=item))
-                trans_dict['item_list'].append(it)
-            transaction_list.append(trans_dict)
-        return dict(transactions=transaction_list)
-    
-    @tg_template('eval.html')
-    @developer_only
-    def eval(self, **kwargs):
-        return {}
-    
-    
-    @jsonify
-    @developer_only
-    def do_eval(self, **kwargs):
-        code = urllib.unquote_plus(self.request.get('code'))
-        return {'evalResult': eval(code), 'errors': traceback.format_exc()}
 
 class UserPages(webapp.RequestHandler):
     def index(self, **kwargs):
@@ -277,7 +252,7 @@ class CategoryAPI(webapp.RequestHandler):
     def update(self, **kwargs):
         try:
             c = ItemCategory.get(Key(encoded=self.request.get('key')))
-            c.price = int(urllib.unquote_plus(self.request.get('price')))
+            c.price = str_to_money(urllib.unquote_plus(self.request.get('price')))
             c.description = urllib.unquote_plus(self.request.get('description'))
             c.code = urllib.unquote_plus(self.request.get('code'))
             c.put()
