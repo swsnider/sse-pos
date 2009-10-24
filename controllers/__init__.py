@@ -2,9 +2,10 @@ import cgi, os
 import hashlib
 from google.appengine.api import users
 from google.appengine.ext import webapp
+from google.appengine.ext.db import Key
 from util import render_template, secure, tg_template, jsonify, developer_only
 from auth_layer import uses_users
-from models import User, Visit
+from models import User, Visit, Transaction, Transaction2
 from debugging import DebuggingPages
 from transactions import TransactionPage, TransactionAPI
 from admin import AdminPages, ColorAPI, CategoryAPI, UserAPI, UserPages
@@ -24,8 +25,13 @@ class GenericPages(webapp.RequestHandler):
         u = self.users.get_current_user()
         return dict(valid=True, data="<a onclick='destroy_cache();'>Welcome</a> " + u.first_name+" "+u.last_name)
     
-    @uses_users
+    @secure
     def logout(self, **kwargs):
+        if 'transaction_key' in self.session:
+            try:
+                Transaction2.get(Key(encoded=self.session['transaction_key'])).delete()
+            except:
+                Transaction.get(Key(encoded=self.session['transaction_key'])).delete()
         self.users.logout()
         self.redirect('/')
     

@@ -4,7 +4,6 @@ Mike's feature requests:
 * Make it easier to change the amount of discount a tag color provides
 * Need to record the actual deposit amount for a day along with an explanation
 * Have actual monthly reports, including a sales tax due report.
-* Attach an email address or something to each sale to keep information about repeat sales
 * Gift certificates and donations both need to be able to be entered.
 
 Biggest single change:

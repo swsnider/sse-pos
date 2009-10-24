@@ -31,7 +31,7 @@ class AdminPages(webapp.RequestHandler):
     @tg_template('category_list.html')
     @admin_only
     def category(self, **kwargs):
-        return dict(categories=ItemCategory.all())
+        return dict(categories=ItemCategory.all(), conv=money_to_str)
     
     @tg_template('color_list.html')
     @admin_only
@@ -62,12 +62,35 @@ class AdminPages(webapp.RequestHandler):
                 date_requested = (date.today() - oneDay).strftime('%Y-%m-%d')
             else:
                 date_requested = date.today().strftime('%Y-%m-%d')
-        ts = Transaction.gql("WHERE created_on >= :1", datetime.strptime(date_requested, '%Y-%m-%d'))
+        ts = Transaction2.gql("WHERE created_on >= :1 AND finalized = True", datetime.strptime(date_requested, '%Y-%m-%d'))
+        our_total = 0
+        our_count = 0
+        for i in ts:
+            our_count += 1
+            if i.cached_total not in [None, 0]:
+                our_total += i.cached_total /100.0
+            else:
+                our_total += i.total()
+        return dict(sales_today=our_count, sales_today_total=our_total, date_requested=date_requested)
+        
+        
+    @tg_template('stats.html')
+    @admin_only
+    def old_stats(self, **kwargs):
+        date_requested = self.request.get('date_data', False)
+        oneDay = timedelta(days=1)
+        if not date_requested:
+            now = datetime.now()
+            if int(now.hour) < 4:
+                date_requested = (date.today() - oneDay).strftime('%Y-%m-%d')
+            else:
+                date_requested = date.today().strftime('%Y-%m-%d')
+        ts = Transaction.gql("WHERE created_on >= :1 AND finalized = True", datetime.strptime(date_requested, '%Y-%m-%d'))
         our_total = 0
         our_count = 0
         for i in ts:
             if i.items is None or len(i.items) == 0:
-                continue
+                            continue
             our_count += 1
             for k in i.items:
                 j = LineItem.get(Key(encoded=k))
@@ -265,4 +288,4 @@ class CategoryAPI(webapp.RequestHandler):
     @admin_only
     def edit(self, **kwargs):
         c = ItemCategory.get(Key(encoded=self.request.get('key')))
-        return dict(valid=True, html="""<tr id="%(key)srow"><td><input type="text" id="%(key)sdescription" value="%(description)s"/></td><td>$<input type="text" id="%(key)sprice" value="%(price)s"/></td><td><input type="text" id="%(key)scode" value="%(code)s"/></td><td><button onclick="commit_row('%(key)s');">Commit</button></td></tr>""" % {"key": str(c.key()), 'price': str(c.price), 'description': str(c.description), 'code': str(c.code)})
+        return dict(valid=True, html="""<tr id="%(key)srow"><td><input type="text" id="%(key)sdescription" value="%(description)s"/></td><td>$<input type="text" id="%(key)sprice" value="%(price)s"/></td><td><input type="text" id="%(key)scode" value="%(code)s"/></td><td><button onclick="commit_row('%(key)s');">Commit</button></td></tr>""" % {"key": str(c.key()), 'price': str(money_to_str(c.price)), 'description': str(c.description), 'code': str(c.code)})

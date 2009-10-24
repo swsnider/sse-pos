@@ -4,7 +4,7 @@ from util import *
 
 #add models here
 
-__all__ = ['User', 'Visit', 'ItemCategory', 'ColorCode', 'LineItem2', 'Transaction', 'Setting']
+__all__ = ['User', 'Visit', 'ItemCategory', 'ColorCode', 'LineItem2', 'LineItem', 'Transaction', 'Transaction2', 'Setting']
 
 class User(db.Model):
     email = db.EmailProperty()
@@ -44,7 +44,7 @@ class LineItem(db.Model):
         else:
             return self.color.discount
     def total(self):
-        return ((self.category.price + self.misc_amount)*int(self.quantity)*((100 - self.get_discount())/100.0))
+        return (((self.category.price/100.0) + self.misc_amount)*int(self.quantity)*((100 - self.get_discount())/100.0))
     def total_str(self):
         return "%#.2f" % self.total()
 
@@ -79,13 +79,31 @@ class LineItem2(db.Model):
 class Transaction(db.Model):
     owner = db.ReferenceProperty(User)
     items = db.StringListProperty() # List of str(LineItem.key())
-    created_on = db.DateTimeProperty(auto_now=True)
+    created_on = db.DateTimeProperty(auto_now_add=True)
     finalized = db.BooleanProperty(default=False)
+    def total(self):
+        total = 0
+        for i in self.items:
+            it = LineItem.get(db.Key(encoded=i))
+            total += it.total()
+        self.put()
+        return total
+    def total_str(self):
+        return "%#.2f" % self.total()
+
+class Transaction2(db.Model):
+    owner = db.ReferenceProperty(User)
+    items = db.StringListProperty() # List of str(LineItem2.key())
+    created_on = db.DateTimeProperty(auto_now_add=True)
+    finalized = db.BooleanProperty(default=False)
+    cached_total = db.IntegerProperty(default=0)
     def total(self):
         total = 0
         for i in self.items:
             it = LineItem2.get(db.Key(encoded=i))
             total += it.total()
+        self.cached_total = int(total * 100)
+        self.put()
         return total
     def total_str(self):
         return "%#.2f" % self.total()

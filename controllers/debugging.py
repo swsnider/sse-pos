@@ -3,18 +3,14 @@ from datetime import datetime
 from google.appengine.ext import webapp
 from auth_layer import uses_users
 import hashlib
-from util import jsonify, secure
+from util import jsonify, secure, str_to_money
 
 class DebuggingPages(webapp.RequestHandler):
     def fix_items(self, **kwargs):
         its = ItemCategory.all()
         for i in its:
-            i.display = True
+            i.price = str_to_money(str(i.price))
             i.put()
-        cos = ColorCode.all()
-        for c in cos:
-            c.display = True
-            c.put()
         return    
     
     def add_dates(self, **kwargs):

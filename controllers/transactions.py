@@ -10,14 +10,14 @@ class TransactionPage(webapp.RequestHandler):
     @secure
     def index(self, **kwargs):
         if 'transaction_key' not in self.session:
-            trans = Transaction()
+            trans = Transaction2()
             trans.owner = self.users.get_current_user()
             trans.put()
             self.session['transaction_key'] = str(trans.key())
         else:
-            trans = Transaction.get(Key(encoded=self.session['transaction_key']))
+            trans = Transaction2.get(Key(encoded=self.session['transaction_key']))
             if trans is None:
-                trans = Transaction()
+                trans = Transaction2()
                 trans.owner = self.users.get_current_user()
                 trans.put()
                 self.session['transaction_key'] = str(trans.key())
@@ -34,7 +34,7 @@ class TransactionPage(webapp.RequestHandler):
             amt = str_to_money(self.request.get('amt', False))
         except:
             return dict(valid=False, payload=traceback.format_exc())
-        trans = Transaction()
+        trans = Transaction2()
         trans.owner = self.users.get_current_user()
         trans.put()
         item = LineItem2()
@@ -59,12 +59,12 @@ class TransactionAPI(webapp.RequestHandler):
     def add_item(self, **kwargs):
         try:
             if 'transaction_key' not in self.session:
-                trans = Transaction()
+                trans = Transaction2()
                 trans.owner = self.users.get_current_user()
                 trans.put()
                 self.session['transaction_key'] = str(trans.key())
             else:
-                trans = Transaction.get(Key(encoded=self.session['transaction_key']))    
+                trans = Transaction2.get(Key(encoded=self.session['transaction_key']))    
             t = self.request.get('data')
             if t.startswith('$'):
                 #misc processing
@@ -136,7 +136,7 @@ class TransactionAPI(webapp.RequestHandler):
             if 'transaction_key' not in self.session:
                 return {'valid': False, 'is_error': False, 'payload': 'Unable to find the current transaction!'}
             else:
-                trans = Transaction.get(Key(encoded=self.session['transaction_key']))    
+                trans = Transaction2.get(Key(encoded=self.session['transaction_key']))    
             grand_total = 0
             for i in trans.items:
                 j = LineItem2.get(Key(encoded=i))
@@ -153,7 +153,7 @@ class TransactionAPI(webapp.RequestHandler):
             if 'transaction_key' not in self.session:
                 return {'valid': False, 'is_error': False, 'payload': 'Unable to find the current transaction!'}
             else:
-                trans = Transaction.get(Key(encoded=self.session['transaction_key']))    
+                trans = Transaction2.get(Key(encoded=self.session['transaction_key']))    
             customer_total = str_to_money(urllib.unquote_plus(self.request.get('customer_total')))
             grand_total = 0
             for i in trans.items:
@@ -177,7 +177,7 @@ class TransactionAPI(webapp.RequestHandler):
             if 'transaction_key' not in self.session:
                 return {'valid': False, 'is_error': False, 'payload': 'Unable to find the current transaction!'}
             else:
-                trans = Transaction.get(Key(encoded=self.session['transaction_key']))
+                trans = Transaction2.get(Key(encoded=self.session['transaction_key']))
             trans.delete()
             del self.session['transaction_key']
             return {'valid':True, 'is_error': False}
@@ -191,7 +191,7 @@ class TransactionAPI(webapp.RequestHandler):
             if 'transaction_key' not in self.session:
                 return {'valid': False, 'is_error': False, 'payload': 'Unable to find the current transaction!'}
             else:
-                trans = Transaction.get(Key(encoded=self.session['transaction_key']))
+                trans = Transaction2.get(Key(encoded=self.session['transaction_key']))
             trans.items.remove(self.request.get('data'))
             trans.put()
             return {'valid':True, 'is_error': False, 'total_row': """<tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$%s</td></tr>""" % trans.total_str()}
