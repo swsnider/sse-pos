@@ -45,6 +45,11 @@ function cancel_trans(){
     });
 }
 
+function giftcert(){
+  amt = $('#giftcert').val() + "";
+  process_input(':' + amt);
+}
+
 function finalize_trans(){
     $.get('/api/transaction/finalize_step_1', function (data){
         data = eval('(' + data + ')');

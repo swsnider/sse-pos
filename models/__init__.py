@@ -71,7 +71,8 @@ class LineItem2(db.Model):
         return (self.price * self.quantity * ((100 - self.get_discount())/100.0))/100.0
     
     def get_price(self):
-        return money_to_str(self.price)
+        import util
+        return util.money_to_str(self.price)
     
     def total_str(self):
         return "%#.2f" % self.total()
@@ -97,6 +98,7 @@ class Transaction2(db.Model):
     created_on = db.DateTimeProperty(auto_now_add=True)
     finalized = db.BooleanProperty(default=False)
     cached_total = db.IntegerProperty(default=0)
+    cached_cert = db.IntegerProperty(default=0)
     def total(self):
         total = 0
         for i in self.items:
@@ -105,6 +107,18 @@ class Transaction2(db.Model):
         self.cached_total = int(total * 100)
         self.put()
         return total
+    def total_and_cert(self):
+        total = 0
+        cert = 0
+        for i in self.items:
+            it = LineItem2.get(db.Key(encoded=i))
+            total += it.total()
+            if it.category_code == ":::":
+                cert += -it.total()
+        self.cached_total = int(total * 100)
+        self.cached_cert = int(cert * 100)
+        self.put()
+        return total, cert
     def total_str(self):
         return "%#.2f" % self.total()
 

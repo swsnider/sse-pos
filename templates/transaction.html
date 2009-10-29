@@ -19,7 +19,7 @@
             {% endfor %}
             <tr id="tax_row"><td>&nbsp;</td><td><select id="item" name="item"><option value="">Select an item</option>{% for i in itemtypes %}<option value="{{i.code}}">{{i.description}}</option>{% endfor %}</select></td><td>&nbsp;</td><td><input type="text" name="quantity" value="1" id="quantity" /></td><td><select id="color" name="color"><option value="">Select a color</option>{% for i in colors %}<option value="{{i.code}}">{{i.color}}</option>{% endfor %}</select></td><td><button onclick="process_braindead();">Add</button></td></tr>
             <tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>${{ grand_total }}</td></tr>
-            <tr><td><button onclick="cancel_trans();">Cancel</button></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td><button onclick="finalize_trans();">Finalize</button></td></tr>
+            <tr><td><button onclick="cancel_trans();">Cancel</button></td><td>&nbsp;</td><td><input type="text" name="giftcert" id="giftcert" /></td><td><button onclick="giftcert();">Use Gift Certificate</button></td><td>&nbsp;</td><td><button onclick="finalize_trans();">Finalize</button></td></tr>
         </table>
         </td>
         <!-- <td>

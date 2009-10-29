@@ -51,7 +51,7 @@ class AdminPages(webapp.RequestHandler):
         return dict(users=User.all())
     
     
-    @tg_template('stats.html')
+    @tg_template('new_stats.html')
     @admin_only
     def stats(self, **kwargs):
         date_requested = self.request.get('date_data', False)
@@ -65,13 +65,17 @@ class AdminPages(webapp.RequestHandler):
         ts = Transaction2.gql("WHERE created_on >= :1 AND finalized = True", datetime.strptime(date_requested, '%Y-%m-%d'))
         our_total = 0
         our_count = 0
+        cert_today = 0
         for i in ts:
             our_count += 1
-            if i.cached_total not in [None, 0]:
-                our_total += i.cached_total /100.0
+            if i.cached_total not in [None, 0] and i.cached_cert not in [None,0]:
+                our_total += i.cached_total / 100.0
+                cert_today += i.cached_cert / 100.0
             else:
-                our_total += i.total()
-        return dict(sales_today=our_count, sales_today_total=our_total, date_requested=date_requested)
+                total, cert = i.total_and_cert()
+                our_total += total
+                cert_today += cert
+        return dict(sales_today=our_count, sales_today_total=our_total, date_requested=date_requested, cert_today=cert_today)
         
         
     @tg_template('stats.html')

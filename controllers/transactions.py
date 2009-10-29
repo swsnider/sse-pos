@@ -93,6 +93,24 @@ class TransactionAPI(webapp.RequestHandler):
                 else:
                     class_val = 'odd'
                 html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>$%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(item.category_code), 'description': str(item.category), 'price': money_to_str(price), 'quantity': str(1), 'discount':str(item.get_discount()), 'total': item.total_str(), "class":class_val}
+            elif t.startswith(':'):
+                #gift certificate processing
+                price = str_to_money(t[1:])
+                item = LineItem2()
+                item.category = 'Gift Card Use'
+                item.category_code = ":::"
+                item.price = -price
+                item.quantity = 1
+                item.color = 'Special'
+                item.color_code = ':::'
+                item.discount = 0
+                item.put()
+                trans.items.append(str(item.key()))
+                if len(trans.items) % 2 == 0:
+                    class_val = 'even'
+                else:
+                    class_val = 'odd'
+                html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>$%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)s</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(item.category_code), 'description': str(item.category), 'price': money_to_str(price), 'quantity': str(1), 'discount':str(item.get_discount()), 'total': item.total_str(), "class":class_val}
             else:
                 item = LineItem2()
                 l = t.split()
