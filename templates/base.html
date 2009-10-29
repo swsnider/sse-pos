@@ -14,7 +14,7 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 			    enable_cache();
-				$.get('/user_name', function(data){
+				$.get('/user_name?version=' + CONST_VERSION, function(data){
 					data = eval('('+ data +')');
 					if (data.valid){
 						$('#welcome').html(data.data);

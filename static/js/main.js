@@ -15,6 +15,7 @@ function destroy_cache(){
   }else{
 var localServer = google.gears.factory.create('beta.localserver');
 var store = localServer.removeManagedStore('sse-pos-store');
+window.location.reload();
 }
 }
 
@@ -28,3 +29,4 @@ function process_donation(){
             alert("Server Error!");
     });
 }
+CONST_VERSION = 2;

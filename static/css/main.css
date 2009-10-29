@@ -36,3 +36,9 @@ tr.even td {
 .clickable {
     cursor: hand;
 }
+
+.new_feature {
+  cursor: hand;
+  color: white;
+  background-color: red;
+}

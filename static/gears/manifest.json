@@ -3,6 +3,7 @@
   "version": "gears1.1",
   "entries": [
       { "url": "/static/js/jquery.js"},
+      { "url": "/static/js/main.js"},
       { "url": "/static/js/jquery-ui.js"},
       { "url": "/static/js/transaction.js"},
       { "url": "/static/js/user_list.js"},
