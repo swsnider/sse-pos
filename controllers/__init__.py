@@ -23,7 +23,7 @@ class GenericPages(webapp.RequestHandler):
     @secure
     def user_name(self, **kwargs):
         u = self.users.get_current_user()
-        if int(self.request.get('version', 0)) < 2:
+        if int(self.request.get('version', 0)) < 3:
             return dict(valid=True, data="<a onclick='destroy_cache();'>Welcome</a> " + u.first_name+" "+u.last_name + ".<a onclick=\"destroy_cache();\"><span class=\"new_feature\"> New features have been added! To enable them, click here.</span></a>")
         else:
             return dict(valid=True, data="<a onclick='destroy_cache();'>Welcome</a> " + u.first_name+" "+u.last_name)

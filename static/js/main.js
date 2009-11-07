@@ -29,4 +29,4 @@ function process_donation(){
             alert("Server Error!");
     });
 }
-CONST_VERSION = 2;
+CONST_VERSION = 3;
