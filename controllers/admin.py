@@ -58,7 +58,7 @@ class AdminPages(webapp.RequestHandler):
         oneDay = timedelta(days=1)
         if not date_requested:
             now = datetime.now()
-            if int(now.hour) < 4:
+            if int(now.hour) < 5:
                 date_requested = (date.today() - oneDay).strftime('%Y-%m-%d')
             else:
                 date_requested = date.today().strftime('%Y-%m-%d')
@@ -85,7 +85,7 @@ class AdminPages(webapp.RequestHandler):
         oneDay = timedelta(days=1)
         if not date_requested:
             now = datetime.now()
-            if int(now.hour) < 4:
+            if int(now.hour) < 5:
                 date_requested = (date.today() - oneDay).strftime('%Y-%m-%d')
             else:
                 date_requested = date.today().strftime('%Y-%m-%d')
@@ -187,9 +187,10 @@ class UserAPI(webapp.RequestHandler):
     @admin_only
     def delete(self, **kwargs):
         try:
-            c = User.get(Key(encoded=self.request.get('key')))
-            c.delete()
-            return dict(valid=True)
+            #c = User.get(Key(encoded=self.request.get('key')))
+            #c.delete()
+            #return dict(valid=True)
+            raise "UnsupportedFeature"
         except:
             return dict(valid=False, failure=traceback.format_exc())
 

@@ -93,9 +93,10 @@ class Transaction(db.Model):
         return "%#.2f" % self.total()
 
 class Transaction2(db.Model):
+    import util.db
     owner = db.ReferenceProperty(User)
     items = db.StringListProperty() # List of str(LineItem2.key())
-    created_on = db.DateTimeProperty(auto_now_add=True)
+    created_on = util.db.ESTTZDateTimeProperty(auto_now_add=True)
     finalized = db.BooleanProperty(default=False)
     cached_total = db.IntegerProperty(default=0)
     cached_cert = db.IntegerProperty(default=0)
