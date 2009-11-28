@@ -16,3 +16,4 @@ def add_routes(map):
     map.connect('/denied', controller="controllers:GenericPages", action="denied")
     map.connect('/debug/:action', controller="controllers:DebuggingPages")
     map.connect('/donation/add', controller="controllers:TransactionPage", action="donate")
+    map.connect('/pos/:action', controller="controllers:PosPage", action="index")

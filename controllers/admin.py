@@ -233,7 +233,7 @@ class ColorAPI(webapp.RequestHandler):
             c.color = urllib.unquote_plus(self.request.get('color'))
             c.code = urllib.unquote_plus(self.request.get('code'))
             c.put()
-            return dict(valid=True, html="""<tr id="%(key)s"><td>%(color)s</td><td>%(discount)s%%</td><td>%(code)s</td><td>%(display)s</td><td><a onclick="delete_color('%(key)s');" class="delete_button">X</a></td><td><a onclick="edit_row('%(key)s');" class="edit_button">edit</a></td><td><a onclick="toggle_display('%(key)s');" class="edit_button">Toggle Displayed</a></td></tr>""" % {'key': str(c.key()), 'discount': str(c.discount), 'color': str(c.color), 'code': str(c.code)})
+            return dict(valid=True, html="""<tr id="%(key)s"><td>%(color)s</td><td>%(discount)s%%</td><td>%(code)s</td><td>%(display)s</td><td><a onclick="delete_color('%(key)s');" class="delete_button">X</a></td><td><a onclick="edit_row('%(key)s');" class="edit_button">edit</a></td><td><a onclick="toggle_display('%(key)s');" class="edit_button">Toggle Displayed</a></td></tr>""" % {'key': str(c.key()), 'discount': str(c.discount), 'color': str(c.color), 'code': str(c.code), 'display': str(c.display)})
         except:
             return dict(valid=False, failure=traceback.format_exc())
     
@@ -284,7 +284,7 @@ class CategoryAPI(webapp.RequestHandler):
             c.description = urllib.unquote_plus(self.request.get('description'))
             c.code = urllib.unquote_plus(self.request.get('code'))
             c.put()
-            return dict(valid=True, html="""<tr id="%(key)s"><td>%(description)s</td><td>$%(price)s</td><td>%(code)s</td><td>%(display)s</td><td><a onclick="delete_category('%(key)s');" class="delete_button">X</a></td><td><a onclick="edit_row('%(key)s');" class="edit_button">edit</a></td><td><a onclick="toggle_display('%(key)s');" class="edit_button">Toggle Displayed</a></td></tr>""" % {'key': str(c.key()), 'price': str(c.price), 'description': str(c.description), 'code': str(c.code)})
+            return dict(valid=True, html="""<tr id="%(key)s"><td>%(description)s</td><td>$%(price)s</td><td>%(code)s</td><td>%(display)s</td><td><a onclick="delete_category('%(key)s');" class="delete_button">X</a></td><td><a onclick="edit_row('%(key)s');" class="edit_button">edit</a></td><td><a onclick="toggle_display('%(key)s');" class="edit_button">Toggle Displayed</a></td></tr>""" % {'key': str(c.key()), 'price': str(c.price), 'description': str(c.description), 'code': str(c.code), 'display': str(c.display)})
         except:
             return dict(valid=False, failure=traceback.format_exc())
     

@@ -42,3 +42,12 @@ tr.even td {
   color: white;
   background-color: red;
 }
+
+.pos_button{
+    background-color: #C5E6DC;
+    color: #CC7254;
+    vertical-align: center;
+    text-align: center;
+    width: 150px;
+    height: 150px;
+}

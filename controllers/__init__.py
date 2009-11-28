@@ -9,6 +9,7 @@ from models import User, Visit, Transaction, Transaction2
 from debugging import DebuggingPages
 from transactions import TransactionPage, TransactionAPI
 from admin import AdminPages, ColorAPI, CategoryAPI, UserAPI, UserPages
+from pos import PosPage
 
 #'Core' controller
 
