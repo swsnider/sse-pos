@@ -5,7 +5,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
 from util import render_template, secure, tg_template, jsonify, developer_only
 from auth_layer import uses_users
-from models import User, Visit, Transaction, Transaction2
+from models import User, Visit, Transaction, Transaction2, ItemCategory
 from debugging import DebuggingPages
 from transactions import TransactionPage, TransactionAPI
 from admin import AdminPages, ColorAPI, CategoryAPI, UserAPI, UserPages
@@ -24,7 +24,7 @@ class GenericPages(webapp.RequestHandler):
     @secure
     def user_name(self, **kwargs):
         u = self.users.get_current_user()
-        if int(self.request.get('version', 0)) < 3:
+        if int(self.request.get('version', 0)) < 4:
             return dict(valid=True, data="<a onclick='destroy_cache();'>Welcome</a> " + u.first_name+" "+u.last_name + ".<a onclick=\"destroy_cache();\"><span class=\"new_feature\"> New features have been added! To enable them, click here.</span></a>")
         else:
             return dict(valid=True, data="<a onclick='destroy_cache();'>Welcome</a> " + u.first_name+" "+u.last_name)
@@ -62,3 +62,7 @@ class GenericPages(webapp.RequestHandler):
     @tg_template("denied.html")
     def denied(self, **kwargs):
         return {}
+
+    @tg_template("pricelist.html")
+    def pricelist(self, **kwargs):
+        return {'itemtypes':ItemCategory.all().filter('display =', True)}

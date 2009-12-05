@@ -19,6 +19,13 @@ window.location.reload();
 }
 }
 
+function show_prices(key){
+    $.get("/pricelist", function(data){
+        $(data).dialog();
+    });
+}
+
+
 function process_donation(){
     amt = prompt('Enter the amount of the donation');
     $.get('/donation/add', {amt: amt}, function (data){
@@ -29,4 +36,4 @@ function process_donation(){
             alert("Server Error!");
     });
 }
-CONST_VERSION = 3;
+CONST_VERSION = 4;

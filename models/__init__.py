@@ -25,6 +25,10 @@ class ItemCategory(db.Model):
     description = db.StringProperty()
     code = db.StringProperty()
     display = db.BooleanProperty(default=True)
+    
+    def get_price(self):
+        import util
+        return util.money_to_str(self.price)
 
 class ColorCode(db.Model):
     discount = db.IntegerProperty()
