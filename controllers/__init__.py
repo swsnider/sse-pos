@@ -65,4 +65,4 @@ class GenericPages(webapp.RequestHandler):
 
     @tg_template("pricelist.html")
     def pricelist(self, **kwargs):
-        return {'itemtypes':ItemCategory.all().filter('display =', True)}
+        return {'itemtypes':ItemCategory.all().filter('display =', True).order("description")}
