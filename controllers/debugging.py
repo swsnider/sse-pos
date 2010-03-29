@@ -11,8 +11,8 @@ class DebuggingPages(webapp.RequestHandler):
         for i in its:
             i.price = str_to_money(str(i.price))
             i.put()
-        return    
-    
+        return
+
     def add_dates(self, **kwargs):
         trans = Transaction.all().fetch(1000)
         for t in trans:
@@ -69,4 +69,12 @@ class DebuggingPages(webapp.RequestHandler):
         u = self.users.get_current_user()
         u.is_admin = True
         u.put()
+        return {}
+
+    @jsonify
+    @secure
+    def add_notification(self, **kwargs):
+        n = Notification()
+        n.notification = ""
+        n.put()
         return {}
