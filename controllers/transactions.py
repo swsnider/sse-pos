@@ -125,8 +125,8 @@ class TransactionAPI(webapp.RequestHandler):
                     item.color = 'CUSTOM'
                     item.color_code = '%%%'
                 else:                
-                    color = ColorCode.all().filter('code =', color).fetch(1)[0]
-                category = ItemCategory.all().filter('code =', cat_code).fetch(1)[0]
+                    color = ColorCode.all().filter('code =', color).filter('display =', True).fetch(1)[0]
+                category = ItemCategory.all().filter('code =', cat_code).filter('display =', True).fetch(1)[0]
                 item.set_color(color)
                 item.set_category(category)
                 item.put()
