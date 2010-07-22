@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Adminstration: Sales Tax Data{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="/static/js/daterangepicker.jQuery.js"></script>
+<link rel="stylesheet" href="/static/css/ui.daterangepicker.css" type="text/css" />
+{% endblock %}
+{% block content %}
+        {{start_date}}#{{end_date}}@{{owed_amount}}
+        <h1>Common Thread POS Admin::Sales Tax Data</h1>
+        <form method="POST" action="">
+            Date Range: <input type="text" name="start_date" value="{{start_date}}" /> - <input type="text" name="end_date" value="{{end_date}}" /> <button onclick="submit();">Calculate Sales Tax</button>
+            <script type="text/javascript">
+                $('input').daterangepicker({arrows:true});
+            </script>
+        </form>
+        <table>
+            <tr><th>Amount to Pay: </th><td>${{owed_amount}}</td></tr>
+            <tr><th>Amount taxable: </th><td>${{taxable}}</td></tr>
+            <tr><th>Amount total: </th><td>${{total}}</td></tr>
+        </table>
+        <table>
+            <tr><th colspan="5">Out of the following items:</th></tr>
+            {% for i in items %}
+            <tr><td>{{i.category}}</td><td>{{i.discount}}% off</td><td>${{conv(i.price)}}</td><td>x {{i.quantity}}</td><td>=${{i.total()}}</td></tr>
+            {% endfor %}
+        </table>
+{% endblock %}
