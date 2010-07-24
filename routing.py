@@ -12,6 +12,7 @@ def add_routes(map):
     map.connect('/api/category/:action', controller="controllers:CategoryAPI")
     map.connect('/api/user/:action', controller="controllers:UserAPI")
     map.connect('/admin/:action', controller="controllers:AdminPages", action="index")
+    map.connect('/admin/tax', controller="controllers:AdminPages", action="tax")
     map.connect('/admin/user', controller="controllers:AdminPages", action="user")
     map.connect('/admin/user/:action', controller="controllers:UserPages")
     map.connect('/denied', controller="controllers:GenericPages", action="denied")

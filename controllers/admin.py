@@ -1,9 +1,13 @@
 import traceback, urllib, hashlib, time
 from models import *
 from util import *
+import code
 from datetime import datetime, date, timedelta
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
+
+TAXABLE_CATEGORIES = ['jw', 'pu', 'ac', 'sa', 'prom', 'LB']
+TAX_RATE = 0.07
 
 class AdminPages(webapp.RequestHandler):
     @tg_template('admin.html')
@@ -94,12 +98,39 @@ class AdminPages(webapp.RequestHandler):
         our_count = 0
         for i in ts:
             if i.items is None or len(i.items) == 0:
-                            continue
+                continue
             our_count += 1
             for k in i.items:
                 j = LineItem.get(Key(encoded=k))
                 our_total += j.total()
         return dict(sales_today=our_count, sales_today_total=our_total, date_requested=date_requested)
+
+    @tg_template('tax.html')
+    @admin_only
+    def tax(self, **kwargs):
+        start_date = self.request.get('start_date', '')
+        end_date = self.request.get('end_date', '')
+        owed = 0
+        taxable = 0
+        total = 0
+        calculated_items = []
+        if start_date != '' and end_date != '':
+            e = datetime.strptime(end_date, '%m/%d/%Y')
+            s = datetime.strptime(start_date, '%m/%d/%Y')
+            ts = Transaction2.gql("WHERE created_on >= :1 AND created_on <= :2", s, e)
+            calculated_items = []
+            for transaction in ts:
+                if transaction.items is None or len(transaction.items) == 0:
+                    continue
+                for i in transaction.items:
+                    it = LineItem2.get(Key(encoded=i))
+                    this_total = it.total()
+                    total += this_total
+                    if it.category_code in TAXABLE_CATEGORIES:
+                        taxable += this_total
+                        calculated_items.append(it)
+            owed = taxable * 0.07
+        return dict(start_date=start_date, end_date=end_date, owed_amount=owed, items=calculated_items, conv=money_to_str, total=total, taxable=taxable)
 
 class UserPages(webapp.RequestHandler):
     def index(self, **kwargs):

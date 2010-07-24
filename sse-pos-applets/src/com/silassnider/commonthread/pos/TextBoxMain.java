@@ -53,6 +53,10 @@ public class TextBoxMain extends JApplet {
 	public void show_error() {
 		this.input.setBackground(Color.RED);
 	}
+	
+	public void clear_error() {
+		this.input.setBackground(Color.WHITE);
+	}
 
 	public void add_chars(String new_char) {
 		input.setText(input.getText() + new_char);

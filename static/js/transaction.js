@@ -1,3 +1,16 @@
+function date_change(){
+    $('#spinner').show();
+    $.post("/api/transaction/change_date", {data: $('#effective_date').val()}, function(data){
+        $('#spinner').hide();
+        data = eval('(' + data + ')');
+        if (data.valid){
+            $('#effective_date').val(data.date);
+        }else{
+            $('#effective_date').val('now');
+        }
+    });
+}
+
 function void_item(key){
     $('#spinner').show();
     $.post("/api/transaction/void_item", {data: key}, function(data){

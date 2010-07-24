@@ -1,4 +1,5 @@
 from models import *
+from datetime import datetime
 import traceback, urllib
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
@@ -213,5 +214,23 @@ class TransactionAPI(webapp.RequestHandler):
             trans.items.remove(self.request.get('data'))
             trans.put()
             return {'valid':True, 'is_error': False, 'total_row': """<tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$%s</td></tr>""" % trans.total_str()}
+        except:
+            return {'valid': False, 'is_error': True, 'payload':traceback.format_exc()}
+
+    @jsonify
+    @secure
+    def change_date(self, **kwargs):
+        try:
+            if 'transaction_key' not in self.session:
+                return {'valid': False, 'is_error': False, 'payload': 'Unable to find the current transaction!'}
+            else:
+                trans = Transaction2.get(Key(encoded=self.session['transaction_key']))
+            if self.request.get('data') == 'now':
+                trans.created_on = datetime.now()
+                trans.put()
+                return {'valid':True, 'is_error': False, 'date': 'now'}
+            trans.created_on = datetime.strptime(self.request.get('data'), '%m/%d/%Y')
+            trans.put()
+            return {'valid':True, 'is_error': False, 'date': trans.created_on.strftime('%m/%d/%Y')}
         except:
             return {'valid': False, 'is_error': True, 'payload':traceback.format_exc()}

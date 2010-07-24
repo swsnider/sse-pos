@@ -4,12 +4,16 @@
         <script type="text/javascript" src="/static/js/transaction.js">
         </script>
         <script type="text/javascript">
-            
+            $(document).ready(function(){
+                $('#effective_date').datepicker({ constrainInput: false, showButtonPanel: true, showOn: 'button'});
+            });
         </script>
 {% endblock %}
 {% block content %}
     <h1>Common Thread POS</h1>
-    <table><tr><td>
+    <table>
+        {% if transaction.owner.is_admin %}<tr><td>Effective date: <input id="effective_date" type="text" name="effective_date" value="now" /><button onclick="date_change();">Change effective date</button></td></tr>{% endif %}
+        <tr><td>
         <applet id="text_field" name="TextBoxMain" width="150" height="25" archive="/static/misc/complicated.jar" code="com.silassnider.commonthread.pos.TextBoxMain.class" mayscript="true">
         </applet><img src="/static/images/ajax-loader.gif" id="spinner" style="display: none;" />
         <table id="item_list">
@@ -22,17 +26,5 @@
             <tr><td><button onclick="cancel_trans();">Cancel</button></td><td>&nbsp;</td><td><input type="text" name="giftcert" id="giftcert" /></td><td><button onclick="giftcert();">Use Gift Certificate</button></td><td>&nbsp;</td><td><button onclick="finalize_trans();">Finalize</button></td></tr>
         </table>
         </td>
-        <!-- <td>
-            <table style="border-left: solid black thin; border-collapse:collapse;">
-                <tr><th>Items</th><th>Description</th><th>Code</th></tr>
-                {% for i in itemtypes %}
-                <tr onclick="enter_item('{{i.code}}')" class="{{loop.cycle('odd','even')}}"><td>&nbsp;</td><td>{{ i.description }}</td><td>{{ i.code }}</td></tr>
-                {% endfor %}
-                <tr><th>Tag Names</th><th>Color</th><th>Code</th></tr>
-                {% for c in colors %}
-                <tr onclick="enter_color('{{c.code}}')" class="{{loop.cycle('odd','even')}}"><td>&nbsp;</td><td>{{ c.color }}</td><td>{{ c.code }}</td></tr>
-                {% endfor %}
-            </table>
-        </td> -->
     </tr></table>
 {% endblock %}
