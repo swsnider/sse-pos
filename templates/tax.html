@@ -19,7 +19,7 @@
         <h3>Breakdown</h3>
         <img src="http://chart.apis.google.com/chart?cht=p&amp;chs=500x200&amp;chd=t:{{categorized_data}}&amp;chl={{categorized_labels}}">
         <table>
-            <tr><th colspan="5">Out of the following items:</th></tr>
+            <tr><th colspan="5">Taxable items:</th></tr>
             {% for i in items %}
             <tr><td>{{i.category}}</td><td>{{i.discount}}% off</td><td>${{conv(i.price)}}</td><td>x {{i.quantity}}</td><td>=${{i.total()}}</td></tr>
             {% endfor %}
