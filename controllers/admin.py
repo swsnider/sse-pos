@@ -2,6 +2,7 @@ import traceback, urllib, hashlib, time
 from models import *
 from util import *
 import code
+import urllib
 from datetime import datetime, date, timedelta
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
@@ -58,6 +59,8 @@ class AdminPages(webapp.RequestHandler):
     @tg_template('new_stats.html')
     @admin_only
     def stats(self, **kwargs):
+        self.redirect('/admin/tax')
+        return {}
         date_requested = self.request.get('date_data', False)
         oneDay = timedelta(days=1)
         if not date_requested:
@@ -85,6 +88,8 @@ class AdminPages(webapp.RequestHandler):
     @tg_template('stats.html')
     @admin_only
     def old_stats(self, **kwargs):
+        self.redirect('/admin/tax')
+        return {}
         date_requested = self.request.get('date_data', False)
         oneDay = timedelta(days=1)
         if not date_requested:
@@ -110,10 +115,20 @@ class AdminPages(webapp.RequestHandler):
     def tax(self, **kwargs):
         start_date = self.request.get('start_date', '')
         end_date = self.request.get('end_date', '')
+        if start_date == '' or end_date == '':
+            oneDay = timedelta(days=1)
+            now = datetime.now()
+            if int(now.hour) < 5:
+                start_date = (date.today() - oneDay).strftime('%m/%d/%Y')
+                end_date = date.today().strftime('%m/%d/%Y')
+            else:
+                start_date = date.today().strftime('%m/%d/%Y')
+                end_date = (date.today + oneDay).strftime('%m/%d/%Y')
         owed = 0
         taxable = 0
         total = 0
         calculated_items = []
+        categorized = {}
         if start_date != '' and end_date != '':
             e = datetime.strptime(end_date, '%m/%d/%Y')
             s = datetime.strptime(start_date, '%m/%d/%Y')
@@ -129,8 +144,11 @@ class AdminPages(webapp.RequestHandler):
                     if it.category_code in TAXABLE_CATEGORIES:
                         taxable += this_total
                         calculated_items.append(it)
+                    categorized[it.category] = categorized.get(it.category, 0) + 1
             owed = taxable * 0.07
-        return dict(start_date=start_date, end_date=end_date, owed_amount=owed, items=calculated_items, conv=money_to_str, total=total, taxable=taxable)
+            categorized_labels = '|'.join([urllib.quote_plus(str(i)) for i in sorted(categorized.keys())])
+            categorized_data = ','.join([str(categorized[i]) for i in sorted(categorized.keys())])
+        return dict(categorized_labels=categorized_labels, categorized_data=categorized_data, start_date=start_date, end_date=end_date, owed_amount=owed, items=calculated_items, conv=money_to_str, total=total, taxable=taxable, categorized=categorized)
 
 class UserPages(webapp.RequestHandler):
     def index(self, **kwargs):

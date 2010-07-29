@@ -220,6 +220,8 @@ class TransactionAPI(webapp.RequestHandler):
     @jsonify
     @secure
     def change_date(self, **kwargs):
+        if not self.users.get_current_user().is_admin:
+            return {'valid': True, 'date': 'now', 'is_error': True, 'payload': 'ENOPERMISSION'}
         try:
             if 'transaction_key' not in self.session:
                 return {'valid': False, 'is_error': False, 'payload': 'Unable to find the current transaction!'}
