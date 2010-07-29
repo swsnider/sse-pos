@@ -123,7 +123,7 @@ class AdminPages(webapp.RequestHandler):
                 end_date = date.today().strftime('%m/%d/%Y')
             else:
                 start_date = date.today().strftime('%m/%d/%Y')
-                end_date = (date.today + oneDay).strftime('%m/%d/%Y')
+                end_date = (date.today() + oneDay).strftime('%m/%d/%Y')
         owed = 0
         taxable = 0
         total = 0
