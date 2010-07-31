@@ -38,6 +38,7 @@ class DataPage(webapp.RequestHandler):
                 d = t.created_on - oneDay
             else:
                 d = t.created_on
+            d = d.replace(hour=0,second=0,microsecond=0,minute=0)
             if d not in tdata:
                 tdata[d] = 0
             tdata[d] += len(t.items)
