@@ -1,12 +1,30 @@
 {% extends "base.html" %}
 {% block title %}Adminstration: Sales Tax Data{% endblock %}
 {% block scripts %}
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript" src="/static/js/daterangepicker.jQuery.js"></script>
 <link rel="stylesheet" href="/static/css/ui.daterangepicker.css" type="text/css" />
+<script type="text/javascript">
+    google.load('visualization', '1', {'packages':['piechart']});
+    google.setOnLoadCallback(drawChart);
+    function drawChart(){
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Item Type');
+        data.addColumn('number', 'Number Purchased');
+        data.addRows([
+            {% for i in cats %}
+            ["{{i[0]}}", {{i[1]}}],
+            {% endfor %}
+        ]);
+        
+        var chart = new google.visualization.PieChart(document.getElementById('breakdown'));
+        chart.draw(data, {width: 700, height: 300, is3D: true, title: 'Sales Breakdown'});
+    }
+</script>
 {% endblock %}
 {% block content %}
         <h1>Common Thread POS Admin::Sales Tax Data</h1>
-        <form method="POST" action="">
+        <form method="GET" action="">
             Date Range: <input type="text" name="start_date" value="{{start_date}}" /> - <input type="text" name="end_date" value="{{end_date}}" /> <button onclick="submit();">Calculate Stats</button>
             <script type="text/javascript">
                 $('input').daterangepicker({arrows:true});
@@ -17,7 +35,9 @@
             <tr><th>Total Taxable Sales: </th><td>${{taxable}}</td></tr>
         </table>
         <h3>Breakdown</h3>
-        <img src="http://chart.apis.google.com/chart?cht=p&amp;chs=500x200&amp;chd=t:{{categorized_data}}&amp;chl={{categorized_labels}}">
+        <div id="breakdown">
+            <img src="http://chart.apis.google.com/chart?cht=p&amp;chs=700x300&amp;chd=t:{{categorized_data}}&amp;chl={{categorized_labels}}">
+        </div>
         <table>
             <tr><th colspan="5">Taxable items:</th></tr>
             {% for i in items %}

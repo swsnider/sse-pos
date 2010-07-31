@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Adminstration: Sales Tax Data{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript" src="/static/js/daterangepicker.jQuery.js"></script>
+<link rel="stylesheet" href="/static/css/ui.daterangepicker.css" type="text/css" />
+<script type="text/javascript">
+    google.load('visualization', '1', {'packages':['annotatedtimeline']});
+    //google.setOnLoadCallback(drawCharts);
+    var query = new google.visualization.query('http://sse-pos.appspot.com/data/default?end_date={{end_date}}&start_date={{start_date}}');
+    query.send(handleResponse);
+    function handleResponse(response){
+      if (response.isError()) {
+        alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+        return;
+      }
+
+      var data = response.getDataTable();
+      var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('graphs'));
+      chart.draw(data, {displayAnnotations:false, numberFormats: {2:"\u00A4@@"}});
+    }
+    // function drawCharts(){
+    //         var data = new google.visualization.DataTable();
+    //         data.addColumn('date', 'Date');
+    //         data.addColumn('number', 'Quantity Purchased');
+    //         data.addRows([
+    //             {% for i in volume %}
+    //             [{{i[0]}}, {{i[1]}}],
+    //             {% endfor %}
+    //         ]);
+    //         
+    //         var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('graphs'));
+    //         chart.draw(data, {displayAnnotations:false, numberFormats: {2:"\u00A4@@"}});
+    //     }
+</script>
+{% endblock %}
+{% block content %}
+<h1>Common Thread POS Admin::Reports:Sales Volumes</h1>
+<form method="GET" action="">
+    Date Range: <input type="text" name="start_date" value="{{start_date}}" /> - <input type="text" name="end_date" value="{{end_date}}" /> <button onclick="submit();">Calculate Stats</button>
+    <script type="text/javascript">
+        $('input').daterangepicker({arrows:true});
+    </script>
+</form>
+<div id="graphs" style="width:800; height:250">
+</div>
+{% endblock %}
