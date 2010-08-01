@@ -7,18 +7,6 @@
 <script type="text/javascript">
     google.load('visualization', '1', {'packages':['annotatedtimeline']});
     google.setOnLoadCallback(drawCharts);
-    // var query = new google.visualization.Query('http://sse-pos.appspot.com/data/default?end_date={{end_date}}&start_date={{start_date}}');
-    //     query.send(handleResponse);
-    //     function handleResponse(response){
-    //       if (response.isError()) {
-    //         alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-    //         return;
-    //       }
-    // 
-    //       var data = response.getDataTable();
-    //       var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('graphs'));
-    //       chart.draw(data, {displayAnnotations:false, numberFormats: {2:"\u00A4@@"}});
-    //     }
     function drawCharts(){
                 var data = new google.visualization.DataTable();
                 data.addColumn('date', 'Date');
