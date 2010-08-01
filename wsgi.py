@@ -74,10 +74,28 @@ class WSGIApplication(object):
         response.out.write("""<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
             <head>
                 <title>Technical Whhhaaaa?</title>
+                <style type="text/css"> 
+                  /* Just some nice colors */
+
+                  /* Vertical centering: make div as large as viewport and use table layout */
+                  div.container {top: 0; left: 0; width: 100%; height: 100%;
+                    position: fixed; display: table}
+                  p {display: table-cell; vertical-align: middle}
+
+                  /* Horizontal centering of image: set left & right margins to 'auto' */
+                  img.displayed {display: block; margin: 1em auto}
+
+                  /* Also center the lines in the paragraph */
+                  p {text-align: center}
+                  .heading {
+                      font-size: xx-large;
+                  }
+                </style>
             </head>
             <body>
-                <h1><span style="color: #C5E6DC">Something</span> <span style="color: #F8F7DC">is</span> <span style="color: #CC7254">technically</span> <span style="color: #534C48">wrong</span><span style="color: #3B2B20">!</span></h1>
-                <img src="/static/images/beardcap.jpg" />
+                <div class=container> 
+                  <p><img class="displayed" src="/static/images/beardcap.jpg" /><span class="heading"><span style="color: #C5E6DC">Something</span> <span style="color: #F8F7DC">is</span> <span style="color: #CC7254">technically</span> <span style="color: #534C48">wrong</span><span style="color: #3B2B20">!</span></span>
+                </div> 
             </body>
         </html>
         """)
