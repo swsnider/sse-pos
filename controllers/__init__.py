@@ -6,7 +6,6 @@ from google.appengine.ext.db import Key
 from util import render_template, secure, tg_template, jsonify, developer_only
 from auth_layer import uses_users
 from models import User, Visit, Transaction, Transaction2, ItemCategory
-from debugging import DebuggingPages
 from transactions import TransactionPage, TransactionAPI
 from admin import AdminPages, ColorAPI, CategoryAPI, UserAPI, UserPages
 from reports import ReportPages
