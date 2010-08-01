@@ -8,18 +8,18 @@
     google.load('visualization', '1', {'packages':['annotatedtimeline']});
     google.setOnLoadCallback(drawCharts);
     function drawCharts(){
-                var data = new google.visualization.DataTable();
-                data.addColumn('date', 'Date');
-                data.addColumn('number', 'Quantity Purchased');
-                data.addRows([
-                    {% for i in volume %}
-                    [{{i[0]}}, {{i[1]}}],
-                    {% endfor %}
-                ]);
-                
-                var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('graphs'));
-                chart.draw(data, {displayAnnotations:false, numberFormats: {2:"\u00A4@@"}});
-            }
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Date');
+        data.addColumn('number', 'Quantity Purchased');
+        data.addRows([
+            {% for i in volume %}
+            [{{i[0]}}, {{i[1]}}],
+            {% endfor %}
+        ]);
+        
+        var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('graphs'));
+        chart.draw(data, {displayAnnotations:false, numberFormats: {2:"\u00A4@@"}});
+    }
 </script>
 {% endblock %}
 {% block content %}
