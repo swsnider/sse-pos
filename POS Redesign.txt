@@ -1,14 +1,4 @@
 POS Redesign
 
 Mike's feature requests:
-* Make it easier to change the amount of discount a tag color provides
 * Need to record the actual deposit amount for a day along with an explanation
-* Have actual monthly reports, including a sales tax due report.
-* Gift certificates and donations both need to be able to be entered.
-
-Biggest single change:
-    When a transaction is entered, the items/prices are not *linked* but are, instead, *copied*.
-
-More minor changes:
-* record all amounts as cents, rather than dollars
-* 
