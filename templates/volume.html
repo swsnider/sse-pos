@@ -22,8 +22,12 @@
     }
 </script>
 {% endblock %}
+{% block menu %}
+<li><a href="/admin/reports/tax">Sales Stats/Sales Tax Calculation</a></li>
+<li class="selected"><a href="/admin/reports/volume">Sales Volume</a></li>
+{% endblock %}
+{% block desc %}Common Thread POS Admin::Reports:Sales Volumes{% endblock %}
 {% block content %}
-<h1>Common Thread POS Admin::Reports:Sales Volumes</h1>
 <form method="GET" action="">
     Date Range: <input type="text" name="start_date" value="{{start_date}}" /> - <input type="text" name="end_date" value="{{end_date}}" /> <button onclick="submit();">Calculate Stats</button>
     <script type="text/javascript">

@@ -1,0 +1,21 @@
+    <script type="text/javascript">
+        {% if outdated %}
+        destroy_cache();
+        location.reload();
+        {% endif %}
+        $(document).ready(function(){
+            $('a.abutton').button();
+        });
+    </script>
+    <div id="inner">
+        <div id="avatarName">
+            <img src="http://gravatar.com/avatar/{{user.gravatarHash()}}?s=140" width="20" height="20" />
+            <span id="welcome">Welcome, {{user.first_name}} {{user.last_name}}</span>
+        </div>
+        <ul class="usernav">
+            {% if user.is_admin %}<li><a href="/admin">Admin</a>{% endif %}
+            <li style="padding-right: 10px;"><a href="/transaction">Sell Stuff</a></li>
+            <li style="border-left: thin solid black"><a class="abutton" href="/logout">Logout</a></li>
+            {% if user.is_developer %}<li><a class="abutton" href="/logout_pred">Logout with prejudice</a></li>{% endif %}
+        </ul>
+    </div>

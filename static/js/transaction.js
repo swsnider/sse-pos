@@ -18,7 +18,7 @@ function void_item(key){
         data = eval('(' + data + ')');
         if (data.valid){
             $('#' + key).remove();
-            $('#total_row').replaceWith(data.total_row);
+            $('#grand_total_contents').replaceWith(data.total_row);
         }
     });
 }
@@ -41,7 +41,7 @@ function process_input(some_input){
         data = eval('(' + data + ')');
         if (data.valid){
             $('#tax_row').before(data.html);
-            $('#total_row').replaceWith(data.total_row);
+            $('#grand_total_contents').replaceWith(data.total_row);
         }else{
             document.TextBoxMain.show_error();
         }

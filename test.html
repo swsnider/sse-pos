@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!--
+Common Thread Colors:
+
+Blue: #C5E6DC
+Tan: #F8F7DC
+Red/Orange: #CC7254
+Gray: #534C48
+Dark Brown: #3B2B20
+green: #ACDBD1
+-->
+    <head>
+        <title>Common Thread Interface Test</title>
+        <link type="text/css" href="/static/css/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
+        <link rel="Stylesheet" href="/static/css/ui.selectmenu.css" type="text/css" /> 
+        <link type="text/css" href="/static/css/new_main.css" rel="Stylesheet" />
+        <script type="text/javascript" src="/static/js/jquery.js"></script>
+        <script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+        <script type="text/javascript" src="/static/js/ui.selectmenu.js"></script> 
+        <script type="text/javascript" src="/static/gears/gears_init.js"></script>
+        <script type="text/javascript" src="/static/js/main.js"></script>
+        <script type="text/javascript" src="/static/js/transaction.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                enable_cache();
+                $.get('/user_name?version=' + CONST_VERSION, function(data){
+                    data = eval('('+ data +')');
+                    if (data.valid){
+                        $('#userbox').html(data.data);
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="abs">
+            <h1>Common Thread POS</h1>
+        </div>
+        <div id="navigation">
+            <span id="logo"><img src="static/images/logoweb.png" /></span>
+                <div id="userbox">
+                    <div id="inner">
+                        <div id="avatarName">
+                            <img src="http://gravatar.com/avatar/0e1e958389de0d2354bb5ad80235c3fb?s=140" width="20" height="20" />
+                            <span id="welcome">Welcome, Silas Snider</span>
+                        </div>
+                        <ul class="usernav">
+                            <li><a href="/admin">Admin</a>
+                            <li><a href="/logout">Logout</a></li>
+                            <li><a href="/logout_pred">Logout with prejudice</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <ul class="tabmenu">
+                    <li class="selected"><a href="/transaction">Start/Continue Sale</a></li>
+                    <li><a onclick="show_prices();" href="#">Show Pricelist</a></li>
+                    <li><a onclick="process_donation();" href="#">Donate</a></li>
+                
+                </ul>
+        </div>
+        <div id="outer_wrapper">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla scelerisque eros nec libero luctus scelerisque. Fusce fermentum odio dolor. Integer gravida sapien ut ante euismod vitae vehicula eros rhoncus. Sed imperdiet ultrices sagittis. In enim neque, accumsan nec viverra at, tempor ac dolor. Sed justo quam, tincidunt quis aliquam vitae, eleifend blandit sem. Curabitur magna dui, iaculis et ornare vel, molestie id metus. Mauris fermentum facilisis augue in condimentum. Morbi consectetur elementum posuere. Donec ut mi quis nisl suscipit laoreet. Sed ipsum tellus, suscipit euismod dapibus eu, luctus vel magna. Aliquam vitae quam non metus rutrum malesuada eu at nulla. Curabitur rutrum velit non urna iaculis at feugiat sem facilisis. Integer ac feugiat mauris. Sed ac tellus sit amet felis tincidunt sodales. Cras tincidunt tortor a dui malesuada porttitor. Vestibulum egestas nisi eget nisl cursus congue. Nam pellentesque suscipit ligula in congue. Etiam ipsum ligula, porttitor sit amet dictum vel, suscipit vitae dolor. Nulla facilisi.
+
+            Proin vestibulum purus a dui sodales nec sodales est rutrum. Praesent tempus elit id turpis vestibulum elementum. Morbi consectetur, justo sit amet pretium fringilla, tortor elit laoreet sem, vitae tincidunt nibh nunc sit amet dui. Aenean auctor pulvinar ultricies. Morbi nibh nunc, scelerisque ac pharetra ac, lobortis a felis. Curabitur id risus sed metus semper rhoncus id eget tellus. Etiam blandit condimentum fermentum. Nunc dictum, elit eget mattis laoreet, ligula eros sodales mauris, sit amet dapibus sem nibh ac orci. Etiam ut libero et felis congue interdum at id lorem. Duis pretium fringilla urna. Pellentesque sodales bibendum odio, et hendrerit sapien placerat interdum. Phasellus ultrices risus blandit tellus elementum eu vulputate erat accumsan. Curabitur a augue arcu.
+
+            Aliquam volutpat sodales tellus non sollicitudin. Vivamus et commodo purus. Vestibulum in metus malesuada orci fermentum lobortis. Ut risus diam, euismod nec facilisis sed, cursus vitae metus. In hac habitasse platea dictumst. Vivamus porta tincidunt vestibulum. Nam id dui quis leo lacinia fermentum et id elit. Ut ultrices tempor lacus at tempus. In vitae dolor sit amet augue ultrices posuere id nec metus. Mauris et mauris sed enim accumsan facilisis at commodo mi. Duis elementum, ante vitae mollis feugiat, massa risus pretium velit, facilisis scelerisque lorem est sit amet libero. Nam orci turpis, euismod vel luctus id, condimentum eu ante. Integer luctus augue sit amet sem ultricies consequat.
+
+        </div>
+        <div id="footer">
+            <p>Created by Silas Snider for Matthew's Quarter</p>
+        </div>
+    </body>
+</html>

@@ -139,11 +139,7 @@ class TransactionAPI(webapp.RequestHandler):
                 total = item.total()
                 html = """<tr class="%(class)s" id="%(key)s"><td>%(item_id)s</td><td>%(description)s</td><td>%(price)s</td><td>%(quantity)s</td><td>%(discount)s%%</td><td>$%(total)#.2f</td><td><a class="delete_button" onclick="void_item('%(key)s')">void</a></td></tr>""" % {'key': str(item.key()), 'item_id': str(cat_code), 'description': str(category.description), 'price': money_to_str(category.price), 'quantity': str(quantity), 'discount':str(item.get_discount()), 'total': total, "class":class_val}
             trans.put()
-            grand_total = 0
-            for i in trans.items:
-                j = LineItem2.get(Key(encoded=i))
-                grand_total += j.total()
-            return {'valid':True, 'html':html, 'total_row':"""<tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$%s</td></tr>""" %(str(grand_total)), 'sess':repr(self.session)}
+            return {'valid':True, 'html':html, 'total_row':str(trans.total_str()), 'sess':repr(self.session)}
         except:
             return {'valid':False, 'payload':traceback.format_exc()}
     
@@ -213,7 +209,7 @@ class TransactionAPI(webapp.RequestHandler):
                 trans = Transaction2.get(Key(encoded=self.session['transaction_key']))
             trans.items.remove(self.request.get('data'))
             trans.put()
-            return {'valid':True, 'is_error': False, 'total_row': """<tr id="total_row"><th>Grand Total</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>$%s</td></tr>""" % trans.total_str()}
+            return {'valid':True, 'is_error': False, 'total_row':trans.total_str()}
         except:
             return {'valid': False, 'is_error': True, 'payload':traceback.format_exc()}
 

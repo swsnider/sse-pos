@@ -1,5 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-{#
+<!--
 Common Thread Colors:
 
 Blue: #C5E6DC
@@ -7,40 +7,67 @@ Tan: #F8F7DC
 Red/Orange: #CC7254
 Gray: #534C48
 Dark Brown: #3B2B20
-#}
+green: #ACDBD1
+-->
     <head>
         {% block head %}
         <title>{% block title %}{% endblock %} - Common Thread POS</title>
-        <link type="text/css" href="/static/css/jquery-ui.css" rel="Stylesheet" />
-        <link type="text/css" href="/static/css/main.css" rel="Stylesheet" />
-        <script type="text/javascript" src="/static/js/jquery.js">
-        </script>
-        <script type="text/javascript" src="/static/js/jquery-ui.js">
-        </script>
+        <link type="text/css" href="/static/css/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
+        <link rel="Stylesheet" href="/static/css/ui.selectmenu.css" type="text/css" /> 
+        <link type="text/css" href="/static/css/new_main.css" rel="Stylesheet" />
+        <script type="text/javascript" src="/static/js/jquery.js"></script>
+        <script type="text/javascript" src="/static/js/jquery-ui.js"></script>
+        <script type="text/javascript" src="/static/js/ui.selectmenu.js"></script> 
         <script type="text/javascript" src="/static/gears/gears_init.js"></script>
-		<script type="text/javascript" src="/static/js/main.js">
-		</script>
-		<script type="text/javascript">
-			$(document).ready(function(){
-			    enable_cache();
-				$.get('/user_name?version=' + CONST_VERSION, function(data){
-					data = eval('('+ data +')');
-					if (data.valid){
-						$('#welcome').html(data.data);
-					}
-				});
-			});
-		</script>
+        <script type="text/javascript" src="/static/js/main.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                enable_cache();
+                $.get('/user_name?version=' + CONST_VERSION, function(data){
+                    data = eval('('+ data +')');
+                    if (data.valid){
+                        $('#userbox').html(data.data);
+                    }
+                });
+            });
+        </script>
         {% block scripts %}{% endblock %}
         {% endblock %}
     </head>
     <body>
-        <table>
-            <tr><td id="welcome"></td><td><a href="/transaction">Start/Continue Sale</a></td><td><a onclick="show_prices();" href="#">Show Pricelist</a></td><td><a onclick="process_donation();" href="#">Donate</a></td><td><a href="/admin">Administration Menu</a></td><td><a href="/logout">Logout</a></td><td><a href="/logout_pred">Logout with prejudice</a></td></tr>
-        </table>
-        {% block content %}
-        <h1>Common Thread POS</h1>
-        {% endblock %}
-        <p>Created by Silas Snider <img src="/static/images/beard_icon.png" height="16" width="16"/></p>
+        <div id="abs">
+            <h1>{% block desc %}Common Thread POS{% endblock %}</h1>
+        </div>
+        <div id="navigation">
+            <span id="logo"><img src="/static/images/logoweb.png" /></span>
+                <div id="userbox">
+                    <div id="inner">
+                        <div id="avatarName">
+                            <img src="http://gravatar.com/avatar/0e1e958389de0d2354bb5ad80235c3fb?s=140" width="20" height="20" />
+                            <span id="welcome">Welcome, Silas Snider</span>
+                        </div>
+                        <ul class="usernav">
+                            <li><a href="/admin">Admin</a>
+                            <li><a href="/logout">Logout</a></li>
+                            <li><a href="/logout_pred">Logout with prejudice</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <ul class="tabmenu">
+                    {% block menu %}
+                    <li class="selected"><a href="/transaction">Start/Continue Sale</a></li>
+                    <li><a onclick="show_prices();" href="#">Show Pricelist</a></li>
+                    <li><a onclick="process_donation();" href="#">Donate</a></li>
+                    {% endblock %}
+                </ul>
+        </div>
+        <div id="outer_wrapper">
+            {% block content %}
+            <h1>Common Thread POS</h1>
+            {% endblock %}
+        </div>
+        <div id="footer">
+            <p>Created by Silas Snider for Matthew's Quarter</p>
+        </div>
     </body>
 </html>

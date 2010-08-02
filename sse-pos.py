@@ -9,7 +9,7 @@ myMap = Mapper(explicit=True)
 from routing import add_routes
 add_routes(myMap)
 debug = os.environ['SERVER_SOFTWARE'].lower().startswith("development/")
-app = WSGIApplication(myMap, debug=True)
+app = WSGIApplication(myMap, debug=debug)
 
 def main():
     run_wsgi_app(app)

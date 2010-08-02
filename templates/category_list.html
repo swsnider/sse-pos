@@ -4,8 +4,16 @@
         <script type="text/javascript" src="/static/js/category_list.js">
         </script>
 {% endblock %}
+{% block menu %}
+<li class="selected"><a href="/admin/category">Item Types</a></li>
+<li><a href="/admin/color">Colors</a></li>
+<li><a href="/admin/user">Users</a></li>
+<li><a href="/admin/reports">Generate Reports</a></li>
+<li><a href="/admin/export_users">Export User list</a></li>
+<li><a href="/admin/view_transactions">Transactions list</a></li>
+{% endblock %}
+{% block desc %}Common Thread POS Admin::Categories{% endblock %}
 {% block content %}
-        <h1>Common Thread POS Admin::Categories</h1>
         <table>
             <tr><th>Category description</th><th>Price</th><th>Code</th><th>Displayed?</th></tr>
         {% for category in categories %}

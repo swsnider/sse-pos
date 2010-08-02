@@ -36,4 +36,4 @@ function process_donation(){
             alert("Server Error!");
     });
 }
-CONST_VERSION = 6;
+CONST_VERSION = 7;

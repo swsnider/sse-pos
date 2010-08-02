@@ -1,10 +1,21 @@
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
 from util import *
+import hashlib
 
 #add models here
 
 __all__ = ['User', 'Visit', 'ItemCategory', 'ColorCode', 'LineItem2', 'LineItem', 'Transaction', 'Transaction2', 'Setting']
+
+class Deposits(db.Model):
+    amount = db.IntegerProperty()
+    explanation = db.TextProperty()
+    date = db.DateTimeProperty(auto_now_add=True)
+
+class InitialCount(db.Model):
+    amount = db.IntegerProperty()
+    explanation = db.TextProperty()
+    date = db.DateTimeProperty(auto_now_add=True)
 
 class User(db.Model):
     email = db.EmailProperty()
@@ -14,6 +25,8 @@ class User(db.Model):
     last_name = db.StringProperty()
     is_admin = db.BooleanProperty(default=False)
     is_developer = db.BooleanProperty(default=False)
+    def gravatarHash(self):
+        return str(hashlib.md5(self.email.strip().lower()).hexdigest())
 
 class Visit(db.Model):
     expired = db.BooleanProperty()
