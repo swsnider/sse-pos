@@ -26,14 +26,4 @@ function show_prices(key){
 }
 
 
-function process_donation(){
-    amt = prompt('Enter the amount of the donation');
-    $.get('/donation/add', {amt: amt}, function (data){
-        data = eval('(' + data + ')');
-        if (data.valid)
-            alert("Donation entered.");
-        else
-            alert("Server Error!");
-    });
-}
-CONST_VERSION = 7;
+CONST_VERSION = 8;

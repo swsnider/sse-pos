@@ -47,19 +47,22 @@ green: #ACDBD1
                             <span id="welcome">Welcome, Silas Snider</span>
                         </div>
                         <ul class="usernav">
-                            <li><a href="/admin">Admin</a>
+                            <li><a href="/admin">Admin</a></li>
+                            <li><a href="http://11.latest.sse-pos.appspot.com/">Old Version</a></li>
                             <li><a href="/logout">Logout</a></li>
                             <li><a href="/logout_pred">Logout with prejudice</a></li>
                         </ul>
                     </div>
                 </div>
-                <ul class="tabmenu">
-                    {% block menu %}
-                    <li class="selected"><a href="/transaction">Start/Continue Sale</a></li>
-                    <li><a onclick="show_prices();" href="#">Show Pricelist</a></li>
-                    <li><a onclick="process_donation();" href="#">Donate</a></li>
-                    {% endblock %}
-                </ul>
+        </div>
+        <div id="tabmenu_wrapper">
+            <ul class="tabmenu">
+                {% block menu %}
+                <li class="selected"><a href="/transaction">Start/Continue Sale</a></li>
+                <li><a onclick="show_prices();" href="#">Show Pricelist</a></li>
+                <li><a onclick="process_donation();" href="#">Donate</a></li>
+                {% endblock %}
+            </ul>
         </div>
         <div id="outer_wrapper">
             {% block content %}

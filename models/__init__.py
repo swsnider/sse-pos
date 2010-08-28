@@ -17,6 +17,13 @@ class InitialCount(db.Model):
     explanation = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)
 
+class DailyStats(db.Model):
+    day = db.DateProperty()
+    volume = db.IntegerProperty()
+    revenue = db.IntegerProperty()
+    donations = db.IntegerProperty()
+    giftcerts = db.IntegerProperty()
+
 class User(db.Model):
     email = db.EmailProperty()
     salt = db.StringProperty()
@@ -117,6 +124,7 @@ class Transaction2(db.Model):
     finalized = db.BooleanProperty(default=False)
     cached_total = db.IntegerProperty(default=0)
     cached_cert = db.IntegerProperty(default=0)
+    daily_stats_collected = db.BooleanProperty(default=False)
     def total(self):
         total = 0
         for i in self.items:

@@ -24,14 +24,8 @@
         <script type="text/javascript">
             $(document).ready(function(){
                 $('#effective_date').datepicker({ constrainInput: false, showButtonPanel: true, showOn: 'button'});
-                $('select').selectmenu();
+                $('select').selectmenu({style:'dropdown', maxHeight: "200"});
                 $('a.delete_button').button();
-            });
-            $(document).ready(function(){
-                $('.trans_operations .head').click(function() {
-                    $(this).next().toggle('slow');
-                    return false;
-                }).next().hide();
             });
         </script>
     </head>
@@ -76,6 +70,9 @@
                 <hr/>
                 <h3>Gift Certificate</h3>
                 <div>$<input type="text" name="giftcert" id="giftcert" /> <button onclick="giftcert();">Use Gift Certificate</button></div>
+                <hr/>
+                <h3>Donation</h3>
+                <div>$<input type="text" name="donate" id="donate" /> <button onclick="donate();">Donate</button></div>
                 <hr/>
             </div>
             <div id="trans_list">

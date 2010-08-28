@@ -6,6 +6,7 @@ import urllib
 from datetime import datetime, date, timedelta
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
+from google.appengine.api.labs import taskqueue
 
 TAXABLE_CATEGORIES = ['jw', 'pu', 'ac', 'sa', 'prom', 'LB']
 TAX_RATE = 0.07
@@ -15,6 +16,13 @@ class AdminPages(webapp.RequestHandler):
     @admin_only
     def index(self, **kwargs):
         return {}
+
+    @tg_template('task_queues.html')
+    @admin_only
+    def task_queue(self, **kwargs):
+        if (self.request.get('create_queue', False)):
+            taskqueue.add(url="/worker/daily_stats", params=dict(range=range))
+        return dict(created=False)
 
     @admin_only
     @csvify

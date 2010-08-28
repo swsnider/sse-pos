@@ -18,7 +18,7 @@ function void_item(key){
         data = eval('(' + data + ')');
         if (data.valid){
             $('#' + key).remove();
-            $('#grand_total_contents').replaceWith(data.total_row);
+            $('#grand_total_contents').html(data.total_row);
         }
     });
 }
@@ -41,7 +41,7 @@ function process_input(some_input){
         data = eval('(' + data + ')');
         if (data.valid){
             $('#tax_row').before(data.html);
-            $('#grand_total_contents').replaceWith(data.total_row);
+            $('#grand_total_contents').html(data.total_row);
         }else{
             document.TextBoxMain.show_error();
         }
@@ -107,4 +107,15 @@ function enter_item(code){
 function enter_color(code){
     document.TextBoxMain.add_chars(" "+code);
     document.TextBoxMain.commit();
+}
+
+function donate(){
+    var amt = $('#donate').val();
+    $.get('/donation/add', {amt: amt}, function (data){
+        data = eval('(' + data + ')');
+        if (data.valid)
+            alert("Donation entered.");
+        else
+            alert("Server Error!");
+    });
 }

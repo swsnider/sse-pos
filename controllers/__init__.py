@@ -10,6 +10,7 @@ from transactions import TransactionPage, TransactionAPI
 from admin import AdminPages, ColorAPI, CategoryAPI, UserAPI, UserPages
 from reports import ReportPages
 from pos import PosPage
+from mapreduce import MapReducePage
 
 #'Core' controller
 
@@ -24,7 +25,7 @@ class GenericPages(webapp.RequestHandler):
     @secure
     def user_name(self, **kwargs):
         u = self.users.get_current_user()
-        values = dict(user=u, outdated=int(self.request.get('version', 0)) < 7)
+        values = dict(user=u, outdated=int(self.request.get('version', 0)) < 8)
         return dict(valid=True, data=render_template("userbox.html", values))
     
     @secure

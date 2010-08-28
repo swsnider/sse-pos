@@ -14,6 +14,7 @@
         </div>
         <ul class="usernav">
             {% if user.is_admin %}<li><a href="/admin">Admin</a>{% endif %}
+            <li><a href="http://11.latest.sse-pos.appspot.com/">Old Version</a></li>
             <li style="padding-right: 10px;"><a href="/transaction">Sell Stuff</a></li>
             <li style="border-left: thin solid black"><a class="abutton" href="/logout">Logout</a></li>
             {% if user.is_developer %}<li><a class="abutton" href="/logout_pred">Logout with prejudice</a></li>{% endif %}
