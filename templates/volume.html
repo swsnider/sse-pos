@@ -1,9 +1,6 @@
-{% extends "base.html" %}
+{% extends "report_base.html" %}
 {% block title %}Adminstration: Sales Tax Data{% endblock %}
-{% block scripts %}
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script type="text/javascript" src="/static/js/daterangepicker.jQuery.js"></script>
-<link rel="stylesheet" href="/static/css/ui.daterangepicker.css" type="text/css" />
+{% block report_scripts %}
 <script type="text/javascript">
     google.load('visualization', '1', {'packages':['annotatedtimeline']});
     google.setOnLoadCallback(drawCharts);
@@ -22,18 +19,8 @@
     }
 </script>
 {% endblock %}
-{% block menu %}
-<li><a href="/admin/reports/tax">Sales Stats/Sales Tax Calculation</a></li>
-<li class="selected"><a href="/admin/reports/volume">Sales Volume</a></li>
-{% endblock %}
 {% block desc %}Common Thread POS Admin::Reports:Sales Volumes{% endblock %}
-{% block content %}
-<form method="GET" action="">
-    Date Range: <input type="text" name="start_date" value="{{start_date}}" /> - <input type="text" name="end_date" value="{{end_date}}" /> <button onclick="submit();">Calculate Stats</button>
-    <script type="text/javascript">
-        $('input').daterangepicker({arrows:true});
-    </script>
-</form>
+{% block report_content %}
 <div id="graphs" style="width:800; height:250">
 </div>
 {% endblock %}

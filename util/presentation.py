@@ -1,4 +1,4 @@
-import os, csv, simplejson as json, datetime as datetime_module
+import os, csv, simplejson as json, datetime as datetime_module, urllib
 from re import compile, subn
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 
@@ -78,3 +78,59 @@ def money_to_str(amt):
         temp, count = subn(profile,r"\1,\2",temp)
         if not count: break
     return temp
+
+def report(f):
+    def g(*args, **kwargs):
+        self = args[0]
+        start_date = self.request.get('start_date', '')
+        end_date = self.request.get('end_date', '')
+        if start_date == '' or end_date == '':
+            oneDay = datetime_module.timedelta(days=1)
+            now = datetime_module.datetime.now()
+            if int(now.hour) < 5:
+                start_date = (datetime_module.date.today() - oneDay).strftime('%m/%d/%Y')
+                end_date = datetime_module.date.today().strftime('%m/%d/%Y')
+            else:
+                start_date = datetime_module.date.today().strftime('%m/%d/%Y')
+                end_date = (datetime_module.date.today() + oneDay).strftime('%m/%d/%Y')
+        e = s = None
+        if start_date != '' and end_date != '':
+            e = datetime_module.datetime.strptime(end_date, '%m/%d/%Y')
+            s = datetime_module.datetime.strptime(start_date, '%m/%d/%Y')
+        kwargs['e'] = e
+        kwargs['s'] = s
+        r = f(*args, **kwargs)
+        r['start_date'] = start_date
+        r['end_date'] = end_date
+        return r
+    return g
+
+def pie_chart(f):
+    def g(*args, **kwargs):
+        self = args[0]
+        r = f(*args, **kwargs)
+        if 'categorized' in r:
+            ###Single case
+            categorized = r['categorized']
+            cats = sorted(categorized.items(), key=lambda x:x[1], reverse=True)
+            categorized_labels = '|'.join([urllib.quote_plus(str(i[0])) for i in cats])
+            categorized_data = ','.join([urllib.quote_plus(str(i[1])) for i in cats])
+        elif 'categorized_list' in r:
+            ###Multiple case
+            categorized_list = r['categorized_list']
+            cats = {}
+            categorized_labels = {}
+            categorized_data = {}
+            for k in categorized_list.keys():
+                categorized = categorized_list[k]
+                c = sorted(categorized.items(), key=lambda x:x[1], reverse=True)
+                c_l = '|'.join([urllib.quote_plus(str(i[0])) for i in c])
+                c_d = ','.join([urllib.quote_plus(str(i[1])) for i in c])
+                cats[k] = c
+                categorized_labels[k] = c_l
+                categorized_data[k] = c_d
+        r['cats'] = cats
+        r['categorized_labels'] = categorized_labels
+        r['categorized_data'] = categorized_data
+        return r
+    return g

@@ -1,5 +1,6 @@
 def add_routes(map):
     map.connect('/',controller="controllers:GenericPages", action="index")
+    map.connect('/receipt', controller="controllers:TransactionPage", action="receipt")
     map.connect("/pricelist", controller="controllers:GenericPages", action="pricelist")
     map.connect('/login',controller="controllers:GenericPages", action="login")
     map.connect('/do_login',controller="controllers:GenericPages", action="do_login")

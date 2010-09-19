@@ -60,3 +60,8 @@ indexes:
   properties:
   - name: finalized
   - name: created_on
+
+- kind: Transaction2
+  properties:
+  - name: owner
+  - name: created_on

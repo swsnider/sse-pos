@@ -1,9 +1,10 @@
 from models import *
 from datetime import datetime
 import traceback, urllib
+from google.appengine.api import mail
 from google.appengine.ext import webapp
 from google.appengine.ext.db import Key
-from util import secure, tg_template, jsonify, str_to_money, money_to_str
+from util import secure, tg_template, jsonify, str_to_money, money_to_str, report, render_template
 
 class TransactionPage(webapp.RequestHandler):
     
@@ -27,7 +28,39 @@ class TransactionPage(webapp.RequestHandler):
         for i in items:
             grand_total += i.total()
         return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all().filter('display =', True).order('color'), itemtypes=ItemCategory.all().filter('display =', True).order('description'))
-    
+
+
+    @jsonify
+    @secure
+    def email_receipt(self, **kwargs):
+        email = self.request.get('email', False)
+        key = self.request.get('key', False)
+        if key and email:
+            t = Transaction2.get(Key(encoded=key))
+            its = [LineItem2.get(Key(encoded=i)) for i in t.items]
+            d = t.created_on.strftime('%B %d, %Y at %I:%M %p')
+            mail.send_mail(sender="Common Thread Register <swsnider@gmail.com>",
+                           to=email,
+                           subject="Receipt for recent purchase at Common Thread",
+                           body=render_template('email_receipt.txt', dict(transaction=t,lineitems=its, transaction_date=d)))
+            return dict(valid=True)
+        else:
+            return dict(valid=False)
+
+    @tg_template("receipt.html")
+    @secure
+    @report
+    def receipt(self, **kwargs):
+        current_user = self.users.get_current_user()
+        e = kwargs['e']
+        s = kwargs['s']
+        if e != None:
+            if not current_user.is_admin:
+                ts = Transaction2.gql("WHERE created_on >= :1 AND created_on <= :2 AND owner = KEY(:3) ORDER BY created_on DESC", s, e, str(current_user.key()))
+            else:
+                ts = Transaction2.gql("WHERE created_on >= :1 AND created_on <= :2 ORDER BY created_on DESC", s, e)
+            return dict(transactions=ts)
+
     @jsonify
     @secure
     def donate(self, **kwargs):

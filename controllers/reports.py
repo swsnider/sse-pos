@@ -18,23 +18,13 @@ class ReportPages(webapp.RequestHandler):
 
     @tg_template('volume.html')
     @admin_only
+    @report
     def volume(self, **kwargs):
-        start_date = self.request.get('start_date', '')
-        end_date = self.request.get('end_date', '')
-        if start_date == '' or end_date == '':
-            oneDay = timedelta(days=1)
-            now = datetime.now()
-            if int(now.hour) < 5:
-                start_date = (date.today() - oneDay).strftime('%m/%d/%Y')
-                end_date = date.today().strftime('%m/%d/%Y')
-            else:
-                start_date = date.today().strftime('%m/%d/%Y')
-                end_date = (date.today() + oneDay).strftime('%m/%d/%Y')
+        e = kwargs['e']
+        s = kwargs['s']
         volume = []
         volumeDict = {}
-        if start_date != '' and end_date != '':
-            e = datetime.strptime(end_date, '%m/%d/%Y')
-            s = datetime.strptime(start_date, '%m/%d/%Y')
+        if e != None and s != None:
             ts = Transaction2.gql("WHERE created_on >= :1 AND created_on <= :2", s, e)
             for t in ts:
                 if t.created_on.hour < 5:
@@ -47,30 +37,21 @@ class ReportPages(webapp.RequestHandler):
                     volumeDict[d] = 0
                 volumeDict[d] += len(t.items)
         volume = [(i[0], i[1]) for i in volumeDict.items()]
-        return dict(volume=volume, start_date=start_date, end_date=end_date)
+        return dict(volume=volume)
 
     @tg_template('tax.html')
     @admin_only
+    @pie_chart
+    @report
     def tax(self, **kwargs):
-        start_date = self.request.get('start_date', '')
-        end_date = self.request.get('end_date', '')
-        if start_date == '' or end_date == '':
-            oneDay = timedelta(days=1)
-            now = datetime.now()
-            if int(now.hour) < 5:
-                start_date = (date.today() - oneDay).strftime('%m/%d/%Y')
-                end_date = date.today().strftime('%m/%d/%Y')
-            else:
-                start_date = date.today().strftime('%m/%d/%Y')
-                end_date = (date.today() + oneDay).strftime('%m/%d/%Y')
+        e = kwargs['e']
+        s = kwargs['s']
         owed = 0
         taxable = 0
         total = 0
         calculated_items = []
         categorized = {}
-        if start_date != '' and end_date != '':
-            e = datetime.strptime(end_date, '%m/%d/%Y')
-            s = datetime.strptime(start_date, '%m/%d/%Y')
+        if e != None and s != None:
             ts = Transaction2.gql("WHERE created_on >= :1 AND created_on <= :2", s, e)
             calculated_items = []
             for transaction in ts:
@@ -85,7 +66,42 @@ class ReportPages(webapp.RequestHandler):
                         calculated_items.append(it)
                     categorized[it.category] = categorized.get(it.category, 0) + 1
             owed = taxable * 0.07
-            cats = sorted(categorized.items(), key=lambda x:x[1], reverse=True)
-            categorized_labels = '|'.join([urllib.quote_plus(str(i[0])) for i in cats])
-            categorized_data = ','.join([urllib.quote_plus(str(i[1])) for i in cats])
-        return dict(cats=cats,categorized_labels=categorized_labels, categorized_data=categorized_data, start_date=start_date, end_date=end_date, owed_amount=owed, items=calculated_items, conv=money_to_str, total=total, taxable=taxable, categorized=categorized)
+        return dict(owed_amount=owed, items=calculated_items, conv=money_to_str, total=total, taxable=taxable, categorized=categorized)
+    
+
+    @tg_template('report_tag_colors.html')
+    @admin_only
+    @pie_chart
+    @report
+    def tag_color(self, **kwargs):
+        e = kwargs['e']
+        s = kwargs['s']
+        if e != None:
+            ts = Transaction2.gql("WHERE created_on >= :1 AND created_on <= :2", s, e)
+            categorized = {}
+            ocategorized = {}
+            colorDict = {}
+            discountDict = {}
+            for t in ts:
+                if t.items is None: continue
+                volumeDict[d] += len(t.items)
+                d_d = {}
+                c_d = {}
+                for i in t.items:
+                    it = LineItem2.get(Key(encoded=i))
+                    categorized[str(it.discount) + "%"] = categorized.get(str(it.discount) + "%", 0) + 1
+                    ocategorized[str(it.color)] = ocategorized.get(str(it.color), 0) + 1
+                    if t.created_on.hour < 5:
+                        d = (t.created_on - oneDay)
+                        d = "new Date(%s, %s, %s)" % (d.year, d.month-1, d.day)
+                    else:
+                        d = t.created_on
+                        d = "new Date(%s, %s, %s)" % (d.year, d.month-1, d.day)
+                    if d not in colorDict:
+                        colorDict[d] = {}
+                    if d not in discountDict:
+                        discountDict[d] = {}
+                    d_d[str(it.discount) + "%"] = d_d.get(str(it.discount) + "%", 0) + 1
+                    c_d[str(it.color)] = c_d.get(str(it.color), 0) + 1
+                
+        return dict(conv=money_to_str, categorized_list = dict(categorized=categorized, ocategorized=ocategorized), colorDict=colorDict, discountDict=discountDict)
