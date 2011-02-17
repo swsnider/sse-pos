@@ -1,0 +1,8 @@
+mapreduce:
+- name: "Add Superuser values"
+  mapper:
+    input_reader: mapreduce.input_readers.DatastoreInputReader
+    handler: controllers.mapreducer.is_superuser_process
+    params:
+    - name: entity_kind
+      default: models.User

@@ -1,9 +1,12 @@
 application: sse-pos
-version: 12
+version: 13
 runtime: python
 api_version: 1
 
 handlers:
+- url: /mapreduce(/.*)?
+  script: mapreduce/main.py
+  login: admin
 - url: /remote_api
   script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
   login: admin

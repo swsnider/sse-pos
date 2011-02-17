@@ -312,7 +312,7 @@ class CategoryAPI(webapp.RequestHandler):
             c = ItemCategory.get(Key(encoded=self.request.get('key')))
             c.display = not c.display
             c.put()
-            return dict(valid=True, html=util.render_fragment('category_list.html', dict(category=c, conv=money_to_str, superuser=current_user.is_superuser)))
+            return dict(valid=True, html=util.render_fragment('category_list.html', dict(category=ItemCategory.get(Key(encoded=self.request.get('key'))), conv=money_to_str, superuser=current_user.is_superuser)))
         except:
             return dict(valid=False, failure=traceback.format_exc())
     
@@ -324,7 +324,7 @@ class CategoryAPI(webapp.RequestHandler):
             c = ItemCategory.get(Key(encoded=self.request.get('key')))
             c.disabled = not c.disabled
             c.put()
-            return dict(valid=True, html=util.render_fragment('category_list.html', dict(category=c, conv=money_to_str, superuser=current_user.is_superuser)))
+            return dict(valid=True, html=util.render_fragment('category_list.html', dict(category=ItemCategory.get(Key(encoded=self.request.get('key'))), conv=money_to_str, superuser=current_user.is_superuser)))
         except:
             return dict(valid=False, failure=traceback.format_exc())
     
@@ -341,7 +341,7 @@ class CategoryAPI(webapp.RequestHandler):
             c.description = urllib.unquote_plus(self.request.get('description'))
             c.code = urllib.unquote_plus(self.request.get('code'))
             c.put()
-            return dict(valid=True, html=util.render_fragment('category_list.html', dict(category=c, conv=money_to_str, superuser=current_user.is_superuser)))
+            return dict(valid=True, html=util.render_fragment('category_list.html', dict(category=ItemCategory.get(Key(encoded=self.request.get('key'))), conv=money_to_str, superuser=current_user.is_superuser)))
         except:
             return dict(valid=False, failure=traceback.format_exc())
     

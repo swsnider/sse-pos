@@ -10,7 +10,6 @@ from transactions import TransactionPage, TransactionAPI
 from admin import AdminPages, ColorAPI, CategoryAPI, UserAPI, UserPages
 from reports import ReportPages
 from pos import PosPage
-from mapreduce import MapReducePage
 
 #'Core' controller
 
