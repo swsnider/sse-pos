@@ -44,7 +44,12 @@ class AdminPages(webapp.RequestHandler):
     @tg_template('category_list.html')
     @admin_only
     def category(self, **kwargs):
-        return dict(categories=ItemCategory.all(), conv=money_to_str)
+        current_user = self.users.get_current_user()
+        if current_user.is_superuser:
+          cats = ItemCategory.all()
+        else:
+          cats = ItemCategory.all().filter('disabled =', False)
+        return dict(categories=cats, conv=money_to_str, superuser=current_user.is_superuser)
     
     @tg_template('color_list.html')
     @admin_only
@@ -136,6 +141,7 @@ class UserPages(webapp.RequestHandler):
     @admin_only
     def do_edit(self, **kwargs):
         try:
+            current_user = self.users.get_current_user()
             u = User.get(Key(encoded=self.request.get('key')))
             email = urllib.unquote_plus(self.request.get('email'))
             first_name = urllib.unquote_plus(self.request.get('first_name'))
@@ -143,6 +149,7 @@ class UserPages(webapp.RequestHandler):
             password = urllib.unquote_plus(self.request.get('password'))
             is_admin = urllib.unquote_plus(self.request.get('is_admin'))
             is_developer = urllib.unquote_plus(self.request.get('is_developer'))
+            is_superuser = urllib.unquote_plus(self.request.get('is_superuser'))
             u.email = email
             u.first_name = first_name
             u.last_name = last_name
@@ -154,6 +161,11 @@ class UserPages(webapp.RequestHandler):
                 u.is_developer = True
             else:
                 u.is_developer = False
+            if current_user.is_superuser:
+              if is_superuser == "True":
+                  u.is_superuser = True
+              else:
+                  u.is_superuser = False
             if password != "****":
                 h = hashlib.sha512()
                 u.salt = email
@@ -166,12 +178,14 @@ class UserPages(webapp.RequestHandler):
         self.redirect("/admin/user")        
     @admin_only
     def do_add(self, **kwargs):
+        current_user = self.users.get_current_user()
         email = urllib.unquote_plus(self.request.get('email'))
         first_name = urllib.unquote_plus(self.request.get('first_name'))
         last_name = urllib.unquote_plus(self.request.get('last_name'))
         password = urllib.unquote_plus(self.request.get('password'))
         is_admin = urllib.unquote_plus(self.request.get('is_admin'))
         is_developer = urllib.unquote_plus(self.request.get('is_developer'))
+        is_superuser = urllib.unquote_plus(self.request.get('is_superuser'))
         u = User()
         u.salt = email
         u.email = email
@@ -185,6 +199,13 @@ class UserPages(webapp.RequestHandler):
             u.is_developer = True
         else:
             u.is_developer = False
+        if current_user.is_superuser:
+          if is_superuser == "True":
+              u.is_superuser = True
+          else:
+              u.is_superuser = False
+        else:
+          u.is_superuser = False
         h = hashlib.sha512()
         h.update(password)
         h.update(email)
@@ -260,6 +281,10 @@ class CategoryAPI(webapp.RequestHandler):
     @jsonify
     @admin_only
     def delete(self, **kwargs):
+        current_user = self.users.get_current_user()
+        if not current_user.is_superuser:
+            self.redirect('/denied')
+            return
         try:
             c = ItemCategory.get(Key(encoded=self.request.get('key')))
             c.delete()
@@ -270,6 +295,10 @@ class CategoryAPI(webapp.RequestHandler):
     @jsonify
     @admin_only
     def new_blank(self, **kwargs):
+        current_user = self.users.get_current_user()
+        if not current_user.is_superuser:
+            self.redirect('/denied')
+            return
         c = ItemCategory()
         c.put()
         return dict(valid=True, html="""<tr id="%(key)srow"><td><input type="text" id="%(key)sdescription" /></td><td>$<input type="text" id="%(key)sprice" /></td><td><input type="text" id="%(key)scode" /></td><td><button onclick="commit_row('%(key)s');">Commit</button></td></tr>""" % {"key": str(c.key())})
@@ -278,24 +307,41 @@ class CategoryAPI(webapp.RequestHandler):
     @jsonify
     @admin_only
     def toggle_display(self, **kwargs):
+        current_user = self.users.get_current_user()
         try:
             c = ItemCategory.get(Key(encoded=self.request.get('key')))
             c.display = not c.display
             c.put()
-            return dict(valid=True, html="""<tr id="%(key)s"><td>%(description)s</td><td>$%(price)s</td><td>%(code)s</td><td>%(display)s</td><td><a onclick="delete_category('%(key)s');" class="delete_button">X</a></td><td><a onclick="edit_row('%(key)s');" class="edit_button">edit</a></td><td><a onclick="toggle_display('%(key)s');" class="edit_button">Toggle Displayed</a></td></tr>""" % {'key': str(c.key()), 'price': str(money_to_str(c.price)), 'description': str(c.description), 'code': str(c.code), 'display': str(c.display)})
+            return dict(valid=True, html=util.render_fragment('category_list.html', dict(category=c, conv=money_to_str, superuser=current_user.is_superuser)))
+        except:
+            return dict(valid=False, failure=traceback.format_exc())
+    
+    @jsonify
+    @admin_only
+    def toggle_disabled(self, **kwargs):
+        current_user = self.users.get_current_user()
+        try:
+            c = ItemCategory.get(Key(encoded=self.request.get('key')))
+            c.disabled = not c.disabled
+            c.put()
+            return dict(valid=True, html=util.render_fragment('category_list.html', dict(category=c, conv=money_to_str, superuser=current_user.is_superuser)))
         except:
             return dict(valid=False, failure=traceback.format_exc())
     
     @jsonify
     @admin_only
     def update(self, **kwargs):
+        current_user = self.users.get_current_user()
+        if not current_user.is_superuser:
+            self.redirect('/denied')
+            return
         try:
             c = ItemCategory.get(Key(encoded=self.request.get('key')))
             c.price = str_to_money(urllib.unquote_plus(self.request.get('price')))
             c.description = urllib.unquote_plus(self.request.get('description'))
             c.code = urllib.unquote_plus(self.request.get('code'))
             c.put()
-            return dict(valid=True, html="""<tr id="%(key)s"><td>%(description)s</td><td>$%(price)s</td><td>%(code)s</td><td>%(display)s</td><td><a onclick="delete_category('%(key)s');" class="delete_button">X</a></td><td><a onclick="edit_row('%(key)s');" class="edit_button">edit</a></td><td><a onclick="toggle_display('%(key)s');" class="edit_button">Toggle Displayed</a></td></tr>""" % {'key': str(c.key()), 'price': str(money_to_str(c.price)), 'description': str(c.description), 'code': str(c.code), 'display': str(c.display)})
+            return dict(valid=True, html=util.render_fragment('category_list.html', dict(category=c, conv=money_to_str, superuser=current_user.is_superuser)))
         except:
             return dict(valid=False, failure=traceback.format_exc())
     
@@ -303,5 +349,9 @@ class CategoryAPI(webapp.RequestHandler):
     @jsonify
     @admin_only
     def edit(self, **kwargs):
+        current_user = self.users.get_current_user()
+        if not current_user.is_superuser:
+            self.redirect('/denied')
+            return
         c = ItemCategory.get(Key(encoded=self.request.get('key')))
         return dict(valid=True, html="""<tr id="%(key)srow"><td><input type="text" id="%(key)sdescription" value="%(description)s"/></td><td>$<input type="text" id="%(key)sprice" value="%(price)s"/></td><td><input type="text" id="%(key)scode" value="%(code)s"/></td><td><button onclick="commit_row('%(key)s');">Commit</button></td></tr>""" % {"key": str(c.key()), 'price': str(money_to_str(c.price)), 'description': str(c.description), 'code': str(c.code)})

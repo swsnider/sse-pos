@@ -7,6 +7,15 @@ function toggle_display(key){
     });
 }
 
+function toggle_disabled(key){
+    $.post('/api/category/toggle_disabled', {key: key}, function(data){
+        data = eval('('+ data +')');
+        if (data.valid){
+            $('#'+key).replaceWith(data.html);
+        }
+    });
+}
+
 function delete_category(key){
     $('<div id="dialog" title="Confirm delete"><p>Do you really want to delete this category?</p></div>').dialog({modal: true, buttons: {"No": function (){
         $(this).dialog("close");

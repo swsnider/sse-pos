@@ -32,6 +32,7 @@ class User(db.Model):
     last_name = db.StringProperty()
     is_admin = db.BooleanProperty(default=False)
     is_developer = db.BooleanProperty(default=False)
+    is_superuser = db.BooleanProperty(default=False)
     def gravatarHash(self):
         return str(hashlib.md5(self.email.strip().lower()).hexdigest())
 
@@ -45,6 +46,7 @@ class ItemCategory(db.Model):
     description = db.StringProperty()
     code = db.StringProperty()
     display = db.BooleanProperty(default=True)
+    disabled = db.BooleanProperty(default=False)
     
     def get_price(self):
         import util

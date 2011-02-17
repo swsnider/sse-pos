@@ -1,3 +1,19 @@
+{% macro cat_tr(category, conv, superuser, even_or_odd) -%}
+{% if category.price != None %}
+    <tr class="{{ even_or_odd }}" id="{{category.key()}}">
+        <td>{{ category.description }}</td>
+        <td>${{ conv(category.price) }}</td>
+        <td>{{ category.code }}</td>
+        <td>{{category.display}}</td>
+        {% if superuser %}<td>{{category.disabled}}</td>{% endif %}
+        {% if superuser %}<td><a onclick="delete_category('{{category.key()}}');" class="delete_button"  href="#">X</a></td>{% endif %}
+        {% if superuser %}<td><a onclick="edit_row('{{category.key()}}');" class="edit_button" href="#">edit</a></td>{% endif %}
+        <td><a onclick="toggle_display('{{category.key()}}');" class="edit_button">Toggle Displayed</a></td>
+        {% if superuser %}<td><a onclick="toggle_disabled('{{category.key()}}');" class="edit_button">Toggle Disabled<a></td>{% endif %}
+    </tr>
+{% endif %}
+{%- endmacro %}
+{% if not standalone %}
 {% extends "base.html" %}
 {% block title %}Adminstration: Categories{% endblock %}
 {% block scripts %}
@@ -17,10 +33,11 @@
         <table>
             <tr><th>Category description</th><th>Price</th><th>Code</th><th>Displayed?</th></tr>
         {% for category in categories %}
-        {% if category.price != None %}
-            <tr class="{{ loop.cycle('odd', 'even') }}" id="{{category.key()}}"><td>{{ category.description }}</td><td>${{ conv(category.price) }}</td><td>{{ category.code }}</td><td>{{category.display}}</td><td><a onclick="delete_category('{{category.key()}}');" class="delete_button"  href="#">X</a></td><td><a onclick="edit_row('{{category.key()}}');" class="edit_button" href="#">edit</a></td><td><a onclick="toggle_display('{{category.key()}}');" class="edit_button">Toggle Displayed</a></td></tr>
-        {% endif %}
+        {{ cat_tr(category, conv, superuser, loop.cycle('odd', 'even')) }}
         {% endfor %}
-            <tr id="add_new"><td colspan="3"><a onclick="add_category();" class="add_button"  href="#">+</a></tr>
+            {% if superuser %}<tr id="add_new"><td colspan="3"><a onclick="add_category();" class="add_button"  href="#">+</a></tr>{% endif %}
         </table>
 {% endblock %}
+{% else %}
+{{ cat_tr(category, conv, superuser, 'odd') }}
+{% endif %}

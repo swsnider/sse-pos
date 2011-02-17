@@ -28,6 +28,10 @@ class eastern(datetime_module.tzinfo):
         else:
             return "EDT"
 
+def render_fragment(name, template_values):
+    template_values['standalone'] = True
+    return render_template(name, template_values)
+
 def render_template(name, template_values):
     template_dirs = []
     template_dirs.append(os.path.join(os.path.dirname(__file__), '..', 'templates'))
@@ -38,6 +42,8 @@ def render_template(name, template_values):
         raise TemplateNotFound(name)
     if not template_values:
         template_values = {}
+        if 'standalone' not in template_values:
+            template_values['standalone'] = False
     return template.render(template_values)
 
 def tg_template(name):
