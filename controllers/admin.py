@@ -1,6 +1,7 @@
 import traceback, urllib, hashlib, time
 from models import *
 from util import *
+import util
 import code
 import urllib
 from datetime import datetime, date, timedelta
@@ -323,6 +324,7 @@ class CategoryAPI(webapp.RequestHandler):
         try:
             c = ItemCategory.get(Key(encoded=self.request.get('key')))
             c.disabled = not c.disabled
+            c.display = not c.disabled
             c.put()
             return dict(valid=True, html=util.render_fragment('category_list.html', dict(category=ItemCategory.get(Key(encoded=self.request.get('key'))), conv=money_to_str, superuser=current_user.is_superuser)))
         except:

@@ -6,3 +6,10 @@ mapreduce:
     params:
     - name: entity_kind
       default: models.User
+- name: "Add Disabled values"
+  mapper:
+    input_reader: mapreduce.input_readers.DatastoreInputReader
+    handler: controllers.mapreducer.disabled_process
+    params:
+    - name: entity_kind
+      default: models.ItemCategory

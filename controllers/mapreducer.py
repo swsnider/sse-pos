@@ -12,3 +12,7 @@ def is_superuser_process(entity):
     else:
       entity.is_superuser = False
     yield op.db.Put(entity)
+
+def disabled_process(entity):
+    entity.disabled = not entity.display
+    yield op.db.Put(entity)
