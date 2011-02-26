@@ -15,5 +15,11 @@ else
 fi
 
 cp -R "$1" "build_out/$1";
-cp -Rn common/ "build_out/$1";
+
+if [ -e "$1/NO_COMMON" ]
+then
+  rm -fr "build_out/$1/NO_COMMON";
+else
+  cp -Rn common/ "build_out/$1";
+fi
 echo "Build complete. Results in build_out/$1";

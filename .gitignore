@@ -5,4 +5,4 @@ auth_info.py
 *.d
 *.csv
 *.sql
-
+build_out/*
