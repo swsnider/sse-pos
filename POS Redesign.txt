@@ -1,4 +1,0 @@
-POS Redesign
-
-Mike's feature requests:
-* Need to record the actual deposit amount for a day along with an explanation
