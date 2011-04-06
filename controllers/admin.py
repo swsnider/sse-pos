@@ -50,7 +50,7 @@ class AdminPages(webapp.RequestHandler):
           cats = ItemCategory.all()
         else:
           cats = ItemCategory.all().filter('disabled =', False)
-        return dict(categories=cats, conv=money_to_str, superuser=current_user.is_superuser)
+        return dict(categories=cats.order('description'), conv=money_to_str, superuser=current_user.is_superuser)
     
     @tg_template('color_list.html')
     @admin_only
