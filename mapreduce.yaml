@@ -20,3 +20,10 @@ mapreduce:
     params:
     - name: entity_kind
       default: models.Transaction2
+- name: "Move Transaction to Transaction2"
+  mapper:
+    input_reader: mapreduce.input_readers.DatastoreInputReader
+    handler: controllers.mapreducer.transaction_process
+    params:
+    - name: entity_kind
+      default: models.Transaction
