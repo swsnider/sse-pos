@@ -13,3 +13,10 @@ mapreduce:
     params:
     - name: entity_kind
       default: models.ItemCategory
+- name: "Fix timezone issues."
+  mapper:
+    input_reader: mapreduce.input_readers.DatastoreInputReader
+    handler: controllers.mapreducer.timezone_process
+    params:
+    - name: entity_kind
+      default: models.Transaction2
