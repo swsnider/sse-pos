@@ -2100,10 +2100,6 @@ def view(tpl_name, **defaults):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            #TODO(swsnider): fix this to be less brittle somehow
-            from google.appengine.api import users
-            if not users.is_current_user_admin() and users.get_current_user().email() not in ['swsnider@gmail.com', 'swsnider@google.com', 'epstarr@gmail.com']:
-              abort(403, 'You need to be an authorized user!')
             result = func(*args, **kwargs)
             if isinstance(result, (dict, DictMixin)):
                 tplvars = defaults.copy()
