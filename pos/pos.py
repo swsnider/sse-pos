@@ -1,4 +1,5 @@
 from global_defs import *
+from beaker.middleware import SessionMiddleware
 import bottle
 import controllers
 
@@ -13,6 +14,7 @@ class StripPathMiddleware(object):
 
 def main():
   app = bottle.app()
+  app = SessionMiddleware(app, SESSION_OPTS)
   app = StripPathMiddleware(app)
   bottle.run(app=app, server='gae')
 
