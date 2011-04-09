@@ -1,4 +1,4 @@
-from global import *
+from global_defs import *
 import bottle
 import controllers
 
