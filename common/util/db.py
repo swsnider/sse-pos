@@ -65,7 +65,7 @@ class ESTTZDateTimeProperty(Property):
                    self).get_value_for_datastore(model_instance)
 
   data_type = datetime.datetime
-  offset = datetime.timedelta(hours=5)
+  offset = datetime.timedelta(hours=4) #TODO(swsnider): make this non-dependent on manual labor
 
   @staticmethod
   def now():
