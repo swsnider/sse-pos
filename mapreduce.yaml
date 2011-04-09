@@ -20,10 +20,10 @@ mapreduce:
     params:
     - name: entity_kind
       default: models.Transaction2
-- name: "Move Transaction to Transaction2"
+- name: "Delete unfinalized"
   mapper:
     input_reader: mapreduce.input_readers.DatastoreInputReader
-    handler: controllers.mapreducer.transaction_process
+    handler: controllers.mapreducer.delete_unfinalized
     params:
     - name: entity_kind
-      default: models.Transaction
+      default: models.Transaction2
