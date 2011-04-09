@@ -8,3 +8,6 @@ handlers:
   static_files: index.html
   upload: index.html
 
+builtins:
+- datastore_admin: on
+- remote_api: on
