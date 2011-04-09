@@ -1,5 +1,6 @@
 from global import *
 import bottle
+import controllers
 
 
 class StripPathMiddleware(object):
