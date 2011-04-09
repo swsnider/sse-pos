@@ -28,6 +28,6 @@ def uses_session(f):
         curr_session.session = repr(sess)
         curr_session.put()
         if invalid_cookie:
-            self.response.headers['Set-Cookie'] = 'sse_pos_session_key=%s; expires=Thu, 22-May-2014 17:36:31 GMT; Path=/;' % str(curr_session.key())
+            self.response.headers['Set-Cookie'] = 'sse_pos_session_key=%s; expires=Thu, 22-May-2014 17:36:31 GMT; Path=/; Domain=.sse-pos.appspot.com' % str(curr_session.key())
         return ret_val
     return g

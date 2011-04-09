@@ -8,4 +8,4 @@ handlers:
   static_files: favicon.ico
   upload: favicon.ico
 - url: /.*
-  script: sse-pos.py
+  script: pos.py
