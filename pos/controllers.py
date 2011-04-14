@@ -1,5 +1,6 @@
 from models import *
 from google.appengine.ext.db import Key
+from google.appengine.api import memcache
 from bottle import route, jinja2_view as view, request
 from util import money, secure
 
@@ -7,7 +8,7 @@ from util import money, secure
 @route('/')
 @view('transaction')
 @secure()
-def transaction():
+def main():
   session = request.environ.get('beaker.session')
   trans = None
   if 'transaction_key' not in session:

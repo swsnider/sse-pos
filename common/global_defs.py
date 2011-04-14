@@ -9,3 +9,4 @@ SESSION_OPTS = {
   'session.secret': 'spO7sp6Us5I0ql1voe3Leroubrouxlu8riamieSlEciUpri227EHlE2IUb5aYie2',
   'session.auto': True
 }
+TAX_RATE = .07
