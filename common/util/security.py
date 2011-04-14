@@ -1,7 +1,5 @@
 import bottle
-from auth_layer import uses_users
 from models import Setting
-import random
 
 def secure(f):
   def g(*args, **kwargs):
