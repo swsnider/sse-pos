@@ -9,6 +9,7 @@ if DEBUG:
     inventory = 'http://localhost:8083',
     mapreducer = 'http://localhost:8084',
     pos = 'http://localhost:8085',
+    admin = 'http://localhost:8086',
   )
 else:
   APPS = dict(
@@ -18,6 +19,7 @@ else:
     inventory = 'http://inventory.sse-pos.appspot.com',
     mapreducer = 'http://mapreducer.sse-pos.appspot.com',
     pos = 'http://pos.sse-pos.appspot.com',
+    admin = 'http://admin.sse-pos.appspot.com',
   )
 SESSION_OPTS = {
   'session.type': 'ext:google',

@@ -8,7 +8,10 @@ fi
 
 if [ -d build_out ]
 then
-  rm -fr build_out/*;
+  if [ -d "build_out/$1" ]
+  then
+    rm -fr build_out/$1;
+  fi
 else
   rm -fr build_out;
   mkdir build_out;
