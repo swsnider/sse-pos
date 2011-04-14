@@ -2,29 +2,28 @@ from models import *
 from google.appengine.ext.db import Key
 from google.appengine.api import memcache
 from bottle import route, jinja2_view as view, request
-from util import money, secure
+import util
 
 
 @route('/')
 @view('transaction')
-@secure()
+@util.secure()
 def main():
   session = request.environ.get('beaker.session')
-  trans = None
-  if 'transaction_key' not in session:
-    trans = Transaction2()
-    trans.owner = User.get(Key(encoded=session['user']))
-    trans.put()
-    session['transaction_key'] = str(trans.key())
+  sale = None
+  if 'sale_key' not in session:
+    sale = Sale()
+    sale.owner = User.get(Key(encoded=session['current_user']['key']))
+    sale.put()
+    session['sale_key'] = str(sale.key())
   else:
-    trans = Transaction2.get(Key(encoded=session['transaction_key']))
-    if trans is None:
-      trans = Transaction2()
-      trans.owner = User.get(Key(encoded=session['user']))
-      trans.put()
-      session['transaction_key'] = str(trans.key())
-  items = [LineItem2.get(Key(encoded=i)) for i in trans.items]
-  grand_total = 0
-  for i in items:
-    grand_total += i.total()
-  return dict(transaction=trans, items=items, grand_total="%#.2f" % grand_total, colors=ColorCode.all().filter('display =', True).order('color'), itemtypes=ItemCategory.all().filter('display =', True).order('description'))
+    sale = Sale.get(Key(encoded=session['sale_key']))
+    if sale is None:
+      sale = Transaction2()
+      sale.owner = User.get(Key(encoded=session['user']))
+      sale.put()
+      session['sale_key'] = str(sale.key())
+  pending_items = sale.get_items()
+  grand_total = money.to_str(sale.get_total())
+  colors, items = util.get_lists('Color', 'Item')
+  return dict(sale=sale, items=items, grand_total=grand_total, colors=colors, itemtypes=items)
