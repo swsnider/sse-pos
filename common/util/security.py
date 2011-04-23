@@ -1,5 +1,4 @@
 import bottle
-from models import Setting
 
 def secure(f):
   def g(*args, **kwargs):

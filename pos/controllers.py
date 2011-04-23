@@ -19,7 +19,7 @@ def main():
   else:
     sale = Sale.get(Key(encoded=session['sale_key']))
     if sale is None:
-      sale = Transaction2()
+      sale = Sale()
       sale.owner = User.get(Key(encoded=session['user']))
       sale.put()
       session['sale_key'] = str(sale.key())
