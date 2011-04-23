@@ -1,9 +1,0 @@
-application: sse-pos
-version: mapreduce
-runtime: python
-api_version: 1
-
-handlers:
-- url: (/.*)
-  script: mapreduce/main.py
-  login: admin

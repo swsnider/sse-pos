@@ -1,8 +1,0 @@
-Common Thread Receipt from {{transaction_date}}
-
-Items Purchased:
-{% for item in lineitems %}
-* {{ item.quantity }} {{ item.category }} {% if item.discount > 0 %}({{item.discount}}% off){% endif %} - ${{item.total()}}
-{% endfor %}
-
-Total: ${{ transaction.total() }}
