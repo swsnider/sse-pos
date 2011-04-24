@@ -6,10 +6,10 @@ then
   exit;
 fi
 
-if [ 0 -ne `gem list --local | grep "haml" | wc -l`]
+if [ `gem list --local | grep "haml" | wc -l` -lt 1 ]
 then
-  echo "Installing gem for sass";
-  sudo gem install haml || (echo "Install failed -- exiting..." && exit);
+  echo "[BUILD] Installing gem for sass";
+  sudo gem install haml || (echo "[BUILD] Sass gem installation failed -- exiting..." && exit);
 fi
 
 if [ -d build_out ]
@@ -31,7 +31,7 @@ then
 else
   cp -Rn common/ "build_out/$1";
 fi
-echo "Copying complete. Running Sass...";
-sass --update "build_out/$1" "build_out/$1";
+echo "[BUILD] Copying complete. Running Sass...";
+sass --update --style expanded "build_out/$1" "build_out/$1";
 find "build_out/$1" -iname "*.scss" -delete;
-echo "Build complete. Results in build_out/$1";
+echo "[BUILD] Build complete. Results in build_out/$1";
