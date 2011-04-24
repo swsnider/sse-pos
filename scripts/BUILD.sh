@@ -25,4 +25,7 @@ then
 else
   cp -Rn common/ "build_out/$1";
 fi
+echo "Copying complete. Running Sass...";
+sass --update "build_out/$1" "build_out/$1";
+find "build_out/$1" -iname "*.scss" -delete;
 echo "Build complete. Results in build_out/$1";

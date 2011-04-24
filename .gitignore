@@ -6,3 +6,4 @@ auth_info.py
 *.csv
 *.sql
 build_out/*
+.sass-cache/*
