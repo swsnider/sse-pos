@@ -36,3 +36,22 @@ def get_lists(*lists):
         ret_list.append(objs)
         memcache.add('__lists__' + model, objs)
   return ret_list
+
+@public
+def binary_search(haystack, needle, key=lambda x:x):
+  """Returns the index that the value needle can be found at in the sorted haystack."""
+  length = len(haystack)
+  if length < 5:
+    for i in range(len(haystack)):
+      if key(haystack[i]) == needle:
+        return i
+    else:
+      return -1
+  pivot = length / 2
+  pivot_key = key(haystack[pivot])
+  if pivot_key == needle:
+    return pivot
+  elif pivot_key > needle:
+    return binary_search(haystack[:pivot], needle, key=key)
+  elif pivot_key < needle:
+    return binary_search(haystack[pivot+1:], needle, key=key)

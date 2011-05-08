@@ -7,7 +7,7 @@ import util
 
 @route('/')
 @view('transaction')
-@util.secure()
+@util.secure
 def main():
   session = request.environ.get('beaker.session')
   sale = None
@@ -27,3 +27,17 @@ def main():
   grand_total = money.to_str(sale.get_total())
   colors, items = util.get_lists('Color', 'Item')
   return dict(sale=sale, items=items, grand_total=grand_total, colors=colors, itemtypes=items)
+
+@route('/add_item')
+@util.jsonify
+def add_item_to_sale():
+  session = request.environ.get('beaker.session')
+  if 'sale_key' not in session:
+    return dict(error="No current sale!")
+  sale = Sale.get(Key(encoded=session['sale_key']))
+  if sale is None:
+    del session['sale_key']
+    return dict(error="Corrupt sale key in session!")
+  colors, items = util.get_lists('Color', 'Item')
+  items = sorted(items, key=lambda x: x['code'])
+  colors = sorted(colors, key=lambda x: x['code'])

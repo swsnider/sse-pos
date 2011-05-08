@@ -1,42 +1,42 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<!--
-Common Thread Colors:
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+    <title>{% block title %}{% endblock %} - Common Thread POS</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="staticapp/static/css/blueprint/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="staticapp/static/css/blueprint/print.css" type="text/css" media="print">
+    <!--[if lt IE 8]>
+      <link rel="stylesheet" href="staticapp/static/css/blueprint/ie.css" type="text/css" media="screen, projection">
+    <![endif]-->
+    <link rel="stylesheet" href="http://static.sse-pos.appspot.com/css/global.css" type="text/css" media="screen, projection">
+    {% block scripts %}{% endblock %}
+    {% endblock %}
+  </head>
+  <body id="test">
+    <div class="sandbar large">
+      <ol>
+        <li class="selected"><a href="#">Sales</a></li>
+        <li><a href="#">Reports</a></li>
+        <li><a href="#">Inventory</a></li>
+        <li><a href="#">Admin</a></li>
+        <li><a href="#">Developer</a></li>
+      </ol>
+    </div>
+    <div class="container">
+      <div id="headline" class="span-24">
+        {% block desc %}Common Thread POS{% endblock %}
+      </div>
+      <div id="content" class="span-24">
 
-Blue: #C5E6DC
-Tan: #F8F7DC
-Red/Orange: #CC7254
-Gray: #534C48
-Dark Brown: #3B2B20
-green: #ACDBD1
--->
-    <head>
-        {% block head %}
-        <title>{% block title %}{% endblock %} - Common Thread POS</title>
-        <link type="text/css" href="/static/css/jquery-ui-1.8.2.custom.css" rel="Stylesheet" />
-        <link rel="Stylesheet" href="/static/css/ui.selectmenu.css" type="text/css" /> 
-        <link type="text/css" href="/static/css/new_main.css" rel="Stylesheet" />
-        <script type="text/javascript" src="/static/js/jquery.js"></script>
-        <script type="text/javascript" src="/static/js/jquery-ui.js"></script>
-        <script type="text/javascript" src="/static/js/ui.selectmenu.js"></script> 
-        <script type="text/javascript" src="/static/gears/gears_init.js"></script>
-        <script type="text/javascript" src="/static/js/main.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                enable_cache();
-                $.get('/user_name?version=' + CONST_VERSION, function(data){
-                    data = eval('('+ data +')');
-                    if (data.valid){
-                        $('#userbox').html(data.data);
-                    }
-                });
-            });
-        </script>
-        {% block scripts %}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        <div id="abs">
-            <h1>{% block desc %}Common Thread POS{% endblock %}</h1>
+      </div>
+    </div>
+    <div id="footer" class="sandbar" style="height: 100%; text-align: center; font-size: normal">
+      Created by Silas Snider for Matthew's Quarter
+    </div>
+  </body>
+</html>
+            <h1></h1>
         </div>
         <div id="navigation">
             <span id="logo"><img src="/static/images/logoweb.png" /></span>
