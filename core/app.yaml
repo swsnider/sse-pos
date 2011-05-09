@@ -1,0 +1,34 @@
+application: sse-pos
+version: default
+runtime: python
+api_version: 1
+
+handlers:
+  - url: /favicon.ico
+    static_files: favicon.ico
+    upload: favicon.ico
+  - url: /.*
+    script: home.py
+
+error_handlers:
+  - file: misc/default_error.html
+  - error_code: over_quota
+    file: misc/over_quota.html
+  - error_code: timeout
+    file: misc/timeout.html
+
+builtins:
+  - datastore_admin: on
+  - remote_api: on
+  - deferred: on
+
+skip_files:
+  - ^(.*/)?app\.yaml
+  - ^(.*/)?app\.yml
+  - ^(.*/)?index\.yaml
+  - ^(.*/)?index\.yml
+  - ^(.*/)?.*~
+  - ^(.*/)?.*\.py[co]
+  - ^(.*/)?.*/RCS/.*
+  - ^(.*/)?\..*
+  - ^(.*/)?tests/.*$
