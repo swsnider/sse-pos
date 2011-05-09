@@ -19,4 +19,3 @@ Modules
 * Inventory Control: Track incoming/outgoing inventory simply and easily.
 * **STRETCH** Port something like sawzall to the the mapreduce framework so that
   we can dynamically create mapreduces.
-
