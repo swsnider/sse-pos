@@ -25,12 +25,6 @@ fi
 
 cp -R "$1" "build_out/$1";
 
-if [ -e "$1/NO_COMMON" ]
-then
-  rm -fr "build_out/$1/NO_COMMON";
-else
-  cp -Rn common/ "build_out/$1";
-fi
 echo "[BUILD] Copying complete. Running Sass...";
 sass --update --style expanded "build_out/$1" "build_out/$1";
 find "build_out/$1" -iname "*.scss" -delete;
