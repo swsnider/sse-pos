@@ -24,6 +24,18 @@ class User(db.Model):
       'last_name',
       'stati')
 
+  @staticmethod
+  def get_user(email, password):
+    user = User.all().filter('email =', email).get()
+    if user is None:
+      return None
+    salt = user.salt
+    candidate_hash = hashlib.sha512(password).hexdigest()
+    if user.password == candidate_hash:
+      return user
+    else:
+      return None
+
 class Item(db.Model):
   name = db.StringProperty()
   price = db.IntegerProperty()

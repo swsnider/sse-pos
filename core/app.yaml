@@ -5,8 +5,11 @@ api_version: 1
 
 handlers:
   - url: /favicon.ico
-    static_files: favicon.ico
+    static_files: misc/favicon.ico
     upload: favicon.ico
+  - url: /beardcap.jpg
+    static_files: misc/beardcap.jpg
+    upload: misc/beardcap.jpg
   - url: /.*
     script: home.py
 

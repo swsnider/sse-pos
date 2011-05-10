@@ -1,15 +1,22 @@
+from bottle import request
 from google.appengine.api import memcache
 
 from security import *
 from presentation import *
 import models
 
-__all__ = []
+__all__ = ['provide_session']
 
 def public(f):
   global __all__
   __all__.append(f.__name__)
   return f
+
+def provide_session(f):
+  def g(*args, **kwargs):
+    kwargs['_session'] = request.environ.get('beaker.session')
+    return f(*args, **kwargs)
+  return g
 
 def model_to_dict(obj, klass):
   ret = dict(__key__ = str(obj.key()))

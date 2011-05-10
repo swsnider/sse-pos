@@ -1,1 +1,2 @@
-from pos import *
+import pos
+import misc

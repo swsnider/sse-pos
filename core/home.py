@@ -7,12 +7,18 @@ sys.path.append(os.path.join(os.getcwd(), 'lib'))
 
 from beaker.middleware import SessionMiddleware
 import bottle
+if DEBUG:
+  from paste.evalexception import EvalException
+
 import controllers
 
 
 def main():
   app = bottle.app()
+  app.catchall = False
   app = SessionMiddleware(app, SESSION_OPTS)
+  if DEBUG:
+    app = EvalException(app)
   bottle.run(app=app, server='gae')
 
 
