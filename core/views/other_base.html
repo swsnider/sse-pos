@@ -1,0 +1,17 @@
+%rebase super title=title
+<div class="sandbar large">
+  <ol>
+    <li class="selected"><a href="#">{{title}}</a></li>
+  </ol>
+</div>
+<div class="container">
+  %for flashed in __flash__:
+  <div class="span-24 info">{{flashed}}</div>
+  %end
+  <div id="content" class="span-24">
+    %include
+  </div>
+</div>
+<div id="footer" class="sandbar" style="height: 100%; text-align: center; font-size: normal">
+  Created by Silas Snider for Matthew's Quarter
+</div>
