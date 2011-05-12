@@ -6,3 +6,4 @@ def secure(f):
     if 'current_user' not in session:
       bottle.redirect('/login')
     return f(*args, **kwargs)
+  return g

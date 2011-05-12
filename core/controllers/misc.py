@@ -1,5 +1,7 @@
-from bottle import route, view, request, redirect
+from bottle import route, request, redirect
 import util
+from util import view
+from models import User
 
 
 @route('/login')
@@ -8,7 +10,7 @@ def login():
   return dict()
 
 
-@route('/do_login')
+@route('/do_login', method="POST")
 @util.provide_session
 def do_login(_session):
   email = request.forms.get('email', '')
@@ -21,8 +23,8 @@ def do_login(_session):
 
 
 @route('/logout')
-# @util.secure
-# @util.provide_session
+@util.secure
+@util.provide_session
 @view('logout')
 def logout(_session):
   session.delete()

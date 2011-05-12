@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="http://static.sse-pos.appspot.com/css/blueprint/screen.css" type="text/css" media="screen, projection">
+    <link rel="stylesheet" href="http://static.sse-pos.appspot.com/css/blueprint/print.css" type="text/css" media="print">
+    <!--[if lt IE 8]>
+      <link rel="stylesheet" href="staticapp/static/css/blueprint/ie.css" type="text/css" media="screen, projection">
+    <![endif]-->
+    <link rel="stylesheet" href="http://static.sse-pos.appspot.com/css/global.css" type="text/css" media="screen, projection">
+  </head>
+  <body>
+    <div class="container">
+      <div class="span-24 large">&nbsp;</div>
+      %for flashed in __flash__:
+      <div class="span-24 info">{{flashed}}</div>
+      %end
+      <div class="span-24 large" style="height: 150px;">&nbsp;</div>
+      <div class="span-24 large"><h1>Login</h1></div>
+      <div class="span-16 push-6 large last" style="text-align: right;">
+        <form method="POST" action="/do_login">
+          Email Address: <input type="text" name="email" class="title"><br>
+          Password: <input type="password" name="password" class="title"><br>
+          <input type="submit" value="Login" class="title">
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

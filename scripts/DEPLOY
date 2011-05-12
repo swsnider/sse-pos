@@ -6,9 +6,6 @@ then
   exit;
 fi
 
-if [ ! -d "build_out/$1" ]
-then
-  source scripts/BUILD.sh "$1";
-fi
+source scripts/BUILD "$1";
 
 appcfg.py update "build_out/$1" $2;

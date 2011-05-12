@@ -1,7 +1,8 @@
 from models import *
 from google.appengine.ext.db import Key
-from bottle import route, view, request, redirect
+from bottle import route, request, redirect
 import util
+from util import view
 
 
 class NoSaleError(Exception):
@@ -48,9 +49,9 @@ def require_sale(f):
 @route('/pos')
 @route('/pos/')
 @view('pos')
-# @util.secure
-# @ensure_sale
-def main(_sale):
+@util.secure
+@ensure_sale
+def main_page(_sale):
   pending_items = _sale.get_items()
   grand_total = money.to_str(_sale.get_total())
   colors, items = util.get_lists('Color', 'Item')
