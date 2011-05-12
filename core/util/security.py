@@ -7,3 +7,7 @@ def secure(f):
       bottle.redirect('/login')
     return f(*args, **kwargs)
   return g
+
+def is_authenticated():
+  session = bottle.request.environ.get('beaker.session')
+  return 'current_user' in session

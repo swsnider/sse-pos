@@ -25,20 +25,23 @@ def csvify(f):
     return output.getvalue()
   return g
 
-def str_to_money(amt):
-  if '.' not in amt: amt += "00"
-  amt = amt.replace(",", "")
-  amt = amt.replace(".", "")
-  amt = int(amt)
-  return amt
+class money(object):
+  @staticmethod
+  def from_str(amt):
+    if '.' not in amt: amt += "00"
+    amt = amt.replace(",", "")
+    amt = amt.replace(".", "")
+    amt = int(amt)
+    return amt
 
-def money_to_str(amt):
-  temp = "%.2f" % (amt / 100.0)
-  profile = re.compile(r"(\d)(\d\d\d[.,])")
-  while 1:
-    temp, count = re.subn(profile,r"\1,\2",temp)
-    if not count: break
-  return temp
+  @staticmethod
+  def to_str(amt):
+    temp = "%.2f" % (amt / 100.0)
+    profile = re.compile(r"(\d)(\d\d\d[.,])")
+    while 1:
+      temp, count = re.subn(profile,r"\1,\2",temp)
+      if not count: break
+    return temp
 
 def flash(flash_str):
   session = bottle.request.environ.get('beaker.session')
@@ -55,7 +58,7 @@ def view(*view_args, **view_kwargs):
       if 'flash' not in session:
         session['flash'] = []
       ret_dict = f(*args, **kwargs)
-      ret_dict['__flash__'] = list(session['flash'])
+      ret_dict['__flash__'] = session['flash']
       session['flash'] = []
       return ret_dict
     return h

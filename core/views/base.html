@@ -1,7 +1,7 @@
-%rebase super title=title additional_head=additional_head
+%rebase super title=title
 <div class="sandbar large">
   <ol>
-    <li class="selected"><a href="#">Sales</a></li>
+    <li><a href="#">Sales</a></li>
     <li><a href="#">Reports</a></li>
     <li><a href="#">Inventory</a></li>
     <li><a href="#">Admin</a></li>
@@ -9,6 +9,9 @@
   </ol>
 </div>
 <div class="container">
+  %for flashed in __flash__:
+  <div class="span-24 info">{{flashed}}</div>
+  %end
   <div id="content" class="span-24">
     %include
   </div>

@@ -16,14 +16,14 @@ def ensure_sale(f):
     sale = None
     if 'sale_key' not in session:
       sale = Sale()
-      sale.owner = User.get(Key(encoded=session['current_user']['key']))
+      sale.owner = User.get(Key(encoded=session['current_user']))
       sale.put()
       session['sale_key'] = str(sale.key())
     else:
       sale = Sale.get(Key(encoded=session['sale_key']))
       if sale is None:
         sale = Sale()
-        sale.owner = User.get(Key(encoded=session['user']))
+        sale.owner = User.get(Key(encoded=session['current_user']))
         sale.put()
         session['sale_key'] = str(sale.key())
     kwargs['_sale'] = sale
@@ -53,6 +53,6 @@ def require_sale(f):
 @ensure_sale
 def main_page(_sale):
   pending_items = _sale.get_items()
-  grand_total = money.to_str(_sale.get_total())
+  grand_total = util.money.to_str(_sale.get_total())
   colors, items = util.get_lists('Color', 'Item')
   return dict(sale=_sale, items=items, grand_total=grand_total, colors=colors, itemtypes=items)

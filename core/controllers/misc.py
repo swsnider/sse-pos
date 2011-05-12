@@ -4,6 +4,15 @@ from util import view
 from models import User
 
 
+@route('/')
+@view('index')
+def index():
+  if User.all().count(1) > 0:
+    return dict()
+  else:
+    redirect('/setup')
+
+
 @route('/login')
 @view('login')
 def login():
@@ -14,7 +23,7 @@ def login():
 @util.provide_session
 def do_login(_session):
   email = request.forms.get('email', '')
-  password = request.forms.get('passsword', '')
+  password = request.forms.get('password', '')
   user = User.get_user(email, password)
   if user is None:
     util.flash('Incorrect email or password!')

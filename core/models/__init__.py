@@ -3,8 +3,11 @@ from google.appengine.api import urlfetch
 from global_defs import *
 import util
 import hashlib
+import random
 
 #add models here
+
+salt_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 __all__ = ['User', 'Item', 'Color', 'Sale', 'Setting']
 
@@ -25,12 +28,20 @@ class User(db.Model):
       'stati')
 
   @staticmethod
+  def generate_password(plaintext_pwd):
+    salt = []
+    for i in xrange(64):
+      salt.append(random.choice(salt_chars))
+    salt = ''.join(salt)
+    return (salt, hashlib.sha512(salt + plaintext_pwd).hexdigest())
+
+  @staticmethod
   def get_user(email, password):
-    user = User.all().filter('email =', email).get()
+    user = User.all().filter('email =', email).filter('stati =', 'active').get()
     if user is None:
       return None
     salt = user.salt
-    candidate_hash = hashlib.sha512(password).hexdigest()
+    candidate_hash = hashlib.sha512(salt + password).hexdigest()
     if user.password == candidate_hash:
       return user
     else:
