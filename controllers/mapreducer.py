@@ -25,3 +25,19 @@ def timezone_process(entity):
 def delete_unfinalized(entity):
     if entity.finalized == False:
         yield op.db.Delete(entity)
+
+class MultiYield(object):
+    def __init__(self, op_list):
+        self.op_list = op_list
+
+    def __call__(self, context):
+        for i in self.op_list:
+            i(context)
+
+def tally_by_item(entity):
+    if entity.created_on.year == 2010:
+        op_list = []
+        for it in entity.items:
+            li = LineItem2.get(Key(encoded=it))
+            op_list.append(op.counters.Increment(li.category))
+        yield MultiYield(op_list)

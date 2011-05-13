@@ -27,3 +27,10 @@ mapreduce:
     params:
     - name: entity_kind
       default: models.Transaction2
+- name: "Tally by item"
+  mapper:
+    input_reader: mapreduce.input_readers.DatastoreInputReader
+    handler: controllers.mapreducer.tally_by_item
+    params:
+    - name: entity_kind
+      default: models.Transaction2
