@@ -1,11 +1,20 @@
-%rebase super title=title
+%rebase super title=title, global_defs=global_defs
+%try:
+%if not selected:
+%selected = dict()
+%end
+%except NameError:
+%selected = dict()
+%end
+<html xmlns:py="http://genshi.edgewall.org" xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include href="super.html" />
 <div class="sandbar large">
   <ol>
-    <li><a href="#">Sales</a></li>
-    <li><a href="#">Reports</a></li>
-    <li><a href="#">Inventory</a></li>
-    <li><a href="#">Admin</a></li>
-    <li><a href="#">Developer</a></li>
+    <li {{selected.get('sales', '')}}><a href="#">Sales</a></li>
+    <li {{selected.get('reports', '')}}><a href="#">Reports</a></li>
+    <li {{selected.get('inventory', '')}}><a href="#">Inventory</a></li>
+    <li {{selected.get('admin', '')}}><a href="#">Admin</a></li>
+    <li {{selected.get('developer', '')}}><a href="#">Developer</a></li>
   </ol>
 </div>
 <div class="container">
@@ -19,3 +28,4 @@
 <div id="footer" class="sandbar" style="height: 100%; text-align: center; font-size: normal">
   Created by Silas Snider for Matthew's Quarter
 </div>
+</html>

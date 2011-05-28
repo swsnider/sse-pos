@@ -9,7 +9,12 @@ import random
 
 salt_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
-__all__ = ['User', 'Item', 'Color', 'Sale', 'Setting']
+__all__ = ['Organization', 'User', 'Item', 'Color', 'Sale', 'Setting']
+
+class Organization(db.Model):
+  name = db.StringProperty()
+  namespace = db.StringProperty()
+  stati = db.StringListProperty()
 
 class User(db.Model):
   email = db.EmailProperty()
@@ -17,6 +22,7 @@ class User(db.Model):
   password = db.StringProperty()
   first_name = db.StringProperty()
   last_name = db.StringProperty()
+  organization = db.ReferenceProperty(Organization)
   stati = db.StringListProperty()
   ORDERING = ('last_name', 'first_name')
   USEFUL_FIELDS = (
@@ -28,12 +34,18 @@ class User(db.Model):
       'stati')
 
   @staticmethod
-  def generate_password(plaintext_pwd):
+  def generate_password(plaintext_pwd = None):
+    if plaintext_pwd is None:
+      pwd = []
+      for i in range(16):
+        pwd.append(random.choice(salt_chars))
+      plaintext_pwd = ''.join(pwd)
+      del pwd
     salt = []
     for i in xrange(64):
       salt.append(random.choice(salt_chars))
     salt = ''.join(salt)
-    return (salt, hashlib.sha512(salt + plaintext_pwd).hexdigest())
+    return (salt, hashlib.sha512(salt + plaintext_pwd).hexdigest(), plaintext_pwd)
 
   @staticmethod
   def get_user(email, password):

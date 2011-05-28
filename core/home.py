@@ -3,7 +3,7 @@ from global_defs import *
 import os
 import os.path
 import sys
-sys.path.append(os.path.join(os.getcwd(), 'lib'))
+sys.path.insert(0, os.path.join(os.getcwd(), 'lib'))
 
 from beaker.middleware import SessionMiddleware
 import bottle

@@ -1,3 +1,4 @@
 import pos
 import misc
-import setup
+import org_setup
+import org_admin

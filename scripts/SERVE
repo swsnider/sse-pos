@@ -6,6 +6,15 @@ then
   exit;
 fi
 
+if [ -f "$1/DEPS" ]
+then
+  for i in `cat $1/DEPS`
+  do
+    echo "[SERVE] Starting depedency $i";
+    source scripts/SERVE $i;
+  done
+fi
+
 source scripts/BUILD "$1";
 
-dev_appserver.py --skip_sdk_update_check --allow_skipped_files --port=8080 --address=0.0.0.0 "build_out/$1"
+screen -S "$1" -d -m dev_appserver.py --skip_sdk_update_check --allow_skipped_files --port=`cat $1/PORT` --address=0.0.0.0 "build_out/$1"

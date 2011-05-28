@@ -1,2 +1,20 @@
-%rebase base title='Sell Things', __flash__=__flash__
-<h1>Yay!</h1>
+%rebase base title=_org_name + ' Sales', global_defs=__global_defs__, __flash__=__flash__
+<div class="span-24" style="text-align: center">
+  <input type="text" class="title" name="q">
+</div>
+<div class="span-20 push-2 last">
+  %for item_group in group(itemtypes, 4):
+    %for item in item_group:
+      %if item == item_group[-1]:
+      <div class="span-5 last">
+      %else:
+      <div class="span-5">
+      %end
+      {{item.name}}
+      </div>
+    %end
+  %end
+</div>
+<div class="span-24">
+  <p>Purchased items go here.</p>
+</div>

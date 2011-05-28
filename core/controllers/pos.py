@@ -51,8 +51,9 @@ def require_sale(f):
 @view('pos')
 @util.secure
 @ensure_sale
+@util.user_namespace
 def main_page(_sale):
   pending_items = _sale.get_items()
   grand_total = util.money.to_str(_sale.get_total())
   colors, items = util.get_lists('Color', 'Item')
-  return dict(sale=_sale, items=items, grand_total=grand_total, colors=colors, itemtypes=items)
+  return dict(group=util.group, sale=_sale, items=items, grand_total=grand_total, colors=colors, itemtypes=items)

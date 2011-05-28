@@ -10,6 +10,9 @@ handlers:
   - url: /beardcap.jpg
     static_files: misc/beardcap.jpg
     upload: misc/beardcap.jpg
+  - url: /org_admin(/.*)?
+    script: org_admin.py
+    login: admin
   - url: /.*
     script: home.py
 
@@ -24,3 +27,21 @@ builtins:
   - datastore_admin: on
   - remote_api: on
   - deferred: on
+
+admin_console:
+  pages:
+  - name: Organization Admin
+    url: /org_admin
+
+skip_files:
+- ^(.*/)?app\.yaml
+- ^(.*/)?app\.yml
+- ^(.*/)?index\.yaml
+- ^(.*/)?index\.yml
+- ^(.*/)?#.*#
+- ^(.*/)?.*~
+- ^(.*/)?.*\.py[co]
+- ^(.*/)?.*/RCS/.*
+- ^(.*/)?\..*
+- ^(.*/)?.*\.bak$
+- ^lib/paste.*$

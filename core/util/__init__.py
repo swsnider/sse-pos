@@ -1,20 +1,74 @@
-from bottle import request
+from bottle import request, redirect
 from google.appengine.api import memcache
+from google.appengine.api import namespace_manager
+from google.appengine.ext import db
 
 from security import *
 from presentation import *
 import models
 
-__all__ = ['provide_session']
+__all__ = [
+  'group',
+  'provide_user',
+  'global_namespace',
+  'user_namespace',
+  'provide_session',
+  'get_lists',
+  'binary_search'
+]
 
-def public(f):
-  global __all__
-  __all__.append(f.__name__)
-  return f
+def group(seq, num):
+  counter = 0
+  appender = []
+  idx = 0
+  while idx < len(seq):
+    while counter < num:
+      appender.append(seq[idx])
+      idx += 1
+      counter += 1
+    yield appender
+    appender = []
+    counter = 0
+
+def provide_user(f):
+  def g(*args, **kwargs):
+    user_key = request.environ.get('beaker.session').get('current_user', None)
+    if user_key is None:
+      redirect('/login')
+    request._user = db.get(user_key)
+    _user = request._user
+    if 'active' not in _user.stati or 'active' not in _user.organization.stati:
+      request.environ.get('beaker.session').invalidate()
+      flash('Invalid user!')
+      redirect('/login')
+    return f(*args, **kwargs)
+  return g
+      
+
+def global_namespace(f):
+  def g(*args, **kwargs):
+    old_namespace = namespace_manager.get_namespace()
+    namespace_manager.set_namespace('-global-')
+    ret_dict = f(*args, **kwargs)
+    namespace_manager.set_namespace(old_namespace)
+    return ret_dict
+
+def user_namespace(f):
+  @provide_user
+  def g(*args, **kwargs):
+    _user = request._user
+    namespace = _user.organization.namespace
+    org_name = _user.organization.name
+    request._old_namespace = namespace_manager.get_namespace()
+    namespace_manager.set_namespace(namespace)
+    ret_dict = f(*args, **kwargs)
+    ret_dict['_org_name'] = org_name
+    return ret_dict
+  return g
 
 def provide_session(f):
   def g(*args, **kwargs):
-    kwargs['_session'] = request.environ.get('beaker.session')
+    request._session = request.environ.get('beaker.session')
     return f(*args, **kwargs)
   return g
 
@@ -24,7 +78,6 @@ def model_to_dict(obj, klass):
     ret[field] = getattr(obj, field)
   return ret
 
-@public
 def get_lists(*lists):
   ret_list = []
   for model in lists:
@@ -44,7 +97,6 @@ def get_lists(*lists):
         memcache.add('__lists__' + model, objs)
   return ret_list
 
-@public
 def binary_search(haystack, needle, key=lambda x:x):
   """Returns the index that the value needle can be found at in the sorted haystack."""
   length = len(haystack)

@@ -9,6 +9,7 @@ from beaker.synchronization import null_synchronizer
 log = logging.getLogger(__name__)
 
 db = None
+namespace_manager = None
 
 class GoogleNamespaceManager(OpenResourceNamespaceManager):
     tables = {}
@@ -16,10 +17,12 @@ class GoogleNamespaceManager(OpenResourceNamespaceManager):
     @classmethod
     def _init_dependencies(cls):
         global db
+        global namespace_manager
         if db is not None:
             return
         try:
             db = __import__('google.appengine.ext.db').appengine.ext.db
+            namespace_manager = __import__('google.appengine.api.namespace_manager').appengine.api.namespace_manager
         except ImportError:
             raise InvalidCacheBackendError("Datastore cache backend requires the "
                                            "'google.appengine.ext' library")
@@ -27,6 +30,8 @@ class GoogleNamespaceManager(OpenResourceNamespaceManager):
     def __init__(self, namespace, table_name='beaker_cache', **params):
         """Creates a datastore namespace manager"""
         OpenResourceNamespaceManager.__init__(self, namespace)
+        curr_namespace = namespace_manager.get_namespace()
+        namespace_manager.set_namespace('-global-')
         
         def make_cache():
             table_dict = dict(created=db.DateTimeProperty(),
@@ -44,6 +49,7 @@ class GoogleNamespaceManager(OpenResourceNamespaceManager):
         # Google wants namespaces to start with letters, change the namespace
         # to start with a letter
         self.namespace = 'p%s' % self.namespace
+        namespace_manager.set_namespace(curr_namespace)
     
     def get_access_lock(self):
         return null_synchronizer()
@@ -53,6 +59,8 @@ class GoogleNamespaceManager(OpenResourceNamespaceManager):
         return null_synchronizer()
 
     def do_open(self, flags):
+        curr_namespace = namespace_manager.get_namespace()
+        namespace_manager.set_namespace('-global-')
         # If we already loaded the data, don't bother loading it again
         if self.loaded:
             self.flags = flags
@@ -74,8 +82,11 @@ class GoogleNamespaceManager(OpenResourceNamespaceManager):
                 self._is_new = True
         self.flags = flags
         self.loaded = True
+        namespace_manager.set_namespace(curr_namespace)
     
     def do_close(self):
+        curr_namespace = namespace_manager.get_namespace()
+        namespace_manager.set_namespace('-global-')
         if self.flags is not None and (self.flags == 'c' or self.flags == 'w'):
             if self._is_new:
                 item = self.cache(key_name=self.namespace)
@@ -90,8 +101,11 @@ class GoogleNamespaceManager(OpenResourceNamespaceManager):
                 item.accessed = datetime.now()
                 item.put()
         self.flags = None
+        namespace_manager.set_namespace(curr_namespace)
     
     def do_remove(self):
+        curr_namespace = namespace_manager.get_namespace()
+        namespace_manager.set_namespace('-global-')
         item = self.cache.get_by_key_name(self.namespace)
         item.delete()
         self.hash = {}
@@ -99,6 +113,7 @@ class GoogleNamespaceManager(OpenResourceNamespaceManager):
         # We can retain the fact that we did a load attempt, but since the
         # file is gone this will be a new namespace should it be saved.
         self._is_new = True
+        namespace_manager.set_namespace(curr_namespace)
 
     def __getitem__(self, key):
         return self.hash[key]

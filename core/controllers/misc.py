@@ -1,16 +1,14 @@
 from bottle import route, request, redirect
 import util
-from util import view
+from util import view, user_namespace
 from models import User
 
 
 @route('/')
 @view('index')
+@user_namespace
 def index():
-  if User.all().count(1) > 0:
-    return dict()
-  else:
-    redirect('/setup')
+  return dict()
 
 
 @route('/login')
@@ -21,7 +19,9 @@ def login():
 
 @route('/do_login', method="POST")
 @util.provide_session
-def do_login(_session):
+@util.global_namespace
+def do_login():
+  _session = request._session
   email = request.forms.get('email', '')
   password = request.forms.get('password', '')
   user = User.get_user(email, password)
@@ -29,11 +29,12 @@ def do_login(_session):
     util.flash('Incorrect email or password!')
     redirect('/login')
   _session['current_user'] = str(user.key())
+  redirect('/')
 
 
 @route('/logout')
 @util.secure
 @util.provide_session
 @view('logout')
-def logout(_session):
-  session.delete()
+def logout():
+  request._session.delete()

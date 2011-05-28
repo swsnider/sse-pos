@@ -30,6 +30,7 @@ div.sandbar {
       &.selected, &:hover {
         @include underline($green);
       }
+      @include underline($dark_brown);
     }
   }
 }
