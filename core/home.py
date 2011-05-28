@@ -5,6 +5,8 @@ import os.path
 import sys
 sys.path.insert(0, os.path.join(os.getcwd(), 'lib'))
 
+sys.stderr.write('\n\n#%s#\n\n' % repr(sys.path))
+
 from beaker.middleware import SessionMiddleware
 import bottle
 if DEBUG:

@@ -8,11 +8,6 @@ import re
 import simplejson as json
 import sys
 import urllib
-from genshi.template import TemplateLoader
-
-TEMPLATE_LOADER = TemplateLoader(
-  os.path.join(os.path.dirname(__file__), '..', 'templates'),
-)
 
 def jsonify(f):
   def g(*args, **kwargs):
@@ -56,17 +51,17 @@ def flash(flash_str):
   session['flash'].append(flash_str)
   session.save()
 
-def view(view_name):
+def view(*view_args, **view_kwargs):
   def g(f):
+    @bottle.jinja2_view(*view_args, **view_kwargs)
     def h(*args, **kwargs):
       session = bottle.request.environ.get('beaker.session')
       if 'flash' not in session:
         session['flash'] = []
       ret_dict = f(*args, **kwargs)
-      ret_dict['__flash__'] = session['flash']
-      ret_dict['__global_defs__'] = global_defs
+      ret_dict['_flash'] = session['flash']
+      ret_dict['_global_defs'] = global_defs
       session['flash'] = []
-      template = TEMPLATE_LOADER.load(view_name + '.html')
-      return tmpl.generate(ret_dict).render('html', doctype='html')
+      return ret_dict
     return h
   return g

@@ -1,13 +1,8 @@
-%rebase super title=title, global_defs=global_defs
-%try:
-%if not selected:
-%selected = dict()
-%end
-%except NameError:
-%selected = dict()
-%end
-<html xmlns:py="http://genshi.edgewall.org" xmlns:xi="http://www.w3.org/2001/XInclude">
-<xi:include href="super.html" />
+{% extends "super.html" %}
+{% if not selected %}
+{% set selected = {} %}
+{% endif %}
+{% block body %}
 <div class="sandbar large">
   <ol>
     <li {{selected.get('sales', '')}}><a href="#">Sales</a></li>
@@ -18,14 +13,15 @@
   </ol>
 </div>
 <div class="container">
-  %for flashed in __flash__:
+  {% for flashed in _flash %}
   <div class="span-24 info">{{flashed}}</div>
-  %end
+  {% endfor %}
   <div id="content" class="span-24">
-    %include
+    {% block content %}
+    {% endblock %}
   </div>
 </div>
 <div id="footer" class="sandbar" style="height: 100%; text-align: center; font-size: normal">
   Created by Silas Snider for Matthew's Quarter
 </div>
-</html>
+{% endblock %}
