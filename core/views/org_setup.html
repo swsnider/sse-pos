@@ -1,0 +1,18 @@
+%rebase other_base title='Organization Admin', global_defs=__global_defs__, __flash__=__flash__
+<h1>Snider CashRegister Organization Setup</h1>
+<h3>Please enter organization and first account details below.</h3>
+<p>This account will automatically be granted administrator privileges.</p>
+<form method="POST" action="/org_admin/setup/do_setup" style="text-align: center;">
+  <fieldset>
+    <legend>Organization Details</legend>
+      <label>Organization name: <input type="text" name="org_name" class="title"></label><br>
+    </legend>
+  </fieldset>
+  <fieldset>
+    <legend>New User</legend>
+    <label>Username (email address): <input type="text" name="email" class="title"></label><br>
+    <label>First Name: <input type="text" name="first_name" class="title"></label><br>
+    <label>Last Name: <input type="text" name="last_name" class="title"></label><br>
+    <input type="submit" value="Create User" class="title">
+  </fieldset>
+</form>
