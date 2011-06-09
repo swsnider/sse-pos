@@ -8,4 +8,4 @@ fi
 
 source scripts/BUILD "$1";
 
-appcfg.py update "build_out/$1" $2;
+cat ~/.appcfg_pwd | appcfg.py --passin update "build_out/$1" $2;

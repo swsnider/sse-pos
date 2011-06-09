@@ -1,15 +1,23 @@
+from global_defs import *
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
-from global_defs import *
+from google.appengine.api import namespace_manager
 import util
 import hashlib
 import random
 
-#add models here
+__all__ = ['Organization', 'User', 'Item', 'Color', 'Sale', 'Setting', 'MODEL_CLASSES']
+
+MODEL_CLASSES = [
+  'Organization',
+  'User',
+  'Item',
+  'Color',
+  'Sale',
+  'Setting'
+]
 
 salt_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-
-__all__ = ['Organization', 'User', 'Item', 'Color', 'Sale', 'Setting']
 
 class Organization(db.Model):
   name = db.StringProperty()
@@ -24,6 +32,7 @@ class User(db.Model):
   last_name = db.StringProperty()
   organization = db.ReferenceProperty(Organization)
   stati = db.StringListProperty()
+  initial_password = db.StringProperty()
   ORDERING = ('last_name', 'first_name')
   USEFUL_FIELDS = (
       'email',
@@ -49,11 +58,14 @@ class User(db.Model):
 
   @staticmethod
   def get_user(email, password):
+    old_namespace = namespace_manager.get_namespace()
+    namespace_manager.set_namespace('-global-')
     user = User.all().filter('email =', email).filter('stati =', 'active').get()
     if user is None:
       return None
     salt = user.salt
     candidate_hash = hashlib.sha512(salt + password).hexdigest()
+    namespace_manager.set_namespace(old_namespace)
     if user.password == candidate_hash:
       return user
     else:

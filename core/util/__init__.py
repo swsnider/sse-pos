@@ -52,6 +52,7 @@ def global_namespace(f):
     ret_dict = f(*args, **kwargs)
     namespace_manager.set_namespace(old_namespace)
     return ret_dict
+  return g
 
 def user_namespace(f):
   @provide_user

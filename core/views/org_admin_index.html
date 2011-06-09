@@ -1,0 +1,18 @@
+{% set title = 'Organization Admin' %}
+{% extends "other_base.html" %}
+{% block content %}
+  <h1 class="span-24">Snider CashRegister Organization Admin</h1>
+  {% for org in orgs %}
+    <span class="span-24">
+      <a href="/org_admin/{{org.key()}}">{{org.name}}</a>
+    </span>
+  {% endfor %}
+  <form method="POST" action="/org_admin/create" style="text-align: center;">
+    <fieldset>
+      <legend>New Organization Details</legend>
+        <label>Organization name: <input type="text" name="org_name" class="title"></label><br>
+        <input type="submit" value="Create New Organization" />
+      </legend>
+    </fieldset>
+  </form>
+{% endblock %}

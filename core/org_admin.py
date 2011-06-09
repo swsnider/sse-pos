@@ -10,7 +10,7 @@ import bottle
 if DEBUG:
   from paste.evalexception import EvalException
 
-from controllers import org_admin, org_setup
+from controllers import org_admin
 
 
 def main():

@@ -1,0 +1,33 @@
+{% set title = 'Organization Admin' %}
+{% extends "other_base.html" %}
+{% block content %}
+  <h1 class="span-24">
+    Snider CashRegister Organization Admin :: {{organization.name}}
+  </h1>
+  {% for user in organization.user_set.order('last_name') %}
+    <span class="span-24">
+      {{user.last_name}}, {{user.first_name}}
+      {% if 'pwchange' in user.stati %}
+        (Initial password: {{user.initial_password}})
+      {% endif %}
+      <a href="/org_admin/{{user.key()}}/reset_pwd">Reset Password</a>
+    </span>
+  {% endfor %}
+  <form method="POST" action="/org_admin/{{organization.key()}}/new_admin"
+      style="text-align: center;">
+    <fieldset>
+      <legend>New Admin User</legend>
+        <label>First name:
+          <input type="text" name="first_name" class="title">
+        </label><br>
+        <label>Last name:
+          <input type="text" name="last_name" class="title">
+        </label><br>
+        <label>Email/Username:
+          <input type="text" name="email" class="title">
+        </label><br>
+        <input type="submit" value="Create New Admin User" />
+      </legend>
+    </fieldset>
+  </form>
+{% endblock %}
