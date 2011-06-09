@@ -12,17 +12,16 @@ from models import Organization, User
 
 @route('/org_admin')
 @route('/org_admin/')
-@view('org_admin_index')
 @util.global_namespace
+@view('org_admin_index')
 @admin_secure
 def org_admin_index():
-  
   return dict(orgs=Organization.all().filter('stati =', 'active'))
 
 
 @route('/org_admin/:organization')
-@view('org_admin_details')
 @util.global_namespace
+@view('org_admin_details')
 @admin_secure
 def org_admin_details(organization):
   org = Organization.get(db.Key(organization))

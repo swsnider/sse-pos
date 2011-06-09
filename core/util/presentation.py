@@ -8,6 +8,8 @@ import re
 import simplejson as json
 import sys
 import urllib
+from google.appengine.api import namespace_manager
+
 
 def jsonify(f):
   def g(*args, **kwargs):
@@ -61,6 +63,7 @@ def view(*view_args, **view_kwargs):
       ret_dict = f(*args, **kwargs)
       ret_dict['_flash'] = session['flash']
       ret_dict['_global_defs'] = global_defs
+      ret_dict['namespace'] = namespace_manager.get_namespace()
       session['flash'] = []
       return ret_dict
     return h
