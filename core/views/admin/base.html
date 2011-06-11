@@ -1,0 +1,23 @@
+{% if not alt_selected %}
+{% set alt_selected = {} %}
+{% endif %}
+{% extends "base.html" %}
+{% block pre_container %}
+  <div class="alt_sandbar large">
+    <ol>
+      <li>&nbsp;</li>
+      <li {{alt_selected.get('item', '')}}>
+        <a href="/admin/item">Items</a>
+      </li>
+      <li {{alt_selected.get('color', '')}}>
+        <a href="/admin/color">Colors</a>
+      </li>
+      <li {{alt_selected.get('sales', '')}}>
+        <a href="/admin/sale">Sales</a>
+      </li>
+      <li {{alt_selected.get('users', '')}}>
+        <a href="/admin/user">Users</a>
+      </li>
+    </ol>
+  </div>
+{% endblock %}

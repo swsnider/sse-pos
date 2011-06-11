@@ -5,13 +5,15 @@
 {% block body %}
 <div class="sandbar large">
   <ol>
-    <li {{selected.get('sales', '')}}><a href="#">Sales</a></li>
+    <li {{selected.get('register', '')}}><a href="/pos">Register</a></li>
     <li {{selected.get('reports', '')}}><a href="#">Reports</a></li>
     <li {{selected.get('inventory', '')}}><a href="#">Inventory</a></li>
-    <li {{selected.get('admin', '')}}><a href="#">Admin</a></li>
+    <li {{selected.get('admin', '')}}><a href="/admin">Admin</a></li>
     <li {{selected.get('developer', '')}}><a href="#">Developer</a></li>
   </ol>
 </div>
+{% block pre_container %}
+{% endblock %}
 <div class="container">
   {% for flashed in _flash %}
   <div class="span-24 info">{{flashed}}</div>
@@ -21,7 +23,10 @@
     {% endblock %}
   </div>
 </div>
-<div id="footer" class="sandbar" style="height: 100%; text-align: center; font-size: normal">
+{% block post_container %}
+{% endblock %}
+<div id="footer" class="sandbar"
+    style="height: 100%; text-align: center; font-size: normal">
   Created by Silas Snider for Matthew's Quarter
 </div>
 {% endblock %}

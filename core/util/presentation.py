@@ -11,6 +11,16 @@ import urllib
 from google.appengine.api import namespace_manager
 
 
+import util
+import models
+
+class _modules(object):
+  util = util
+  models = models
+  global_defs = global_defs
+  bottle = bottle
+
+
 def jsonify(f):
   def g(*args, **kwargs):
     return json.dumps(f(*args, **kwargs))
@@ -61,9 +71,15 @@ def view(*view_args, **view_kwargs):
       if 'flash' not in session:
         session['flash'] = []
       ret_dict = f(*args, **kwargs)
+      if ret_dict is None:
+        ret_dict = {}
+      if 'flash' not in session:
+        session['flash'] = []
       ret_dict['_flash'] = session['flash']
-      ret_dict['_global_defs'] = global_defs
-      ret_dict['namespace'] = namespace_manager.get_namespace()
+      ret_dict['_namespace'] = namespace_manager.get_namespace()
+      ret_dict['_m_'] = _modules
+      if '_user' in dir(bottle.request):
+        ret_dict['_user'] = bottle.request._user
       session['flash'] = []
       return ret_dict
     return h

@@ -1,0 +1,8 @@
+{% set title = _user.organization.name ~ ' Sales' %}
+{% set selected = dict(admin='class="selected"') %}
+{% extends "admin/base.html" %}
+{% block content %}
+  <div class="span-24">
+    <p>Choose an admin subsection.</p>
+  </div>
+{% endblock %}

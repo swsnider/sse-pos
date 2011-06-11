@@ -6,6 +6,8 @@ $orangered: #CC7254;
 $gray: #534C48;
 $dark_brown: #3B2B20;
 $green: #ACDBD1;
+$secondary_underline: #38316E;
+$secondary_text: black;
 
 @mixin underline($color) {
   border-bottom: $color 3px solid;
@@ -17,6 +19,8 @@ $green: #ACDBD1;
 div.sandbar {
   background-color: $dark_brown;
   color: white;
+  margin-bottom: 0;
+  padding-bottom: 0;
   a {
     color: white;
     text-decoration: none;
@@ -24,6 +28,8 @@ div.sandbar {
   ol {
     list-style: none;
     display: block;
+    margin-bottom: 0;
+    padding-bottom: 0;
     li {
       display: inline-block;
       margin-right: 2em;
@@ -34,6 +40,40 @@ div.sandbar {
     }
   }
 }
+
+div.alt_sandbar {
+  background-color: $green;
+  color: $secondary_text;
+  a {
+    color: $secondary_text;
+    text-decoration: none;
+  }
+  ol {
+    list-style: none;
+    display: block;
+    li {
+      display: inline-block;
+      margin-right: 2em;
+      &.selected, &:hover {
+        @include underline($secondary_underline);
+      }
+      @include underline($green);
+    }
+  }
+}
+
+div.item-container {
+  display: table;
+  .item-button {
+    display: table-cell;
+    background-color: $blue;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    vertical-align: middle;
+    text-align: center;
+  }
+}
+
 
 #headline {
   background-color: $green;

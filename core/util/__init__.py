@@ -30,20 +30,6 @@ def group(seq, num):
     appender = []
     counter = 0
 
-def provide_user(f):
-  def g(*args, **kwargs):
-    user_key = request.environ.get('beaker.session').get('current_user', None)
-    if user_key is None:
-      redirect('/login')
-    request._user = db.get(user_key)
-    _user = request._user
-    if 'active' not in _user.stati or 'active' not in _user.organization.stati:
-      request.environ.get('beaker.session').invalidate()
-      flash('Invalid user!')
-      redirect('/login')
-    return f(*args, **kwargs)
-  return g
-      
 
 def global_namespace(f):
   def g(*args, **kwargs):
@@ -63,7 +49,6 @@ def user_namespace(f):
     request._old_namespace = namespace_manager.get_namespace()
     namespace_manager.set_namespace(namespace)
     ret_dict = f(*args, **kwargs)
-    ret_dict['_org_name'] = org_name
     return ret_dict
   return g
 
@@ -90,7 +75,7 @@ def get_lists(*lists):
       if objs is not None:
         ret_list.append(objs)
       else:
-        objs = model_klass.all().filter('stati =', 'visible')
+        objs = model_klass.all().filter('stati =', 'admin_active').filter('stati =', 'active')
         for i in model_klass.ORDERING:
           objs = objs.order(i)
         objs = [model_to_dict(i, model_klass) for i in objs]

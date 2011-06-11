@@ -35,6 +35,6 @@ def do_login():
 @route('/logout')
 @util.secure
 @util.provide_session
-@view('logout')
 def logout():
   request._session.delete()
+  redirect('/')

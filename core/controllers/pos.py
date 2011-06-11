@@ -48,10 +48,10 @@ def require_sale(f):
 
 @route('/pos')
 @route('/pos/')
-@view('pos')
+@util.user_namespace
 @util.secure
 @ensure_sale
-@util.user_namespace
+@view('pos')
 def main_page(_sale):
   pending_items = _sale.get_items()
   grand_total = util.money.to_str(_sale.get_total())

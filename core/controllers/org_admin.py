@@ -66,6 +66,6 @@ def org_admin_new_admin_commit(organization):
   user.first_name = first_name
   user.last_name = last_name
   user.organization = org
-  user.stati = ['admin', 'active', 'pwchange']
+  user.stati = ['admin', 'superuser', 'active', 'pwchange']
   key = user.put()
   redirect('/org_admin/%s' % org.key())
