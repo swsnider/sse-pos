@@ -4,21 +4,8 @@ from google.appengine.api import memcache
 from bottle import route, request, redirect
 import util
 from util import view
+from controllers.admin import std_admin_wrapper
 
-
-def std_admin_wrapper(*view_args, **view_kwargs):
-  def h(wrapped):
-    @util.secure
-    @util.has_stati('admin')
-    @util.user_namespace
-    def g(*args, **kwargs):
-      if (len(view_args) + len(view_kwargs)) > 0:
-        f = view(*view_args, **view_kwargs)(wrapped)
-      else:
-        f = wrapped
-      return f(*args, **kwargs)
-    return g
-  return h
 
 @route('/admin/')
 @route('/admin')
@@ -27,97 +14,97 @@ def admin_index():
   return dict()
 
 
-@route('/admin/item')
-@std_admin_wrapper('admin/item.html')
-def admin_item():
+@route('/admin/user')
+@std_admin_wrapper('admin/user.html')
+def admin_user():
   if 'superuser' in request._user.stati:
-    return dict(items=Item.all().order('name'))
+    return dict(users=User.all().order('name'))
   else:
-    return dict(items=Item.all().filter('stati =', 'admin_active').order('name'))
+    return dict(users=User.all().filter('stati =', 'admin_active').order('name'))
 
 
-@route('/admin/item/:item_key/edit')
-@std_admin_wrapper('admin/item_edit.html')
-def admin_item_edit(item_key):
-  return dict(item=Item.get(Key(item_key)))
+@route('/admin/user/:user_key/edit')
+@std_admin_wrapper('admin/user_edit.html')
+def admin_user_edit(user_key):
+  return dict(user=User.get(Key(user_key)))
 
 
-@route('/admin/item/create', method='POST')
+@route('/admin/user/create', method='POST')
 @std_admin_wrapper()
-def admin_item_create():
+def admin_user_create():
   name = request.forms.get('name', '')
   code = request.forms.get('code', '')
   price = request.forms.get('price', '0')
-  item = Item()
-  item.name = name
-  item.code = code
-  item.price = util.money.from_str(price)
-  item.stati = ['active', 'admin_active']
-  item.put()
-  memcache.delete('__lists__Item')
-  redirect('/admin/item')
+  user = User()
+  user.name = name
+  user.code = code
+  user.price = util.money.from_str(price)
+  user.stati = ['active', 'admin_active']
+  user.put()
+  memcache.delete('__lists__User')
+  redirect('/admin/user')
 
 
-@route('/admin/item/:item_key/commit', method='POST')
+@route('/admin/user/:user_key/commit', method='POST')
 @std_admin_wrapper()
-def admin_item_commit(item_key):
+def admin_user_commit(user_key):
   name = request.forms.get('name', '')
   code = request.forms.get('code', '')
   price = request.forms.get('price', '0')
-  item = Item.get(Key(item_key))
-  item.name = name
-  item.code = code
-  item.price = util.money.from_str(price)
-  item.put()
-  memcache.delete('__lists__Item')
-  redirect('/admin/item')
+  user = User.get(Key(user_key))
+  user.name = name
+  user.code = code
+  user.price = util.money.from_str(price)
+  user.put()
+  memcache.delete('__lists__User')
+  redirect('/admin/user')
 
 
-def toggle_active(item):
-  l = item.stati
-  if 'inactive' in item.stati:
+def toggle_active(user):
+  l = user.stati
+  if 'inactive' in user.stati:
     l.remove('inactive')
     l.append('active')
   else:
     l.append('inactive')
     l.remove('active')
-  item.stati = l
-  item.put()
+  user.stati = l
+  user.put()
 
 
-def toggle_admin_active(item):
-  l = item.stati
-  if 'admin_inactive' in item.stati:
+def toggle_admin_active(user):
+  l = user.stati
+  if 'admin_inactive' in user.stati:
     l.remove('admin_inactive')
     l.append('admin_active')
-  elif 'admin_active' not in item.stati:
+  elif 'admin_active' not in user.stati:
     l.append('admin_active')
   else:
     l.append('admin_inactive')
     l.remove('admin_active')
-  item.stati = l
-  item.put()
+  user.stati = l
+  user.put()
 
 
-def delete_item(item):
-  item.stati = ['deleted']
-  item.put()
+def delete_user(user):
+  user.stati = ['deleted']
+  user.put()
 
 
 _actions = {
   'toggle_active': toggle_active,
   'toggle_admin_active': toggle_admin_active,
-  'delete': delete_item
+  'delete': delete_user
 }
 
 
-@route('/admin/item/multi_edit', method='POST')
+@route('/admin/user/multi_edit', method='POST')
 @std_admin_wrapper()
-def admin_item_multi_edit():
-  item_keys = request.forms.getall('multi_edit')
+def admin_user_multi_edit():
+  user_keys = request.forms.getall('multi_edit')
   action = _actions.get(request.forms.get('action'), lambda x:None)
-  for item_key in item_keys:
-    item = Item.get(Key(item_key))
-    action(item)
-  memcache.delete('__lists__Item')
-  redirect('/admin/item')
+  for user_key in user_keys:
+    user = User.get(Key(user_key))
+    action(user)
+  memcache.delete('__lists__User')
+  redirect('/admin/user')

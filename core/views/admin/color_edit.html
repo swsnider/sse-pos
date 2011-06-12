@@ -1,22 +1,22 @@
-{% set title = _user.organization.name ~ ' Admin Items' %}
+{% set title = _user.organization.name ~ ' Admin Colors' %}
 {% set selected = dict(admin='class="selected"') %}
-{% set alt_selected = dict(item='class="selected"') %}
+{% set alt_selected = dict(color='class="selected"') %}
 {% extends "admin/base.html" %}
 {% block content %}
-  <form method="POST" action="/admin/item/{{item.key()}}/commit"
+  <form method="POST" action="/admin/color/{{color.key()}}/commit"
       style="text-align: center;">
     <fieldset>
-      <legend>Edit Item</legend>
+      <legend>Edit Color</legend>
         <label>Name:
-          <input type="text" name="name" class="title" value="{{item.name}}">
+          <input type="text" name="name" class="title" value="{{color.name}}">
         </label><br>
         <label>Shortcut code:
-          <input type="text" name="code" class="title" value="{{item.code}}">
+          <input type="text" name="code" class="title" value="{{color.code}}">
         </label><br>
-        <label>Price:
-          <input type="text" name="price" class="title" value="{{_m_.util.money.to_str(item.price)}}">
+        <label>Discount:
+          <input type="text" name="discount" class="title" value="{{color.discount}}">
         </label><br>
-        <input type="submit" value="Save Item" />
+        <input type="submit" value="Save Color" />
       </legend>
     </fieldset>
   </form>

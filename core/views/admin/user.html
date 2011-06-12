@@ -1,6 +1,6 @@
-{% set title = _user.organization.name ~ ' Admin Items' %}
+{% set title = _user.organization.name ~ ' Admin Users' %}
 {% set selected = dict(admin='class="selected"') %}
-{% set alt_selected = dict(item='class="selected"') %}
+{% set alt_selected = dict(user='class="selected"') %}
 {% extends "admin/base.html" %}
 {% block end_head %}
   <script type="text/javascript">
@@ -10,46 +10,46 @@
   </script>
 {% endblock %}
 {% block content %}
-  {% if items|list|length > 0 %}
-  <form action="/admin/item/multi_edit" method="POST">
+  {% if users|list|length > 0 %}
+  <form action="/admin/user/multi_edit" method="POST">
     <table>
       <tr>
         <th>&nbsp;</th>
-        <th>Item Name</th>
+        <th>User Name</th>
         <th>Shortcut Code</th>
         <th>Price</th>
         <th>Stati</th>
       </tr>
-    {% for item in items %}
+    {% for user in users %}
       <tr>
         <td>
-          <input type="checkbox" name="multi_edit" value="{{item.key()}}" />
-          <a href="/admin/item/{{item.key()}}/edit">Edit</a>
+          <input type="checkbox" name="multi_edit" value="{{user.key()}}" />
+          <a href="/admin/user/{{user.key()}}/edit">Edit</a>
         </td>
-        <td>{{item.name}}</td>
-        <td>{{item.code}}</td>
-        <td>${{_m_.util.money.to_str(item.price)}}</td>
-        <td>{{','.join(item.stati)}}</td>
+        <td>{{user.name}}</td>
+        <td>{{user.code}}</td>
+        <td>${{_m_.util.money.to_str(user.price)}}</td>
+        <td>{{','.join(user.stati)}}</td>
       </tr>
     {% endfor %}
     </table>
     <select name="action">
       <option selected="selected">Select an action</option>
       <option>------------------------------</option>
-      <option value="toggle_active">Toggle item active status</option>
+      <option value="toggle_active">Toggle user active status</option>
       <option value="toggle_admin_active">Toggle admin hidden status</option>
-      <option value="delete">Delete items</option>
+      <option value="delete">Delete users</option>
     </select>
-    <input type="submit" value="Edit Items" />
+    <input type="submit" value="Edit Users" />
   </form>
   {% endif %}
-  <form method="POST" action="/admin/item/create" style="text-align: center;">
+  <form method="POST" action="/admin/user/create" style="text-align: center;">
     <fieldset>
-      <legend>New Item</legend>
-        <label>Item name: <input type="text" name="name" class="title"></label><br>
-        <label>Item shortcut code: <input type="text" name="code" class="title"></label><br>
-        <label>Item price: <input type="text" name="price" class="title"></label><br>
-        <input type="submit" value="Create New Item" />
+      <legend>New User</legend>
+        <label>User name: <input type="text" name="name" class="title"></label><br>
+        <label>User shortcut code: <input type="text" name="code" class="title"></label><br>
+        <label>User price: <input type="text" name="price" class="title"></label><br>
+        <input type="submit" value="Create New User" />
       </legend>
     </fieldset>
   </form>
