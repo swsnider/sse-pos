@@ -26,6 +26,17 @@ def secure(f):
     session = bottle.request.environ.get('beaker.session')
     if 'current_user' not in session:
       bottle.redirect('/login')
+    if 'pwchange' in db.get(db.Key(session['current_user'])).stati:
+      redirect('/pwchange')
+    return f(*args, **kwargs)
+  return g
+
+
+def pwchange_secure(f):
+  def g(*args, **kwargs):
+    session = bottle.request.environ.get('beaker.session')
+    if 'current_user' not in session:
+      bottle.redirect('/login')
     return f(*args, **kwargs)
   return g
 

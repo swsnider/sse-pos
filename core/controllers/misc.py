@@ -5,6 +5,7 @@ from models import User
 
 
 @route('/')
+@util.secure
 @view('index')
 @user_namespace
 def index():
@@ -25,7 +26,7 @@ def do_login():
   email = request.forms.get('email', '')
   password = request.forms.get('password', '')
   user = User.get_user(email, password)
-  if user is None:
+  if user is None or 'deleted' in user.stati or 'inactive' in user.stati:
     util.flash('Incorrect email or password!')
     redirect('/login')
   _session['current_user'] = str(user.key())
@@ -37,4 +38,19 @@ def do_login():
 @util.provide_session
 def logout():
   request._session.delete()
+  redirect('/')
+
+
+@route('/pwchange')
+@util.pwchange_secure
+@view('pwchange')
+def pwchange():
+  return dict()
+
+
+@route('/do_pwchange', method='POST')
+@util.pwchange_secure
+@util.provide_user
+def do_pwchange():
+  
   redirect('/')
