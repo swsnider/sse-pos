@@ -21,6 +21,7 @@ def std_admin_wrapper(*view_args, **view_kwargs):
 import item
 import color
 import user
+import sale
 
 
 @bottle.route('/admin/')

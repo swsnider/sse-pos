@@ -1,0 +1,50 @@
+{% set title = _user.organization.name ~ ' Admin Sales' %}
+{% set selected = dict(admin='class="selected"') %}
+{% set alt_selected = dict(sale='class="selected"') %}
+{% extends "admin/base.html" %}
+{% block end_head %}
+  <script type="text/javascript">
+    $(function() {
+      $(':checkbox').enableCheckboxRangeSelection();
+    });
+  </script>
+{% endblock %}
+{% block content %}
+  {% if sales|list|length > 0 %}
+  <form action="/admin/sale/multi_edit" method="POST">
+    <table>
+      <tr>
+        <th>&nbsp;</th>
+        <th>Sale Name</th>
+        <th>Stati</th>
+      </tr>
+    {% for sale in sales %}
+      <tr>
+        <td>
+          <input type="checkbox" name="multi_edit" value="{{sale.key()}}" />
+          <a href="/admin/sale/{{sale.key()}}/edit">Edit</a>
+        </td>
+        <td>{{sale.name}}</td>
+        <td>{{','.join(sale.stati)}}</td>
+      </tr>
+    {% endfor %}
+    </table>
+    <select name="action">
+      <option selected="selected">Select an action</option>
+      <option>------------------------------</option>
+      <option value="toggle_active">Toggle sale active status</option>
+      <option value="toggle_admin_active">Toggle admin hidden status</option>
+      <option value="delete">Delete sales</option>
+    </select>
+    <input type="submit" value="Edit Sales" />
+  </form>
+  {% endif %}
+  <form method="POST" action="/admin/sale/create" style="text-align: center;">
+    <fieldset>
+      <legend>New Sale</legend>
+        <label>Sale name: <input type="text" name="name" class="title"></label><br>
+        <input type="submit" value="Go to step 2" />
+      </legend>
+    </fieldset>
+  </form>
+{% endblock %}

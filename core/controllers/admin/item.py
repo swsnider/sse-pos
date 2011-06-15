@@ -28,11 +28,14 @@ def admin_item_create():
   name = request.forms.get('name', '')
   code = request.forms.get('code', '')
   price = request.forms.get('price', '0')
+  taxable = request.forms.get('taxable', False)
   item = Item()
   item.name = name
   item.code = code
   item.price = util.money.from_str(price)
   item.stati = ['active', 'admin_active']
+  if taxable:
+    item.stati.append('taxable')
   item.put()
   memcache.delete('__lists__Item')
   redirect('/admin/item')
@@ -44,10 +47,17 @@ def admin_item_commit(item_key):
   name = request.forms.get('name', '')
   code = request.forms.get('code', '')
   price = request.forms.get('price', '0')
+  taxable = request.forms.get('taxable', False)
   item = Item.get(Key(item_key))
   item.name = name
   item.code = code
   item.price = util.money.from_str(price)
+  if taxable:
+    if 'taxable' not in item.stati:
+      item.stati.append('taxable')
+  else:
+    if 'taxable' in item.stati:
+      item.stati.remove('taxable')
   item.put()
   memcache.delete('__lists__Item')
   redirect('/admin/item')

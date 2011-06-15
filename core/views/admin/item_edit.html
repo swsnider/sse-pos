@@ -16,6 +16,9 @@
         <label>Price:
           <input type="text" name="price" class="title" value="{{_m_.util.money.to_str(item.price)}}">
         </label><br>
+        <label class="checkbox large"><input type="checkbox" name="taxable" value="True" {{item|has_stati('taxable')|checked}}>
+          Taxable
+        </label><br>
         <input type="submit" value="Save Item" />
       </legend>
     </fieldset>

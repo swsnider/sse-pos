@@ -1,0 +1,16 @@
+{% set title = _user.organization.name ~ ' Password Change' %}
+{% extends "base.html" %}
+{% block content %}
+<form method="POST" action="/do_pwchange" style="text-align: center;">
+  <fieldset>
+    <legend>Change Password</legend>
+      {% if 'pwchange' not in user.stati %}
+      <label>Old Password: <input type="password" name="old_password" class="title"></label><br>
+      {% endif %}
+      <label>New Password: <input type="password" name="new_password" class="title"></label><br>
+      <label>Confirm New Password: <input type="password" name="con_password" class="title"></label><br>
+      <input type="submit" value="Create New User" />
+    </legend>
+  </fieldset>
+</form>
+{% endblock %}
