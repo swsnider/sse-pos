@@ -7,14 +7,23 @@
       style="text-align: center;">
     <fieldset>
       <legend>Edit User</legend>
-        <label>Name:
-          <input type="text" name="name" class="title" value="{{user.name}}">
+        <label>Username:
+          <input type="text" name="email" class="title" value="{{user.email}}">
         </label><br>
-        <label>Shortcut code:
-          <input type="text" name="code" class="title" value="{{user.code}}">
+        <label>Last Name:
+          <input type="text" name="last_name" class="title" value="{{user.last_name}}">
         </label><br>
-        <label>Price:
-          <input type="text" name="price" class="title" value="{{_m_.util.money.to_str(user.price)}}">
+        <label>First Name:
+          <input type="text" name="first_name" class="title" value="{{user.first_name}}">
+        </label><br>
+        <label class="checkbox large"><input type="checkbox" name="superuser" value="True" {{user|has_stati('superuser')|checked}}>
+          Superuser
+        </label>&nbsp;&nbsp;
+        <label class="checkbox large"><input type="checkbox" name="admin" value="True" {{user|has_stati('admin')|checked}}>
+          Admin
+        </label><br>
+        <label class="checkbox large"><input type="checkbox" name="active" value="True" {{user|has_stati('active')|checked}}>
+          Active
         </label><br>
         <input type="submit" value="Save User" />
       </legend>

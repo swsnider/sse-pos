@@ -3,6 +3,7 @@ import bottle
 from StringIO import StringIO
 import csv
 import datetime
+import functools
 import os
 import re
 import simplejson as json
@@ -63,9 +64,44 @@ def flash(flash_str):
   session['flash'].append(flash_str)
   session.save()
 
+
+def do_checked_filter(value):
+  if value:
+    return 'checked="checked"'
+  else:
+    return ''
+
+
+def do_selected_filter(value):
+  if value:
+    return 'selected="selected"'
+  else:
+    return ''
+
+
+def do_has_stati_filter(value, *stati):
+  for status in stati:
+    if status not in value.stati:
+      return False
+  return True
+
+
+FILTERS = {
+  'checked': do_checked_filter,
+  'selected': do_selected_filter,
+  'has_stati': do_has_stati_filter
+}
+
+
+my_template_settings = dict(filters = FILTERS)
+my_jinja2_view = functools.partial(bottle.view,
+                                   template_adapter=bottle.Jinja2Template,
+                                   template_settings=my_template_settings)
+
+
 def view(*view_args, **view_kwargs):
   def g(f):
-    @bottle.jinja2_view(*view_args, **view_kwargs)
+    @my_jinja2_view(*view_args, **view_kwargs)
     def h(*args, **kwargs):
       session = bottle.request.environ.get('beaker.session')
       if 'flash' not in session:

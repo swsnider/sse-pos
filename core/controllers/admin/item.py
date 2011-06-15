@@ -7,13 +7,6 @@ from util import view
 from controllers.admin import std_admin_wrapper
 
 
-@route('/admin/')
-@route('/admin')
-@std_admin_wrapper('admin/index.html')
-def admin_index():
-  return dict()
-
-
 @route('/admin/item')
 @std_admin_wrapper('admin/item.html')
 def admin_item():

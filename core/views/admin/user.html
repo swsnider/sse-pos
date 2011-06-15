@@ -16,8 +16,8 @@
       <tr>
         <th>&nbsp;</th>
         <th>User Name</th>
-        <th>Shortcut Code</th>
-        <th>Price</th>
+        <th>First Name</th>
+        <th>Last Name</th>
         <th>Stati</th>
       </tr>
     {% for user in users %}
@@ -26,9 +26,9 @@
           <input type="checkbox" name="multi_edit" value="{{user.key()}}" />
           <a href="/admin/user/{{user.key()}}/edit">Edit</a>
         </td>
-        <td>{{user.name}}</td>
-        <td>{{user.code}}</td>
-        <td>${{_m_.util.money.to_str(user.price)}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.first_name}}</td>
+        <td>{{user.last_name}}</td>
         <td>{{','.join(user.stati)}}</td>
       </tr>
     {% endfor %}
@@ -37,7 +37,8 @@
       <option selected="selected">Select an action</option>
       <option>------------------------------</option>
       <option value="toggle_active">Toggle user active status</option>
-      <option value="toggle_admin_active">Toggle admin hidden status</option>
+      <option value="toggle_superuser">Toggle superuser status</option>
+      <option value="toggle_admin">Toggle admin status</option>
       <option value="delete">Delete users</option>
     </select>
     <input type="submit" value="Edit Users" />
@@ -46,9 +47,9 @@
   <form method="POST" action="/admin/user/create" style="text-align: center;">
     <fieldset>
       <legend>New User</legend>
-        <label>User name: <input type="text" name="name" class="title"></label><br>
-        <label>User shortcut code: <input type="text" name="code" class="title"></label><br>
-        <label>User price: <input type="text" name="price" class="title"></label><br>
+        <label>Username: <input type="text" name="email" class="title"></label><br>
+        <label>User first name: <input type="text" name="first_name" class="title"></label><br>
+        <label>User last name: <input type="text" name="last_name" class="title"></label><br>
         <input type="submit" value="Create New User" />
       </legend>
     </fieldset>

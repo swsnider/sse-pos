@@ -1,5 +1,6 @@
 import util
 from util import view
+import bottle
 
 
 def std_admin_wrapper(*view_args, **view_kwargs):
@@ -20,3 +21,10 @@ def std_admin_wrapper(*view_args, **view_kwargs):
 import item
 import color
 import user
+
+
+@bottle.route('/admin/')
+@bottle.route('/admin')
+@std_admin_wrapper('admin/index.html')
+def admin_index():
+  return dict()
