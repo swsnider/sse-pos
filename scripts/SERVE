@@ -17,4 +17,8 @@ fi
 
 source scripts/BUILD "$1";
 
+OLD_PATH="$PATH";
+export PATH="/System/Library/Frameworks/Python.framework/Versions/2.6/bin:$PATH";
+
 screen -S "$1" -d -m dev_appserver.py --skip_sdk_update_check --allow_skipped_files --port=`cat $1/PORT` --address=0.0.0.0 "build_out/$1"
+export PATH="$OLD_PATH";
