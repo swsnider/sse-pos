@@ -21,3 +21,4 @@ else:
   STATIC_PREFIX = 'http://static.snider-cashregister.appspot.com/'
 TAX_RATE = .07
 GLOBAL_NAMESPACE = '-global-'
+VIEW_DIR='new_views'

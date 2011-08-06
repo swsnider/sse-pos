@@ -1,4 +1,5 @@
 from global_defs import *
+import os.path
 
 from beaker.middleware import SessionMiddleware
 import bottle
@@ -9,6 +10,8 @@ import controllers
 
 
 def main():
+  bottle.TEMPLATE_PATH.insert(0, os.path.join(os.path.abspath(
+      os.path.dirname(__file__)), VIEW_DIR))
   app = bottle.app()
   app.catchall = False
   app = SessionMiddleware(app, SESSION_OPTS)

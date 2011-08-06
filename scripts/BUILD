@@ -1,31 +1,44 @@
-#!/bin/bash
-# A small shell script to package up the app
+#!/usr/bin/env python
+# A small python script to package up the app
+import os
+import os.path
+import shutil
+import subprocess
+import sys
 
-if [ -z "$1" ]
-then
-  exit;
-fi
 
-if [ `gem list --local | grep "haml" | wc -l` -lt 1 ]
-then
-  echo "[BUILD] Installing gem for sass";
-  sudo gem install haml || (echo "[BUILD] Sass gem installation failed -- exiting..." && exit);
-fi
+def main():
+  if len(sys.argv) != 2:
+    sys.exit(1)
+  project = sys.argv[1]
 
-if [ -d build_out ]
-then
-  if [ -d "build_out/$1" ]
-  then
-    rm -fr build_out/$1;
-  fi
-else
-  rm -fr build_out;
-  mkdir build_out;
-fi
+  if subprocess.call('type sass', shell=True, stdin=subprocess.PIPE,
+                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT) != 0:
+    print '[BUILD] Installing sass'
+    r = subprocess.call('sudo gem install haml', shell=True)
+    if r != 0:
+      print '[BUILD] Sass gem installation failed -- exiting...'
+      sys.exit(1)
 
-cp -R "$1" "build_out/$1";
+  if os.path.isdir('build_out'):
+    if os.path.isdir('build_out/%s' % project):
+      shutil.rmtree('build_out/%s' % project)
+  else:
+    try:
+      shutil.rmtree('build_out')
+    except OSError:
+      pass
+    os.mkdir('build_out')
 
-echo "[BUILD] Copying complete. Running Sass...";
-sass --update --style expanded "build_out/$1" "build_out/$1";
-find "build_out/$1" -iname "*.scss" -delete;
-echo "[BUILD] Build complete. Results in build_out/$1";
+  shutil.copytree(project, 'build_out/%s' % project)
+
+  print '[BUILD] Copying complete. Running Sass...'
+  r = subprocess.call('sass --update --style expanded "build_out/%s"'
+                      ' "build_out/%s"' % (project, project), shell=True)
+  r = subprocess.call('find "build_out/%s" -iname "*.scss" -delete' % project,
+                      shell=True)
+  print '[BUILD] Build complete. Results in build_out/%s' % project
+
+
+if __name__ == '__main__':
+  main()
